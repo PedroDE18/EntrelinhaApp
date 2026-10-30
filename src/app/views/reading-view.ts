@@ -143,40 +143,44 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
           </div>
         </header>
 
-        <!-- Reading Canvas: Book-like line measure (68ch) & Paper warmth -->
-        <article
-          class="max-w-2xl mx-auto space-y-6 pt-4 text-[#2E2824] dark:text-[#E2DDD3]"
-          [class.font-reading]="useSerif()"
-          [class.font-sans]="!useSerif()"
-          [style.fontSize.px]="fontSize()"
-          [style.lineHeight]="1.85">
-          @for (para of s.paragraphs; track para.id) {
-            <p class="relative select-text transition-colors">
-              @for (tok of getTokens(para); track tok.text + $index) {
-                <span
-                  (click)="selectToken(tok, para.text)"
-                  (keydown.enter)="selectToken(tok, para.text)"
-                  tabindex="0"
-                  role="button"
-                  [attr.aria-label]="'Traduzir ' + tok.text"
-                  [class.text-[#7A2A18]]="tok.falseFriend"
-                  [class.dark:text-[#F3D5A5]]="tok.falseFriend"
-                  [class.font-semibold]="tok.falseFriend || tok.genderTrap"
-                  [class.underline]="tok.falseFriend || tok.genderTrap"
-                  [class.decoration-[#C07D2B]]="tok.falseFriend"
-                  [class.decoration-[#2B6CB0]]="tok.genderTrap"
-                  class="cursor-pointer hover:bg-[#F3E7D3] dark:hover:bg-[#382F26] rounded-xs px-0.5 transition-colors">
-                  {{ tok.text }}
-                </span>{{ ' ' }}
-              }
-            </p>
-          }
-        </article>
+        <!-- Reading Canvas: Book-like line measure (68ch) & Paper warmth with book sheet styling -->
+        <div class="paper-page book-spine-left rounded-2xl p-6 sm:p-10 lg:p-12 shadow-sm">
+          <article
+            class="max-w-2xl mx-auto space-y-6 text-[#2E2824] dark:text-[#E2DDD3]"
+            [class.font-reading]="useSerif()"
+            [class.font-sans]="!useSerif()"
+            [style.fontSize.px]="fontSize()"
+            [style.lineHeight]="1.88">
+            @for (para of s.paragraphs; track para.id; let idx = $index) {
+              <p
+                [class.story-drop-cap]="idx === 0"
+                class="relative select-text transition-colors text-justify hyphens-auto">
+                @for (tok of getTokens(para); track tok.text + $index) {
+                  <span
+                    (click)="selectToken(tok, para.text)"
+                    (keydown.enter)="selectToken(tok, para.text)"
+                    tabindex="0"
+                    role="button"
+                    [attr.aria-label]="'Traduzir ' + tok.text"
+                    [class.text-[#7A2A18]]="tok.falseFriend"
+                    [class.dark:text-[#F3D5A5]]="tok.falseFriend"
+                    [class.font-semibold]="tok.falseFriend || tok.genderTrap"
+                    [class.underline]="tok.falseFriend || tok.genderTrap"
+                    [class.decoration-[#C07D2B]]="tok.falseFriend"
+                    [class.decoration-[#2B6CB0]]="tok.genderTrap"
+                    class="cursor-pointer hover:bg-[#F3E7D3] dark:hover:bg-[#382F26] rounded-xs px-0.5 py-0.5 inline-block transition-colors">
+                    {{ tok.text }}
+                  </span>{{ ' ' }}
+                }
+              </p>
+            }
+          </article>
+        </div>
 
         <!-- Interactive Contextual Gloss Modal / Card -->
         @if (selectedToken(); as tok) {
-          <div class="fixed inset-x-0 bottom-4 z-50 max-w-xl mx-auto px-4 animate-in fade-in slide-in-from-bottom-4 duration-200">
-            <div class="bg-[#FCFAF7] dark:bg-[#221E1B] rounded-2xl p-5 shadow-xl border border-[#DDD6C8] dark:border-[#38322C] space-y-4">
+          <div class="fixed inset-x-0 bottom-0 sm:bottom-4 z-50 max-w-xl mx-auto px-2 sm:px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:pb-0 animate-in fade-in slide-in-from-bottom-4 duration-200">
+            <div class="paper-page rounded-t-2xl sm:rounded-2xl p-5 shadow-2xl border border-[#DDD6C8] dark:border-[#38322C] space-y-4">
               <!-- Header of gloss -->
               <div class="flex items-start justify-between gap-3">
                 <div class="space-y-1">

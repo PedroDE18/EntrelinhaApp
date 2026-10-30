@@ -5,9 +5,11 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import {join} from 'node:path';
+import { existsSync, readFileSync, appendFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
+const devNotesFilePath = join(process.cwd(), 'DEV_NOTES.md');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
@@ -16,6 +18,112 @@ import { checkDatabaseHealth, db, hasDatabaseConnection } from './db/client';
 import * as schema from './db/schema';
 
 app.use(express.json());
+
+interface DevNoteItem {
+  id: string;
+  timestamp: string;
+  category: string;
+  title: string;
+  content: string;
+}
+
+function parseDevNotes(): { notes: DevNoteItem[]; raw: string } {
+  if (!existsSync(devNotesFilePath)) {
+    const initialText = `# LINGUA — Caderno de Desenvolvimento & Registro de Ideias\n\nRegistro contínuo de observações, sugestões e bugs.\n\n---\n`;
+    writeFileSync(devNotesFilePath, initialText, 'utf-8');
+    return { notes: [], raw: initialText };
+  }
+
+  const raw = readFileSync(devNotesFilePath, 'utf-8');
+  const notes: DevNoteItem[] = [];
+  const sections = raw.split(/^###\s+/m);
+
+  for (let i = 1; i < sections.length; i++) {
+    const sec = sections[i].trim();
+    if (!sec) continue;
+    const firstLineEnd = sec.indexOf('\n');
+    const header = firstLineEnd !== -1 ? sec.substring(0, firstLineEnd).trim() : sec;
+    const body = firstLineEnd !== -1 ? sec.substring(firstLineEnd).trim() : '';
+
+    // Match header format: [2026-10-30 13:20] · [MELHORIA] Title
+    const match = header.match(/\[(.*?)\]\s*·?\s*\[(.*?)\]\s*(.*)/);
+    const timestamp = match ? match[1] : '';
+    const category = match ? match[2] : 'Nota';
+    const title = match ? match[3] : header;
+
+    notes.push({
+      id: `note-${i}-${timestamp.replace(/[^0-9]/g, '')}`,
+      timestamp,
+      category,
+      title,
+      content: body,
+    });
+  }
+
+  // Reverse so newest appears first
+  return { notes: notes.reverse(), raw };
+}
+
+/**
+ * Dev Notes endpoints: Reads and appends to DEV_NOTES.md in repository root
+ */
+app.get('/api/dev-notes', (_req, res) => {
+  try {
+    const parsed = parseDevNotes();
+    res.json({
+      success: true,
+      notes: parsed.notes,
+      raw: parsed.raw,
+      filePath: 'DEV_NOTES.md',
+    });
+  } catch (err: unknown) {
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+});
+
+app.post('/api/dev-notes', (req, res) => {
+  try {
+    const { title, category = 'Melhoria', content } = req.body || {};
+
+    if (!title || !content) {
+      return res.status(400).json({
+        success: false,
+        error: 'Título e conteúdo da nota são obrigatórios.',
+      });
+    }
+
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const timestamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const cleanCategory = String(category).trim().toUpperCase();
+    const cleanTitle = String(title).trim();
+    const cleanContent = String(content).trim();
+
+    const entryMarkdown = `\n### [${timestamp}] · [${cleanCategory}] ${cleanTitle}\n- **Tipo:** ${cleanCategory}\n- **Data:** ${timestamp}\n- **Nota:** ${cleanContent}\n`;
+
+    if (!existsSync(devNotesFilePath)) {
+      writeFileSync(devNotesFilePath, `# LINGUA — Caderno de Desenvolvimento\n\n---\n`, 'utf-8');
+    }
+
+    appendFileSync(devNotesFilePath, entryMarkdown, 'utf-8');
+
+    const updated = parseDevNotes();
+    res.json({
+      success: true,
+      message: 'Nota salva com sucesso em DEV_NOTES.md!',
+      notes: updated.notes,
+      raw: updated.raw,
+    });
+  } catch (err: unknown) {
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+});
 
 /**
  * Health check & database connection status endpoint

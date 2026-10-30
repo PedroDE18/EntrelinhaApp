@@ -23,7 +23,7 @@ import { I18nService } from '../core/services/i18n';
       <!-- CEFR Dual Proficiency Matrix -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Reading Proficiency -->
-        <div class="p-6 rounded-2xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28] space-y-4 shadow-xs">
+        <div class="p-6 rounded-2xl paper-page space-y-4 shadow-xs">
           <div class="flex items-center justify-between">
             <span class="text-xs font-semibold uppercase tracking-wider text-[#6C645C] dark:text-[#9C9387]">
               {{ i18n.t('progress.reading_matrix_title') }}
@@ -58,7 +58,7 @@ import { I18nService } from '../core/services/i18n';
         </div>
 
         <!-- Listening Proficiency -->
-        <div class="p-6 rounded-2xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28] space-y-4 shadow-xs">
+        <div class="p-6 rounded-2xl paper-page space-y-4 shadow-xs">
           <div class="flex items-center justify-between">
             <span class="text-xs font-semibold uppercase tracking-wider text-[#6C645C] dark:text-[#9C9387]">
               {{ i18n.t('progress.listening_matrix_title') }}
@@ -94,7 +94,7 @@ import { I18nService } from '../core/services/i18n';
       </section>
 
       <!-- Vocabulary Funnel (Section 9) -->
-      <section class="p-6 sm:p-8 rounded-2xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28] space-y-6">
+      <section class="p-6 sm:p-8 rounded-2xl paper-page space-y-6">
         <div class="space-y-1">
           <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
             <mat-icon class="text-sm leading-none !w-4 !h-4">bubble_chart</mat-icon>
@@ -174,7 +174,7 @@ import { I18nService } from '../core/services/i18n';
       </section>
 
       <!-- Radar de Falsos Cognatos e Armadilhas Lusófonas -->
-      <section class="p-6 sm:p-8 rounded-2xl bg-[#F9F3E8] dark:bg-[#221E1B] border border-[#E8DCC8] dark:border-[#332D28] space-y-6">
+      <section class="p-6 sm:p-8 rounded-2xl paper-page space-y-6">
         <div class="space-y-1">
           <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
             <mat-icon class="text-sm leading-none !w-4 !h-4">radar</mat-icon>

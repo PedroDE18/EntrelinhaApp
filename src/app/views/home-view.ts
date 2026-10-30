@@ -13,7 +13,7 @@ import { I18nService } from '../core/services/i18n';
   template: `
     <div class="space-y-12 sm:space-y-16">
       <!-- Hero: Featured Story of the Day -->
-      <section class="relative bg-[#FCFAF7] dark:bg-[#221E1B] rounded-2xl p-6 sm:p-8 lg:p-10 border border-[#E6DFD3] dark:border-[#332D28] shadow-xs transition-colors">
+      <section class="relative paper-page rounded-2xl p-6 sm:p-8 lg:p-10 shadow-sm transition-colors">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <!-- Text details -->
           <div class="lg:col-span-7 space-y-4">
@@ -73,8 +73,8 @@ import { I18nService } from '../core/services/i18n';
         </div>
       </section>
 
-      <!-- Portuguese-French Contrast Spotlight (Piège Lusophone) -->
-      <section class="bg-[#F9F3E8] dark:bg-[#25201B] rounded-xl p-6 border border-[#E8DCC8] dark:border-[#3A3228] transition-colors">
+      <!-- Portuguese-French Contrast Spotlight (Piège Lusophone / Falso Cognato) -->
+      <section class="paper-page rounded-xl p-6 transition-colors">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div class="space-y-1.5">
             <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
@@ -92,7 +92,7 @@ import { I18nService } from '../core/services/i18n';
           <button
             type="button"
             (click)="playContrastExample()"
-            class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#7A2A18] dark:text-[#F3D5A5] bg-[#F2E4D0] dark:bg-[#382D22] rounded-lg hover:bg-[#EBD8C0] dark:hover:bg-[#46382B] transition-colors shrink-0">
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#7A2A18] dark:text-[#F3D5A5] bg-[#F2E4D0] dark:bg-[#382D22] rounded-lg hover:bg-[#EBD8C0] dark:hover:bg-[#46382B] transition-colors shrink-0 touch-target-min">
             <mat-icon class="text-base leading-none !w-4 !h-4">hearing</mat-icon>
             <span>{{ i18n.t('home.btn_audio_pronunciation') }}</span>
           </button>
@@ -101,7 +101,7 @@ import { I18nService } from '../core/services/i18n';
 
       <!-- Restrained Progress Summary -->
       <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="p-4 rounded-xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28]">
+        <div class="p-4 rounded-xl paper-page">
           <span class="text-xs text-[#6C645C] dark:text-[#9C9387]">{{ i18n.t('home.stats.reading_level') }}</span>
           <div class="mt-1 flex items-baseline gap-2">
             <span class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ profile().readingCEFR }}</span>
@@ -110,7 +110,7 @@ import { I18nService } from '../core/services/i18n';
           <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] mt-1 block">{{ i18n.t('home.stats.reading_level_desc') }}</span>
         </div>
 
-        <div class="p-4 rounded-xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28]">
+        <div class="p-4 rounded-xl paper-page">
           <span class="text-xs text-[#6C645C] dark:text-[#9C9387]">{{ i18n.t('home.stats.listening_level') }}</span>
           <div class="mt-1 flex items-baseline gap-2">
             <span class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ profile().listeningCEFR }}</span>
@@ -119,7 +119,7 @@ import { I18nService } from '../core/services/i18n';
           <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] mt-1 block">{{ i18n.t('home.stats.listening_level_desc') }}</span>
         </div>
 
-        <div class="p-4 rounded-xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28]">
+        <div class="p-4 rounded-xl paper-page">
           <span class="text-xs text-[#6C645C] dark:text-[#9C9387]">{{ i18n.t('home.stats.active_learning') }}</span>
           <div class="mt-1 flex items-baseline gap-2">
             <span class="text-2xl font-serif font-bold text-[#9C3823] dark:text-[#DDA15E]">{{ learnerService.learningWordsCount() }}</span>
@@ -128,7 +128,7 @@ import { I18nService } from '../core/services/i18n';
           <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] mt-1 block">{{ i18n.t('home.stats.active_learning_desc') }}</span>
         </div>
 
-        <div class="p-4 rounded-xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28]">
+        <div class="p-4 rounded-xl paper-page">
           <span class="text-xs text-[#6C645C] dark:text-[#9C9387]">{{ i18n.t('home.stats.streak') }}</span>
           <div class="mt-1 flex items-baseline gap-2">
             <span class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ profile().currentStreakDays }}</span>
@@ -156,7 +156,7 @@ import { I18nService } from '../core/services/i18n';
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           @for (story of secondaryStories; track story.id) {
-            <article class="flex flex-col justify-between bg-[#FCFAF7] dark:bg-[#221E1B] rounded-xl border border-[#E6DFD3] dark:border-[#332D28] p-5 hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-colors shadow-xs">
+            <article class="flex flex-col justify-between paper-page rounded-xl p-5 hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all duration-200 shadow-xs">
               <div class="space-y-3">
                 <div class="overflow-hidden rounded-lg aspect-[16/10] bg-[#EFE9DD] dark:bg-[#1A1715]">
                   <img

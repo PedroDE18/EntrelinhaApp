@@ -175,7 +175,7 @@ async function seed() {
       explanationPt: '"Librairie" é LIVRARIA (loja comercial de compra e venda de livros). O local de empréstimo público e consulta é "bibliothèque".',
       validationStatus: 'validated',
       confidence: 1.0,
-      sourceNotes: 'Falso amigo clássico do par francês-português.',
+      sourceNotes: 'Falso cognato clássico do par francês-português.',
     }).returning();
 
     await db.insert(schema.linguisticRelationships).values({

@@ -74,7 +74,7 @@ import { I18nService } from '../core/services/i18n';
       <!-- Story Catalog Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (story of filteredStories(); track story.id) {
-          <article class="flex flex-col justify-between bg-[#FCFAF7] dark:bg-[#221E1B] rounded-xl border border-[#E6DFD3] dark:border-[#332D28] overflow-hidden shadow-xs hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-colors">
+          <article class="flex flex-col justify-between paper-page rounded-xl overflow-hidden shadow-xs hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all duration-200">
             <div>
               <div class="relative aspect-[16/10] overflow-hidden bg-[#EFE9DD] dark:bg-[#1A1715]">
                 <img

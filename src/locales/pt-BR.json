@@ -22,7 +22,7 @@
     "by_author": "Por {{author}} · {{source}}",
     "btn_start_reading": "Começar a ler",
     "btn_listen_excerpt": "Ouvir trecho",
-    "false_friend_badge": "Armadilha Lusófona / Falso Amigo do Dia",
+    "false_friend_badge": "Armadilha Lusófona / Falso Cognato do Dia",
     "false_friend_title": "« {{french}} » ≠ « {{falseMeaning}} »",
     "btn_audio_pronunciation": "Pronúncia em áudio",
     "stats": {
@@ -89,7 +89,7 @@
       "aria_pronounce": "Ouvir pronúncia",
       "french_definition": "Definição em francês:",
       "portuguese_heading": "Português do Brasil (pt-BR)",
-      "badge_false_friend": "Falso Amigo!",
+      "badge_false_friend": "Falso Cognato!",
       "badge_gender_trap": "Gênero Invertido",
       "classify_prompt": "Classificar em seu perfil de aprendizagem:",
       "btn_want_to_learn": "Quero aprender",
@@ -157,7 +157,7 @@
     "language_pair_heading": "Par Linguístico Ativo",
     "native_language_label": "Língua Materna",
     "native_language_name": "Português do Brasil (pt-BR)",
-    "native_language_sub": "Gloses em português e alertas de falsos amigos",
+    "native_language_sub": "Gloses em português e alertas de falsos cognatos",
     "target_language_label": "Língua Alvo",
     "target_language_name": "Français de France (fr-FR)",
     "target_language_sub": "Francês contemporâneo e literário metropolitano",
@@ -169,7 +169,7 @@
     "theme_sub": "Papel marfim clássico ou encadernação escura",
     "btn_toggle_theme": "Alternar Tema",
     "db_heading": "Arquitetura PostgreSQL Relacional (Fase 1.5)",
-    "db_desc": "O LINGUA utiliza PostgreSQL para modelar a base de conhecimento linguístico (entradas lexicais, sentidos, falsos amigos, gêneros invertidos e conceitos gramaticais) de forma relacional.",
+    "db_desc": "O LINGUA utiliza PostgreSQL para modelar a base de conhecimento linguístico (entradas lexicais, sentidos, falsos cognatos, gêneros invertidos e conceitos gramaticais) de forma relacional.",
     "db_status_ready": "Estrutura relacional Drizzle ORM configurada",
     "pwa_cache_ready": "PWA & Cache offline ativos"
   },
@@ -179,7 +179,7 @@
     "phase_label": "Fase 1.5: Refinamento UX, Localização & PostgreSQL",
     "copyright": "© 2026 LINGUA. Textos do Domínio Público (Wikisource, Project Gutenberg) e ficções pedagógicas originais.",
     "link_catalog": "Catálogo",
-    "link_radar": "Radar Falsos Amigos",
+    "link_radar": "Radar Falsos Cognatos",
     "link_db": "Arquitetura PostgreSQL"
   }
 }
