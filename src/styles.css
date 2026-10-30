@@ -1,0 +1,74 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-serif: "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --color-paper-bg: #F7F4EE;
+  --color-paper-surface: #FCFAF7;
+  --color-paper-border: #E6DFD3;
+  --color-paper-ink: #231F1C;
+  --color-paper-muted: #6C645C;
+
+  --color-night-bg: #181513;
+  --color-night-surface: #221E1B;
+  --color-night-border: #332D28;
+  --color-night-ink: #EAE4DA;
+  --color-night-muted: #9C9387;
+}
+
+html {
+  font-family: var(--font-sans);
+  background-color: #F7F4EE;
+  color: #231F1C;
+  scroll-behavior: smooth;
+}
+
+html.dark {
+  background-color: #181513;
+  color: #EAE4DA;
+}
+
+/* Subtle book paper texture and comfort reading layer */
+body {
+  min-height: 100vh;
+  background-color: inherit;
+  color: inherit;
+  background-image: radial-gradient(rgba(140, 115, 80, 0.035) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+html.dark body {
+  background-image: radial-gradient(rgba(215, 185, 140, 0.025) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.font-editorial {
+  font-family: var(--font-display);
+}
+
+.font-reading {
+  font-family: var(--font-serif);
+}
+
+/* Smooth bookish text selection */
+::selection {
+  background-color: #f1dfbf;
+  color: #5c3514;
+}
+
+.dark ::selection {
+  background-color: #4a3420;
+  color: #faeedb;
+}
+
+/* Comfortable reading column */
+.prose-reading {
+  max-width: 68ch;
+  line-height: 1.85;
+}

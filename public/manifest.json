@@ -1,0 +1,16 @@
+{
+  "name": "LINGUA — French Learning Through Reading",
+  "short_name": "LINGUA",
+  "description": "Read for the story. Learn through the language.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBF9F5",
+  "theme_color": "#1C1917",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

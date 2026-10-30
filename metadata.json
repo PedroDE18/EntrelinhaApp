@@ -1,0 +1,6 @@
+{
+  "name": "LINGUA — French Learning Through Reading",
+  "description": "An immersive AI-powered French reading and listening platform tailored for Brazilian Portuguese speakers with authentic stories, false-friend detection, and adaptive comprehension.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
