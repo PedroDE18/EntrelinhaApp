@@ -1,0 +1,40 @@
+type User @table {
+  username: String!
+  email: String!
+  targetLanguage: String!
+  streakCount: Int
+  level: String
+}
+
+type Article @table {
+  title: String!
+  content: String!
+  language: String!
+  difficultyLevel: String!
+  author: String
+  tags: [String]
+}
+
+type VocabularyItem @table {
+  originalWord: String!
+  translation: String!
+  masteryLevel: Int!
+  contextSentence: String
+  lastReviewedAt: Timestamp
+  user: User!
+}
+
+type UserProgress @table {
+  status: String!
+  timeSpent: Int!
+  lastReadPosition: Int
+  user: User!
+  article: Article!
+}
+
+type ReviewSession @table {
+  sessionDate: Timestamp!
+  score: Int!
+  notes: String
+  user: User!
+}

@@ -1,4 +1,5 @@
 import { CEFRLevel, GlossToken, VocabularyState } from './models';
+import { lookupFrenchLexicon } from './lexicon';
 
 /**
  * Portuguese to French contrastive linguistic rules
@@ -207,12 +208,13 @@ export function tokenizeParagraph(text: string, existingGlosses: GlossToken[] = 
 
     const falseFriend = checkFalseCognate(clean);
     const genderTrap = checkGenderTrap(clean);
+    const lexiconEntry = lookupFrenchLexicon(clean) || lookupFrenchLexicon(rawWord);
 
     return {
       text: rawWord,
       cleanWord: clean,
-      definitionFr: `Mot ou expression en contexte : ${clean}.`,
-      translationPt: falseFriend ? falseFriend.trueMeaningPt : `Vocábulo no contexto narrativo`,
+      definitionFr: lexiconEntry?.definitionFr || `Mot ou expression en contexte : ${clean}.`,
+      translationPt: falseFriend ? falseFriend.trueMeaningPt : (lexiconEntry?.translationPt || `Termo em contexto : ${clean}`),
       falseFriend: falseFriend || undefined,
       genderTrap: genderTrap || undefined,
     };

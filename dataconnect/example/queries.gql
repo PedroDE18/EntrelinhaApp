@@ -1,0 +1,154 @@
+mutation CreateUser($username: String!, $email: String!, $targetLanguage: String!) @auth(level: USER) {
+  user_insert(data: {
+    id_expr: "auth.uid",
+    username: $username,
+    email: $email,
+    targetLanguage: $targetLanguage
+  })
+}
+
+mutation UpdateUser($username: String, $targetLanguage: String) @auth(level: USER) {
+  user_update(key: {id_expr: "auth.uid"}, data: {
+    username: $username,
+    targetLanguage: $targetLanguage
+  })
+}
+
+mutation DeleteUser @auth(level: USER) {
+  user_delete(key: {id_expr: "auth.uid"})
+}
+
+query GetUser @auth(level: USER) {
+  user(key: {id_expr: "auth.uid"}) {
+    username
+    email
+    streakCount
+  }
+}
+
+query ListUsers @auth(level: PUBLIC, insecureReason: "Listing public profile information") {
+  users {
+    username
+    level
+  }
+}
+
+mutation CreateArticle($title: String!, $content: String!, $language: String!, $difficultyLevel: String!) @auth(level: PUBLIC, insecureReason: "Articles are learning resources") {
+  article_insert(data: {title: $title, content: $content, language: $language, difficultyLevel: $difficultyLevel})
+}
+
+mutation UpdateArticle($id: UUID!, $title: String) @auth(level: PUBLIC, insecureReason: "Content maintenance") {
+  article_update(key: {id: $id}, data: {title: $title})
+}
+
+mutation DeleteArticle($id: UUID!) @auth(level: PUBLIC, insecureReason: "Content maintenance") {
+  article_delete(key: {id: $id})
+}
+
+query GetArticle($id: UUID!) @auth(level: PUBLIC, insecureReason: "Reading articles") {
+  article(key: {id: $id}) {
+    title
+    content
+  }
+}
+
+query ListArticles @auth(level: PUBLIC, insecureReason: "Browsing articles") {
+  articles {
+    title
+    difficultyLevel
+  }
+}
+
+mutation CreateVocabulary($originalWord: String!, $translation: String!, $masteryLevel: Int!) @auth(level: USER) {
+  vocabularyItem_insert(data: {
+    originalWord: $originalWord,
+    translation: $translation,
+    masteryLevel: $masteryLevel,
+    userId_expr: "auth.uid"
+  })
+}
+
+mutation UpdateVocabulary($id: UUID!, $masteryLevel: Int!) @auth(level: USER) {
+  vocabularyItem_update(key: {id: $id}, data: {masteryLevel: $masteryLevel})
+}
+
+mutation DeleteVocabulary($id: UUID!) @auth(level: USER) {
+  vocabularyItem_delete(key: {id: $id})
+}
+
+query GetVocabulary($id: UUID!) @auth(level: USER) {
+  vocabularyItem(key: {id: $id}) {
+    originalWord
+    translation
+  }
+}
+
+query ListUserVocabulary @auth(level: USER) {
+  vocabularyItems(where: {userId: {eq_expr: "auth.uid"}}) {
+    originalWord
+    masteryLevel
+  }
+}
+
+mutation CreateProgress($articleId: UUID!, $status: String!, $timeSpent: Int!) @auth(level: USER) {
+  userProgress_insert(data: {
+    articleId: $articleId,
+    status: $status,
+    timeSpent: $timeSpent,
+    userId_expr: "auth.uid"
+  })
+}
+
+mutation UpdateProgress($id: UUID!, $status: String) @auth(level: USER) {
+  userProgress_update(key: {id: $id}, data: {status: $status})
+}
+
+mutation DeleteProgress($id: UUID!) @auth(level: USER) {
+  userProgress_delete(key: {id: $id})
+}
+
+query GetProgress($id: UUID!) @auth(level: USER) {
+  userProgress(key: {id: $id}) {
+    status
+    timeSpent
+  }
+}
+
+query ListUserProgress @auth(level: USER) {
+  userProgresses(where: {userId: {eq_expr: "auth.uid"}}) {
+    status
+    article {
+      title
+    }
+  }
+}
+
+mutation CreateReviewSession($score: Int!, $sessionDate: Timestamp!) @auth(level: USER) {
+  reviewSession_insert(data: {
+    score: $score,
+    sessionDate: $sessionDate,
+    userId_expr: "auth.uid"
+  })
+}
+
+mutation UpdateReviewSession($id: UUID!, $notes: String) @auth(level: USER) {
+  reviewSession_update(key: {id: $id}, data: {notes: $notes})
+}
+
+mutation DeleteReviewSession($id: UUID!) @auth(level: USER) {
+  reviewSession_delete(key: {id: $id})
+}
+
+query GetReviewSession($id: UUID!) @auth(level: USER) {
+  reviewSession(key: {id: $id}) {
+    score
+    notes
+  }
+}
+
+query ListUserReviewSessions @auth(level: USER) {
+  reviewSessions(where: {userId: {eq_expr: "auth.uid"}}) {
+    sessionDate
+    score
+  }
+}

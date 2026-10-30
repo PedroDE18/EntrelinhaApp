@@ -1,0 +1,82 @@
+mutation SeedDatabase @transaction {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      username: "alice_dev",
+      email: "alice@example.com",
+      targetLanguage: "Spanish",
+      streakCount: 5,
+      level: "Intermediate"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440002",
+      username: "bob_learner",
+      email: "bob@example.com",
+      targetLanguage: "French",
+      streakCount: 12,
+      level: "Beginner"
+    }
+  ])
+  article_insertMany(data: [
+    {
+      id: "a0000000-0000-0000-0000-000000000001",
+      title: "Introduction to Spanish",
+      content: "Welcome to your first Spanish lesson.",
+      language: "Spanish",
+      difficultyLevel: "Easy"
+    },
+    {
+      id: "a0000000-0000-0000-0000-000000000002",
+      title: "French Grammar Basics",
+      content: "Understanding verb conjugations.",
+      language: "French",
+      difficultyLevel: "Intermediate"
+    }
+  ])
+  userProgress_insertMany(data: [
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      articleId: "a0000000-0000-0000-0000-000000000001",
+      status: "IN_PROGRESS",
+      timeSpent: 30,
+      lastReadPosition: 10
+    },
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440002",
+      articleId: "a0000000-0000-0000-0000-000000000002",
+      status: "COMPLETED",
+      timeSpent: 120,
+      lastReadPosition: 100
+    }
+  ])
+  reviewSession_insertMany(data: [
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      sessionDate: "2023-10-27T10:00:00Z",
+      score: 85,
+      notes: "Good session"
+    },
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440002",
+      sessionDate: "2023-10-27T11:00:00Z",
+      score: 92,
+      notes: "Excellent progress"
+    }
+  ])
+  vocabularyItem_insertMany(data: [
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440001",
+      originalWord: "Hola",
+      translation: "Hello",
+      masteryLevel: 3,
+      contextSentence: "Hola, como estas?"
+    },
+    {
+      userId: "550e8400-e29b-41d4-a716-446655440002",
+      originalWord: "Chat",
+      translation: "Cat",
+      masteryLevel: 2,
+      contextSentence: "Le chat est sur la table."
+    }
+  ])
+}

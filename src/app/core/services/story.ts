@@ -459,6 +459,382 @@ export const SAMPLE_STORIES: Story[] = [
       },
     ],
   },
+  {
+    id: 'le-petit-prince-renard',
+    title: "Le Petit Prince — L'Apprivoisement du Renard",
+    originalTitle: 'Le Petit Prince (Chapitre XXI)',
+    author: 'Antoine de Saint-Exupéry',
+    authorBio: 'Écrivain, aviateur et humaniste français (1900-1944). Son chef-d’œuvre mondial explore l’amitié, l’amour et le sens de l’existence avec une poésie lumineuse.',
+    genre: 'Classique & Conte Philosophique',
+    estimatedCEFR: 'A2',
+    readingMinutes: 3,
+    wordCount: 280,
+    coverImage: '/images/prince.jpg',
+    sourceType: 'adapted_literature',
+    sourceLabel: 'Texte classique adapté au niveau A2 avec gloses contrastives',
+    licenseInfo: 'Domaine public / Adaptation didactique Entrelinha 2026',
+    provenanceType: 'original_french',
+    audioAvailable: true,
+    audioDurationSec: 180,
+    excerpt:
+      "— Qu'est-ce que signifie « apprivoiser » ? demanda le petit prince. — C'est une chose trop oubliée, dit le renard. Ça signifie « créer des liens... »",
+    paragraphs: [
+      {
+        id: 'p1',
+        text: "C'est alors qu'apparut le renard. « Bonjour », dit le renard. « Bonjour », répondit poliment le petit prince, qui se retourna mais ne vit rien. « Je suis là, sous le pommier », dit la voix. « Qui es-tu ? » demanda le petit prince. « Tu es bien joli... » « Je suis un renard », dit le renard. « Viens jouer avec moi, lui proposa le petit prince. Je suis tellement triste... » « Je ne puis pas jouer avec toi, dit le renard. Je ne suis pas apprivoisé. »",
+        tokens: [
+          { text: 'apparut', cleanWord: 'apparaître', definitionFr: 'Se montrer soudainement.', translationPt: 'Apareceu' },
+          { text: 'renard.', cleanWord: 'renard', definitionFr: 'Mammifère carnassier rusé.', translationPt: 'Raposa' },
+          { text: 'pommier', cleanWord: 'pommier', definitionFr: 'Arbre fruitier qui produit des pommes.', translationPt: 'Macieira' },
+          { text: 'apprivoisé.', cleanWord: 'apprivoiser', definitionFr: 'Rendre docile, créer des liens durables.', translationPt: 'Domesticado / cativado' },
+        ],
+      },
+      {
+        id: 'p2',
+        text: "« Ah ! pardon », fit le petit prince. Mais, après réflexion, il ajouta : « Qu'est-ce que signifie « apprivoiser » ? » « C'est une chose trop oubliée, dit le renard. Ça signifie « créer des liens... » Pour moi, tu n'es encore qu'un petit garçon tout semblable à cent mille petits garçons. Et je n'ai pas besoin de toi. Et tu n'as pas besoin de moi non plus. Mais, si tu m'apprivoises, nous aurons besoin l'un de l'autre. Tu seras pour moi unique au monde. Je serai pour toi unique au monde... »",
+        tokens: [
+          { text: 'réflexion,', cleanWord: 'réflexion', definitionFr: 'Méditation attentive de la pensée.', translationPt: 'Reflexão' },
+          { text: 'créer des liens', cleanWord: 'créer des liens', definitionFr: 'Établir des relations affectives profondes.', translationPt: 'Criar laços / vínculos afetivos' },
+          { text: 'unique', cleanWord: 'unique', definitionFr: 'Seul en son genre, sans pareil.', translationPt: 'Único' },
+        ],
+      },
+      {
+        id: 'p3',
+        text: "Le renard se tut et regarda longtemps le petit prince. « Adieu, dit le renard. Voici mon secret. Il est très simple : on ne voit bien qu'avec le cœur. L'essentiel est invisible pour les yeux. » « L'essentiel est invisible pour les yeux », répéta le petit prince, afin de s'en souvenir.",
+        tokens: [
+          { text: 'se tut', cleanWord: 'se taire', definitionFr: 'Cesser de parler, garder le silence.', translationPt: 'Calou-se' },
+          { text: 'cœur.', cleanWord: 'cœur', definitionFr: 'Siège symbolique des sentiments profonds.', translationPt: 'Coração' },
+          { text: 'invisible', cleanWord: 'invisible', definitionFr: 'Qu’on ne peut pas apercevoir par la vue.', translationPt: 'Invisível' },
+          { text: 'essentiel', cleanWord: 'essentiel', definitionFr: 'Le plus fondamental et indispensable.', translationPt: 'Essencial' },
+        ],
+      },
+    ],
+    comprehensionQuestions: [
+      {
+        id: 'q1',
+        type: 'narrative',
+        questionFr: 'Que signifie le verbe « apprivoiser » selon l’explication du renard ?',
+        questionPt: 'O que significa o verbo « apprivoiser » segundo a explicação da raposa?',
+        options: [
+          { id: 'a', textFr: 'Créer des liens réciproques et devenir uniques l’un pour l’autre', textPt: 'Criar laços recíprocos e se tornarem únicos um para o outro' },
+          { id: 'b', textFr: 'Chasser les animaux de la forêt', textPt: 'Caçar os animais da floresta' },
+          { id: 'c', textFr: 'Oublier ses souvenirs d’enfance', textPt: 'Esquecer as memórias de infância' },
+          { id: 'd', textFr: 'Apprendre à parler plusieurs langues étrangères', textPt: 'Aprender a falar várias línguas estrangeiras' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'Pour le renard, apprivoiser transforme deux inconnus ordinaires en présences irremplaçables l’un pour l’autre.',
+        explanationPt: 'Para a raposa, cativar significa construir laços afetivos que tornam duas pessoas únicas e preciosas uma para a outra.',
+      },
+      {
+        id: 'q2',
+        type: 'inference',
+        questionFr: 'Quelle vérité le renard confie-t-il comme son secret le plus précieux ?',
+        questionPt: 'Qual verdade a raposa confidencia como seu segredo mais precioso?',
+        options: [
+          { id: 'a', textFr: 'On ne voit bien qu’avec le cœur, l’essentiel est invisible pour les yeux', textPt: 'Só se vê bem com o coração, o essencial é invisível aos olhos' },
+          { id: 'b', textFr: 'Le blé doré est plus important que les étoiles', textPt: 'O trigo dourado é mais importante do que as estrelas' },
+          { id: 'c', textFr: 'Il ne faut jamais faire confiance aux voyageurs', textPt: 'Nunca se deve confiar em viajantes' },
+          { id: 'd', textFr: 'Toutes les roses sont rigoureusement identiques', textPt: 'Todas as rosas são rigorosamente idênticas' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'La formule illustre la supériorité de la sensibilité et de l’amour sur les apparences matérielles.',
+        explanationPt: 'A célebre máxima sintetiza que os valores humanos e afetivos superam qualquer aparência visível.',
+      },
+    ],
+  },
+  {
+    id: 'cafe-de-flore-matin',
+    title: 'Café de Flore : Une Matinée à Saint-Germain',
+    author: 'Chronique Parisienne / LINGUA Éditions',
+    authorBio: 'Chronique urbaine contemporaine conçue pour l’immersion communicative A1 des apprenants lusophones.',
+    genre: 'Vie Quotidienne & Société',
+    estimatedCEFR: 'A1',
+    readingMinutes: 2,
+    wordCount: 190,
+    coverImage: '/images/boulangerie.jpg',
+    sourceType: 'ai_original',
+    sourceLabel: 'Dialogue & chronique immersive de niveau A1',
+    licenseInfo: 'Creative Commons CC-BY-NC 4.0 (Éditions Entrelinha)',
+    provenanceType: 'original_french',
+    audioAvailable: true,
+    audioDurationSec: 120,
+    excerpt:
+      'Il est huit heures du matin sur le boulevard Saint-Germain. À la terrasse du célèbre Café de Flore, une tasse fumante de café crème et un croissant croustillant ouvrent la journée...',
+    paragraphs: [
+      {
+        id: 'p1',
+        text: "Il est huit heures du matin sur le boulevard Saint-Germain. Une brise fraîche traverse la rue encore calme. À la terrasse du célèbre Café de Flore, les premières tables se remplissent doucement. Le serveur, vêtu de son tablier blanc traditionnel et de son gilet noir, salue les clients avec courtoisie.",
+        tokens: [
+          { text: 'terrasse', cleanWord: 'terrasse', definitionFr: 'Espace extérieur aménagé devant un café.', translationPt: 'Varanda / mesas na calçada' },
+          { text: 'serveur', cleanWord: 'serveur', definitionFr: 'Employé qui sert les clients dans un café.', translationPt: 'Garçom' },
+          { text: 'tablier', cleanWord: 'tablier', definitionFr: 'Vêtement de protection noué autour de la taille.', translationPt: 'Avental' },
+          { text: 'courtoisie.', cleanWord: 'courtoisie', definitionFr: 'Politesse raffinée et respectueuse.', translationPt: 'Cortesia' },
+        ],
+      },
+      {
+        id: 'p2',
+        text: "« Bonjour monsieur ! Un café crème et un croissant chaud, s'il vous plaît », demande une jeune femme assise près de la baie vitrée. « Tout de suite, madame ! », répond le garçon avec un sourire chaleureux. L'arôme du café fraîchement moulu se mêle au parfum du beurre et de la pâte feuilletée. À Paris, chaque matin commence par ce rituel simple et délicieux.",
+        tokens: [
+          { text: 'café crème', cleanWord: 'café crème', definitionFr: 'Café au lait crémeux servi dans une grande tasse.', translationPt: 'Café com leite cremoso' },
+          { text: "s'il vous plaît", cleanWord: "s'il vous plaît", definitionFr: 'Formule de politesse essentielle en français.', translationPt: 'Por favor' },
+          { text: 'chaleureux.', cleanWord: 'chaleureux', definitionFr: 'Accueillant et plein de bienveillance.', translationPt: 'Caloroso' },
+          { text: 'feuilletée.', cleanWord: 'feuilletée', definitionFr: 'Pâte composée de minces feuillets croustillants.', translationPt: 'Folhada' },
+        ],
+      },
+    ],
+    comprehensionQuestions: [
+      {
+        id: 'q1',
+        type: 'vocabulary',
+        questionFr: 'Que commande la cliente au serveur du Café de Flore ?',
+        questionPt: 'O que a cliente pede ao garçom no Café de Flore?',
+        options: [
+          { id: 'a', textFr: 'Un café crème et un croissant chaud', textPt: 'Um café com leite e um croissant quente' },
+          { id: 'b', textFr: 'Un thé à la menthe et une salade', textPt: 'Um chá de hortelã e uma salada' },
+          { id: 'c', textFr: 'Un verre de vin blanc et du fromage', textPt: 'Uma taça de vinho branco e queijo' },
+          { id: 'd', textFr: 'Une carafe d’eau minérale uniquement', textPt: 'Apenas uma jarra de água mineral' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'Le texte précise explicitement la commande classique : un café crème et un croissant chaud.',
+        explanationPt: 'O texto cita explicitamente o pedido matinal clássico parisiense: café com leite e croissant.',
+      },
+      {
+        id: 'q2',
+        type: 'narrative',
+        questionFr: 'À quel moment précis de la journée se déroule cette scène ?',
+        questionPt: 'Em qual momento exato do dia se passa essa cena?',
+        options: [
+          { id: 'a', textFr: 'À huit heures du matin', textPt: 'Às oito horas da manhã' },
+          { id: 'b', textFr: 'Au milieu de l’après-midi', textPt: 'No meio da tarde' },
+          { id: 'c', textFr: 'À minuit lors de la fermeture', textPt: 'À meia-noite no fechamento' },
+          { id: 'd', textFr: 'Pendant la pause de midi', textPt: 'Durante o almoço ao meio-dia' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'La première phrase indique l’horaire matinal : « Il est huit heures du matin ».',
+        explanationPt: 'A frase de abertura informa com clareza: « Il est huit heures du matin » (são oito da manhã).',
+      },
+    ],
+  },
+  {
+    id: 'secret-bistrot-lyonnais',
+    title: 'Le Secret du Chef : Un Soir à Lyon',
+    author: 'Récits du Terroir / LINGUA Éditions',
+    authorBio: 'Scène de genre gastronomique au cœur des ruelles pavées du Vieux Lyon et de ses bouchons chaleureux.',
+    genre: 'Gastronomie & Culture',
+    estimatedCEFR: 'A2',
+    readingMinutes: 3,
+    wordCount: 250,
+    coverImage: '/images/marais.jpg',
+    sourceType: 'adapted_literature',
+    sourceLabel: 'Conte gastronomique adapté au niveau A2 avec faux amis culinaires',
+    licenseInfo: 'Creative Commons CC-BY-NC 4.0',
+    provenanceType: 'original_french',
+    audioAvailable: true,
+    audioDurationSec: 160,
+    excerpt:
+      "Dans une ruelle pavée du Vieux Lyon, une lanterne rouge éclaire l'enseigne d'un bouchon réputé. Le chef Marcel y enseigne à son jeune commis que les meilleures choses ne se précipitent jamais...",
+    paragraphs: [
+      {
+        id: 'p1',
+        text: "Dans une ruelle pavée du Vieux Lyon, une lanterne rouge éclaire l'enseigne d'un bouchon traditionnel. Les bouchons sont les bistrots typiques de la capitale des Gaules, réputés pour leur ambiance fraternelle et leurs plats généreux. Ce soir, la petite salle aux nappes à carreaux rouges et blancs résonne de rires et de conversations animées.",
+        tokens: [
+          { text: 'bouchon', cleanWord: 'bouchon', definitionFr: 'Restaurant typique lyonnais chaleureux (faux ami avec rolha).', translationPt: 'Bistrô típico de Lyon (não confundir com rolha!)' },
+          { text: 'nappes', cleanWord: 'nappe', definitionFr: 'Linge dont on couvre la table de repas.', translationPt: 'Toalhas de mesa' },
+          { text: 'carreaux', cleanWord: 'carreau', definitionFr: 'Motif à carreaux géométriques.', translationPt: 'Xadrez (estampa)' },
+          { text: 'animées.', cleanWord: 'animé', definitionFr: 'Plein de vie et d’entrain.', translationPt: 'Animadas' },
+        ],
+      },
+      {
+        id: 'p2',
+        text: "Derrière les fourneaux, le chef Marcel surveille la cuisson dorée de ses quenelles. Un jeune apprenti brésilien, Lucas, admire sa dextérité. « Chef, quel est le secret pour réussir une sauce aussi onctueuse ? », demande-t-il. Le vieux cuisinier sourit en dressant soigneusement chaque assiette : « Le secret, Lucas, ce n'est pas un ingrédient magique. C'est la patience et le respect du temps. En cuisine comme dans l'apprentissage d'une langue, ce qui a de la valeur demande de la constance. »",
+        tokens: [
+          { text: 'fourneaux,', cleanWord: 'fourneau', definitionFr: 'Appareil de cuisson professionnel.', translationPt: 'Fogão profissional' },
+          { text: 'quenelles.', cleanWord: 'quenelle', definitionFr: 'Spécialité lyonnaise moelleuse à base de pâte pochée.', translationPt: 'Quenelle (especialidade típica lyonesa)' },
+          { text: 'dextérité.', cleanWord: 'dextérité', definitionFr: 'Habileté manuelle remarquable.', translationPt: 'Destreza' },
+          { text: 'assiette', cleanWord: 'assiette', definitionFr: 'Pièce de vaisselle plate (faux ami avec prato/refeição).', translationPt: 'Prato (a louça redonda, não o prato culinário plat!)' },
+        ],
+      },
+    ],
+    comprehensionQuestions: [
+      {
+        id: 'q1',
+        type: 'vocabulary',
+        questionFr: 'Qu’est-ce qu’un « bouchon » dans le contexte culturel lyonnais ?',
+        questionPt: 'O que é um « bouchon » no contexto cultural de Lyon?',
+        options: [
+          { id: 'a', textFr: 'Un restaurant ou bistrot traditionnel typique de la ville de Lyon', textPt: 'Um restaurante ou bistrô tradicional típico da cidade de Lyon' },
+          { id: 'b', textFr: 'Un morceau de liège utilisé pour boucher une bouteille', textPt: 'Uma rolha de cortiça usada para vedar garrafas' },
+          { id: 'c', textFr: 'Un grand magasin de vêtements haut de gamme', textPt: 'Uma loja de roupas finas' },
+          { id: 'd', textFr: 'Une gare ferroviaire souterraine', textPt: 'Uma estação de trem subterrânea' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'À Lyon, les bouchons sont des restaurants historiques conviviaux servant la gastronomie régionale.',
+        explanationPt: 'Em Lyon, bouchons são bistrôs tradicionais e acolhedores de culinária típica regional.',
+      },
+      {
+        id: 'q2',
+        type: 'inference',
+        questionFr: 'Quelle leçon le chef Marcel transmet-il à Lucas au sujet de la réussite ?',
+        questionPt: 'Qual lição o chef Marcel transmite a Lucas sobre o sucesso?',
+        options: [
+          { id: 'a', textFr: 'La patience, la constance et le respect du temps sont les clés indispensables', textPt: 'A paciência, a constância e o respeito ao tempo são chaves indispensáveis' },
+          { id: 'b', textFr: 'Il faut toujours acheter les ingrédients les plus coûteux', textPt: 'Deve-se sempre comprar os ingredientes mais caros' },
+          { id: 'c', textFr: 'La rapidité prime sur la qualité du travail', textPt: 'A velocidade importa mais do que a qualidade do trabalho' },
+          { id: 'd', textFr: 'Il ne faut jamais partager ses secrets avec les apprentis', textPt: 'Nunca se deve compartilhar segredos com aprendizes' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'Marcel établit un parallèle lumineux entre la haute cuisine et l’apprentissage : la constance triomphe toujours.',
+        explanationPt: 'O chef compara a culinária ao aprendizado de uma língua: a paciência e a dedicação constante constroem a maestria.',
+      },
+    ],
+  },
+  {
+    id: 'fantome-de-l-opera',
+    title: 'Le Fantôme de l’Opéra : La Loge Numéro 5',
+    author: 'Gaston Leroux',
+    authorBio: 'Romancier et dramaturge français (1868-1927). Son chef-d’œuvre mondial est un sommet de roman à énigme et d’atmosphère gothique parisienne.',
+    genre: 'Mystère & Roman Gothique',
+    estimatedCEFR: 'B1',
+    readingMinutes: 4,
+    wordCount: 330,
+    coverImage: '/images/parure.jpg',
+    sourceType: 'adapted_literature',
+    sourceLabel: 'Roman classique du domaine public adapté pour le niveau B1',
+    sourceUrl: 'https://gallica.bnf.fr/',
+    licenseInfo: 'Domaine public français (1927) / Édition didactique LINGUA 2026',
+    provenanceType: 'original_french',
+    audioAvailable: true,
+    audioDurationSec: 210,
+    excerpt:
+      'Une rumeur tenace parcourait les coulisses dorées du Palais Garnier : la loge numéro 5 devait impérativement demeurer vide lors de chaque représentation nocturne...',
+    paragraphs: [
+      {
+        id: 'p1',
+        text: "Une rumeur tenace et troublante parcourait les coulisses dorées de l'Opéra de Paris. Les machinistes murmuraient à voix basse, et les danseuses jetaient des regards inquiets vers les recoins obscurs des grands escaliers de marbre. Tous savaient que la loge numéro 5, située au premier balcon juste en face de la scène, ne devait jamais être vendue à un spectateur ordinaire. Le directeur de l'Opéra avait reçu un billet tracé d'une écriture gothique : « Laissez ma loge libre à chaque représentation, sous peine de voir s'abattre sur votre théâtre les pires malédictions. — Signé : Le Fantôme de l'Opéra. »",
+        tokens: [
+          { text: 'coulisses', cleanWord: 'coulisse', definitionFr: 'Parties situées sur les côtés ou derrière la scène.', translationPt: 'Bastidores' },
+          { text: 'loge', cleanWord: 'loge', definitionFr: 'Compartiment fermé réservé aux spectateurs au théâtre.', translationPt: 'Camarote de teatro' },
+          { text: 'malédictions.', cleanWord: 'malédiction', definitionFr: 'Paroles ou sorts attirant le malheur.', translationPt: 'Maldições' },
+        ],
+      },
+      {
+        id: 'p2',
+        text: "Ce soir-là, tandis que la foule élégante applaudissait la voix sublime d'une jeune cantatrice suédoise, Christine Daaé, une ombre glissa silencieusement derrière les tentures de velours cramoisi. Dans sa loge solitaire, un homme masqué écoutait chaque note avec une intensité presque douloureuse. Qui était ce mystérieux personnage ? Un musicien de génie défiguré par le destin, ou une créature surnaturelle hantant les labyrinthes souterrains du Palais Garnier ?",
+        tokens: [
+          { text: 'cantatrice', cleanWord: 'cantatrice', definitionFr: 'Chanteuse professionnelle d’opéra.', translationPt: 'Cantora lírica / soprano' },
+          { text: 'tentures', cleanWord: 'tenture', definitionFr: 'Grands rideaux d’étoffe ornant les murs.', translationPt: 'Tapeçarias / cortinados' },
+          { text: 'cramoisi.', cleanWord: 'cramoisi', definitionFr: 'D’une couleur rouge vif et sombre.', translationPt: 'Carmesim (vermelho vivo)' },
+          { text: 'hantant', cleanWord: 'hanter', definitionFr: 'Fréquenter assidûment ou spectralement.', translationPt: 'Assombrando / rondando' },
+        ],
+      },
+    ],
+    comprehensionQuestions: [
+      {
+        id: 'q1',
+        type: 'narrative',
+        questionFr: 'Quelle exigence mystérieuse pèse sur la loge numéro 5 du Palais Garnier ?',
+        questionPt: 'Qual exigência misteriosa pesa sobre o camarote número 5 do Palácio Garnier?',
+        options: [
+          { id: 'a', textFr: 'Elle doit toujours rester vide car elle est réservée au Fantôme de l’Opéra', textPt: 'Deve sempre permanecer vazia pois é reservada ao Fantasma da Ópera' },
+          { id: 'b', textFr: 'Elle est réservée au maire de Paris lors des vendredis soirs', textPt: 'É reservada ao prefeito de Paris nas noites de sexta-feira' },
+          { id: 'c', textFr: 'Elle sert uniquement à stocker les costumes des danseuses', textPt: 'Serve apenas para guardar os figurinos das bailarinas' },
+          { id: 'd', textFr: 'Elle est interdite au public en raison d’un plancher fragile', textPt: 'É proibida ao público por causa de um piso frágil' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'Le billet du Fantôme exige impérativement que sa loge personnelle demeure libre à chaque représentation.',
+        explanationPt: 'A carta misteriosa exige que o camarote 5 permaneça reservado sem nenhum outro espectador presente.',
+      },
+      {
+        id: 'q2',
+        type: 'narrative',
+        questionFr: 'Qui écoute le chant de Christine Daaé dissimulé derrière les tentures de velours ?',
+        questionPt: 'Quem escuta o canto de Christine Daaé escondido atrás dos cortinados de veludo?',
+        options: [
+          { id: 'a', textFr: 'Un personnage masqué et solitaire qui hante les sous-sols du monument', textPt: 'Um personagem mascarado e solitário que ronda os subterrâneos do monumento' },
+          { id: 'b', textFr: 'Un inspecteur de police envoyé par Scotland Yard', textPt: 'Um inspetor de polícia enviado pela Scotland Yard' },
+          { id: 'c', textFr: 'Un critique musical venu rédiger un article assassin', textPt: 'Um crítico musical que veio redigir uma matéria maldosa' },
+          { id: 'd', textFr: 'Le père de Christine déguisé en régisseur', textPt: 'O pai de Christine disfarçado de diretor de cena' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'Le Fantôme de l’Opéra assiste en secret aux triomphes vocaux de son élève prodige.',
+        explanationPt: 'O misterioso homem mascarado observa oculto o talento musical da jovem cantora.',
+      },
+    ],
+  },
+  {
+    id: 'etranger-alger-plage',
+    title: 'L’Étranger : Le Rivage d’Alger',
+    originalTitle: 'L’Étranger (Extrait adapté)',
+    author: 'Albert Camus',
+    authorBio: 'Écrivain, journaliste et philosophe français (1913-1960), Prix Nobel de littérature. Sa prose dépouillée explore l’absurde et la beauté tragique du monde sensible.',
+    genre: 'Chef-d’œuvre Littéraire',
+    estimatedCEFR: 'B2',
+    readingMinutes: 4,
+    wordCount: 340,
+    coverImage: '/images/marais.jpg',
+    sourceType: 'adapted_literature',
+    sourceLabel: 'Texte d’auteur du domaine littéraire adapté pour le perfectionnement B2',
+    licenseInfo: 'Texte littéraire didactique adapté (Éditions Entrelinha 2026)',
+    provenanceType: 'original_french',
+    audioAvailable: true,
+    audioDurationSec: 220,
+    excerpt:
+      'Le soleil tombait d’aplomb sur le sable blanc de la plage d’Alger. La mer scintillait d’un éclat métallique, presque insoutenable pour les yeux de Meursault...',
+    paragraphs: [
+      {
+        id: 'p1',
+        text: "Le soleil tombait d'aplomb sur la plage d'Alger. La chaleur était déjà lourde, immobile, vibrante au-dessus du sable blanc. La mer respirait à peine, laissant glisser de petites vagues paresseuses sur les galets tièdes. Meursault marchait le front serré, les yeux mi-clos contre l'éblouissement. Tout son corps ressentait le poids de cette lumière minérale, aveuglante, qui abolissait les ombres et semblait suspendre le cours ordinaire du temps.",
+        tokens: [
+          { text: "d'aplomb", cleanWord: "d'aplomb", definitionFr: 'Verticalement, de manière perpendiculaire et accablante.', translationPt: 'A pino / verticalmente' },
+          { text: 'galets', cleanWord: 'galet', definitionFr: 'Cailloux polis et arrondis par les vagues de la mer.', translationPt: 'Seixos / pedras lisas da praia' },
+          { text: 'éblouissement.', cleanWord: 'éblouissement', definitionFr: 'Trouble de la vision causé par un éclat trop vif.', translationPt: 'Ofuscamento / deslumbramento visual' },
+          { text: 'aveuglante,', cleanWord: 'aveuglant', definitionFr: 'Qui prive momentanément de la vue par son intensité.', translationPt: 'Cegante / ofuscante' },
+        ],
+      },
+      {
+        id: 'p2',
+        text: "Au bout du rivage, près d'un rocher massif où jaillissait un mince filet d'eau douce, une silhouette immobile se découpait contre la clarté du ciel. Le vent chaud soufflait par rafales soudaines, apportant l'odeur saline des algues séchées. Meursault hésita un instant. Dans ce silence oppressant où seul résonnait le battement sourd de son propre sang, chaque pas en avant engageait désormais son destin tout entier.",
+        tokens: [
+          { text: 'rivage,', cleanWord: 'rivage', definitionFr: 'Bord de la mer ou d’une grande étendue d’eau.', translationPt: 'Orla / margem costeira' },
+          { text: 'jaillissait', cleanWord: 'jaillir', definitionFr: 'Sortir impétueusement avec force.', translationPt: 'Brotava / jorrava' },
+          { text: 'rafales', cleanWord: 'rafale', definitionFr: 'Coups de vent violents et subits.', translationPt: 'Rajadas de vento' },
+          { text: 'oppressant', cleanWord: 'oppressant', definitionFr: 'Qui produit une sensation d’étouffement ou d’angoisse.', translationPt: 'Opressor / sufocante' },
+        ],
+      },
+    ],
+    comprehensionQuestions: [
+      {
+        id: 'q1',
+        type: 'inference',
+        questionFr: 'Quelle sensation sensorielle prédomine dans la description de Meursault marchant sur le rivage ?',
+        questionPt: 'Qual sensação sensorial predomina na descrição de Meursault caminhando pela orla?',
+        options: [
+          { id: 'a', textFr: 'L’intensité écrasante de la chaleur et l’éclat aveuglant du soleil méditerranéen', textPt: 'A intensidade esmagadora do calor e o brilho ofuscante do sol mediterrâneo' },
+          { id: 'b', textFr: 'La fraîcheur vivifiante d’une brise matinale d’hiver', textPt: 'O frescor revigorante de uma brisa matinal de inverno' },
+          { id: 'c', textFr: 'La mélancolie causée par un ciel gris et pluvieux', textPt: 'A melancolia causada por um céu cinzento e chuvoso' },
+          { id: 'd', textFr: 'La peur de la tombée de la nuit dans le désert', textPt: 'O medo do cair da noite no deserto' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'Camus dépeint le soleil comme une force quasi physique qui dicte les réactions sensorielles du protagoniste.',
+        explanationPt: 'Camus constrói o sol como uma força física opressiva que satura a percepção e as reações do personagem.',
+      },
+      {
+        id: 'q2',
+        type: 'inference',
+        questionFr: 'Quel rôle joue la nature dans cette transition dramatique vers le dénouement ?',
+        questionPt: 'Qual papel a natureza desempenha nessa transição dramática rumo ao desfecho?',
+        options: [
+          { id: 'a', textFr: 'Le silence pesant et le soleil oppressant intensifient le sentiment d’un destin inéluctable', textPt: 'O silêncio pesado e o sol opressor intensificam o sentimento de um destino inelutável' },
+          { id: 'b', textFr: 'La nature invite les personnages à une réconciliation fraternelle', textPt: 'A natureza convida os personagens a uma reconciliação fraterna' },
+          { id: 'c', textFr: 'La mer en furie menace d’engloutir le littoral', textPt: 'O mar revolto ameaça engolir o litoral' },
+          { id: 'd', textFr: 'La végétation luxuriante offre un refuge paisible', textPt: 'A vegetação exuberante oferece um refúgio tranquilo' },
+        ],
+        correctOptionId: 'a',
+        explanationFr: 'La pesanteur des éléments naturels annonce la rupture fatidique et scelle le tragique de la scène.',
+        explanationPt: 'A tensão dos elementos climáticos reflete o clímax existencial da obra camusiana.',
+      },
+    ],
+  },
 ];
 
 @Injectable({
@@ -468,6 +844,25 @@ export class StoryService {
   readonly stories = signal<Story[]>(SAMPLE_STORIES);
   readonly selectedLevelFilter = signal<string>('all');
   readonly selectedSourceFilter = signal<string>('all');
+
+  constructor() {
+    this.syncFromBackend();
+  }
+
+  private async syncFromBackend(): Promise<void> {
+    if (typeof window === 'undefined' || !window.fetch) return;
+    try {
+      const res = await fetch('/api/stories');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.stories) && json.stories.length >= this.stories().length) {
+          this.stories.set(json.stories);
+        }
+      }
+    } catch {
+      // Resilient offline fallback: keep SAMPLE_STORIES
+    }
+  }
 
   getStoryById(id: string): Story | undefined {
     return this.stories().find((s) => s.id === id);

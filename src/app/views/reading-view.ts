@@ -250,7 +250,7 @@ import { checkFalseCognate, checkGenderTrap } from '../core/linguistics';
                 </div>
 
                 <p class="text-sm font-semibold text-[#231F1C] dark:text-[#EAE4DA]">
-                  {{ tok.translationPt || 'Vocábulo no contexto narrativo' }}
+                  {{ tok.translationPt || ('Termo em contexto : ' + tok.cleanWord) }}
                 </p>
 
                 @if (tok.falseFriend) {
@@ -521,7 +521,7 @@ export class ReadingView implements OnDestroy {
       tok.fullText,
       action,
       tok.sentenceContext,
-      tok.translationPt || 'Vocábulo no contexto narrativo',
+      tok.translationPt || ('Termo em estudo : ' + tok.cleanWord),
       !!tok.falseFriend,
       tok.falseFriend?.explanation
     );

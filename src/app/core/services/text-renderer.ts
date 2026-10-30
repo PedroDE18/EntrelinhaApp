@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GlossToken, RenderedTextItem, VocabularyState } from '../models';
 import { checkFalseCognate, checkGenderTrap, normalizeToken } from '../linguistics';
+import { lookupFrenchLexicon } from '../lexicon';
 import { LearnerProfileService } from './learner-profile';
 
 const ZWS = '\u200B'; // Zero-width space used by Lute to separate multi-word tokens
@@ -477,9 +478,19 @@ export class TextRendererService {
       }
 
       const clean = normalizeToken(candidate.textLc);
+      const lexiconEntry = candidate.isWord
+        ? lookupFrenchLexicon(candidate.textLc) || lookupFrenchLexicon(clean) || lookupFrenchLexicon(candidate.text)
+        : null;
       const falseFriend = candidate.gloss?.falseFriend || checkFalseCognate(clean) || undefined;
       const genderTrap = candidate.gloss?.genderTrap || checkGenderTrap(clean) || undefined;
       const sentenceContext = sentenceContexts.get(candidate.sentenceNumber) || '';
+
+      const translationPt = candidate.gloss?.translationPt
+        || (falseFriend ? falseFriend.trueMeaningPt : undefined)
+        || (lexiconEntry ? lexiconEntry.translationPt : undefined);
+
+      const definitionFr = candidate.gloss?.definitionFr
+        || (lexiconEntry ? lexiconEntry.definitionFr : undefined);
 
       // Determine learner vocabulary state
       let state: VocabularyState = 'unseen';
@@ -505,8 +516,8 @@ export class TextRendererService {
         tokenIndex: candidate.startIndex,
         state,
         isSentenceStart: rawTokens[candidate.startIndex]?.isSentenceStart ?? false,
-        definitionFr: candidate.gloss?.definitionFr,
-        translationPt: candidate.gloss?.translationPt || (falseFriend ? falseFriend.trueMeaningPt : undefined),
+        definitionFr,
+        translationPt,
         falseFriend,
         genderTrap,
       });

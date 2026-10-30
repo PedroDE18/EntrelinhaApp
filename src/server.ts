@@ -17,6 +17,8 @@ const angularApp = new AngularNodeAppEngine();
 
 import { checkDatabaseHealth, db, hasDatabaseConnection } from './db/client';
 import * as schema from './db/schema';
+import { eq } from 'drizzle-orm';
+import { SAMPLE_STORIES } from './app/core/services/story';
 
 app.use(express.json());
 
@@ -267,6 +269,76 @@ app.post('/api/user/data', (req, res) => {
     });
     return;
   }
+});
+
+/**
+ * Story Library Endpoints (Phase 3: Database & Story Library Migration)
+ * Returns story catalog from PostgreSQL when connected, or the curated in-memory catalog.
+ */
+app.get('/api/stories', async (_req, res) => {
+  try {
+    if (db && hasDatabaseConnection) {
+      const dbStories = await db.select().from(schema.stories);
+      if (dbStories.length > 0) {
+        res.json({
+          success: true,
+          source: 'postgresql',
+          count: dbStories.length,
+          stories: dbStories,
+        });
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn('[API] PostgreSQL query failed for stories, falling back to curated library:', err);
+  }
+
+  res.json({
+    success: true,
+    source: 'curated_library',
+    count: SAMPLE_STORIES.length,
+    stories: SAMPLE_STORIES,
+  });
+});
+
+app.get('/api/stories/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (db && hasDatabaseConnection) {
+      const dbStories = await db.select().from(schema.stories).where(eq(schema.stories.id, id));
+      if (dbStories.length > 0) {
+        const paragraphs = await db.select().from(schema.storyParagraphs).where(eq(schema.storyParagraphs.storyId, id));
+        const questions = await db.select().from(schema.comprehensionQuestions).where(eq(schema.comprehensionQuestions.storyId, id));
+        res.json({
+          success: true,
+          source: 'postgresql',
+          story: {
+            ...dbStories[0],
+            paragraphs,
+            comprehensionQuestions: questions,
+          },
+        });
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn(`[API] PostgreSQL story query for ${id} failed:`, err);
+  }
+
+  const memoryStory = SAMPLE_STORIES.find((s) => s.id === id);
+  if (!memoryStory) {
+    res.status(404).json({
+      success: false,
+      error: `História '${id}' não encontrada.`,
+    });
+    return;
+  }
+
+  res.json({
+    success: true,
+    source: 'curated_library',
+    story: memoryStory,
+  });
 });
 
 /**

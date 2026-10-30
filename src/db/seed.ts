@@ -1,6 +1,7 @@
 import pg from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from './schema';
+import { SAMPLE_STORIES } from '../app/core/services/story';
 
 const connectionString = process.env['DATABASE_URL'] || 'postgresql://postgres:postgres@localhost:5432/lingua';
 
@@ -238,6 +239,52 @@ async function seed() {
       },
     ]);
 
+    console.log('[Seed] Seeding curated French stories (compact schema)...');
+    for (const story of SAMPLE_STORIES) {
+      await db.insert(schema.stories).values({
+        id: story.id,
+        title: story.title,
+        author: story.author,
+        genre: story.genre,
+        estimatedCefr: story.estimatedCEFR,
+        readingMinutes: story.readingMinutes,
+        wordCount: story.wordCount,
+        coverImageUrl: story.coverImage,
+        sourceType: story.sourceType,
+        sourceLabel: story.sourceLabel,
+        sourceUrl: story.sourceUrl,
+        licenseInfo: story.licenseInfo,
+      }).onConflictDoNothing();
+
+      // Seed paragraphs in compact text format (no per-word bloat)
+      for (let pIdx = 0; pIdx < story.paragraphs.length; pIdx++) {
+        const p = story.paragraphs[pIdx];
+        await db.insert(schema.storyParagraphs).values({
+          storyId: story.id,
+          paragraphOrder: pIdx + 1,
+          textFr: p.text,
+        });
+      }
+
+      // Seed comprehension questions with pt-BR pedagogical notes
+      if (story.comprehensionQuestions) {
+        for (const q of story.comprehensionQuestions) {
+          await db.insert(schema.comprehensionQuestions).values({
+            storyId: story.id,
+            type: q.type,
+            questionFr: q.questionFr,
+            questionPt: q.questionPt,
+            options: q.options,
+            correctOptionId: q.correctOptionId,
+            explanationFr: q.explanationFr,
+            explanationPt: q.explanationPt,
+            portugueseNotes: q.portugueseInterferenceNote || null,
+          });
+        }
+      }
+    }
+
+    console.log(`[Seed] Seeded ${SAMPLE_STORIES.length} stories, paragraphs, and questions into PostgreSQL!`);
     console.log('[Seed] Database seed completed successfully!');
     await pool.end();
   } catch (error) {
