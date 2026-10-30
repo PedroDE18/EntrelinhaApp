@@ -188,7 +188,45 @@ export class LearnerProfileService {
           // keep initial
         }
       }
+
+      // Asynchronously hydrate from server persistence store
+      this.syncFromServer();
     }
+  }
+
+  private syncFromServer(): void {
+    if (typeof window === 'undefined' || typeof fetch === 'undefined') return;
+    fetch('/api/user/data')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((payload) => {
+        if (payload?.success && payload.data) {
+          if (payload.data.profile) {
+            this.profile.set(payload.data.profile);
+            localStorage.setItem('lingua_learner_profile', JSON.stringify(payload.data.profile));
+          }
+          if (payload.data.words && Array.isArray(payload.data.words)) {
+            this.words.set(payload.data.words);
+            localStorage.setItem('lingua_learner_words', JSON.stringify(payload.data.words));
+          }
+        }
+      })
+      .catch(() => {
+        // Fall back gracefully to local storage
+      });
+  }
+
+  private persistToServer(): void {
+    if (typeof window === 'undefined' || typeof fetch === 'undefined') return;
+    fetch('/api/user/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        profile: this.profile(),
+        words: this.words(),
+      }),
+    }).catch(() => {
+      // Offline fallback: data is already safely stored in localStorage
+    });
   }
 
   updateWordClassification(
@@ -257,12 +295,14 @@ export class LearnerProfileService {
   private saveProfile(): void {
     if (typeof window !== 'undefined') {
       localStorage.setItem('lingua_learner_profile', JSON.stringify(this.profile()));
+      this.persistToServer();
     }
   }
 
   private saveWords(): void {
     if (typeof window !== 'undefined') {
       localStorage.setItem('lingua_learner_words', JSON.stringify(this.words()));
+      this.persistToServer();
     }
   }
 }

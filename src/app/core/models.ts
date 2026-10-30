@@ -96,6 +96,43 @@ export interface LearnerWord {
   falseFriendNote?: string;
 }
 
+export interface RenderedTextItem {
+  id: string;
+  text: string;
+  fullText: string;
+  cleanWord: string;
+  tokenCount: number;
+  displayCount: number;
+  isWord: boolean;
+  isMultiword: boolean;
+  sentenceNumber: number;
+  sentenceContext: string;
+  paragraphIndex: number;
+  tokenIndex: number;
+  state: VocabularyState;
+  isSentenceStart: boolean;
+  definitionFr?: string;
+  translationPt?: string;
+  falseFriend?: {
+    ptTrap: string;
+    trueMeaningPt: string;
+    explanation: string;
+  };
+  genderTrap?: {
+    frGender: 'masculin' | 'féminin';
+    ptGender: 'masculino' | 'feminino';
+    explanation: string;
+  };
+}
+
+export interface MultiwordExpression {
+  text: string;
+  cleanText: string;
+  tokens: string[];
+  translationPt?: string;
+  definitionFr?: string;
+}
+
 export interface PortugueseInterferenceItem {
   id: string;
   frenchTerm: string;

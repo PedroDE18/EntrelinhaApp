@@ -5,11 +5,12 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import { existsSync, readFileSync, appendFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 const devNotesFilePath = join(process.cwd(), 'DEV_NOTES.md');
+const userDataFilePath = join(process.cwd(), 'data/user_data.json');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
@@ -89,10 +90,11 @@ app.post('/api/dev-notes', (req, res) => {
     const { title, category = 'Melhoria', content } = req.body || {};
 
     if (!title || !content) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: 'Título e conteúdo da nota são obrigatórios.',
       });
+      return;
     }
 
     const now = new Date();
@@ -209,6 +211,63 @@ app.get('/api/linguistics/contrastive', async (_req, res) => {
   });
 });
 
+/**
+ * Single-User Persistence Endpoints
+ * Persists learner profile, settings, and vocabulary state across restarts.
+ */
+app.get('/api/user/data', (_req, res) => {
+  try {
+    if (existsSync(userDataFilePath)) {
+      const parsed = JSON.parse(readFileSync(userDataFilePath, 'utf-8'));
+      res.json({
+        success: true,
+        source: 'persistent_file',
+        data: parsed,
+      });
+      return;
+    }
+    res.json({
+      success: true,
+      source: 'initial_mock',
+      data: null,
+    });
+    return;
+  } catch (err: unknown) {
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return;
+  }
+});
+
+app.post('/api/user/data', (req, res) => {
+  try {
+    const { profile, words } = req.body || {};
+    const dir = join(process.cwd(), 'data');
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
+    }
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      profile,
+      words,
+    };
+    writeFileSync(userDataFilePath, JSON.stringify(payload, null, 2), 'utf-8');
+    res.json({
+      success: true,
+      message: 'Dados persistidos com sucesso!',
+      updatedAt: payload.updatedAt,
+    });
+    return;
+  } catch (err: unknown) {
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return;
+  }
+});
 
 /**
  * Serve static files from /browser

@@ -1,33 +1,34 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { describe, it, expect } from 'vitest';
 import { SpeechNarrationService } from './speech';
 
-test('SpeechNarrationService splitIntoSentences splits paragraphs into sentences correctly', () => {
-  const service = new SpeechNarrationService();
-  const text =
-    "Une bruine d'automne enveloppait le quartier du Marais. Les pavés luisants reflétaient les lumières dorées des bistros. L'inspectrice marchait.";
-  const sentences = service.splitIntoSentences(text);
+describe('SpeechNarrationService', () => {
+  it('splitIntoSentences splits paragraphs into sentences correctly', () => {
+    const service = new SpeechNarrationService();
+    const text =
+      "Une bruine d'automne enveloppait le quartier du Marais. Les pavés luisants reflétaient les lumières dorées des bistros. L'inspectrice marchait.";
+    const sentences = service.splitIntoSentences(text);
 
-  assert.equal(sentences.length, 3);
-  assert.equal(sentences[0], "Une bruine d'automne enveloppait le quartier du Marais.");
-  assert.equal(sentences[1], 'Les pavés luisants reflétaient les lumières dorées des bistros.');
-  assert.equal(sentences[2], "L'inspectrice marchait.");
-});
+    expect(sentences.length).toBe(3);
+    expect(sentences[0]).toBe("Une bruine d'automne enveloppait le quartier du Marais.");
+    expect(sentences[1]).toBe('Les pavés luisants reflétaient les lumières dorées des bistros.');
+    expect(sentences[2]).toBe("L'inspectrice marchait.");
+  });
 
-test('SpeechNarrationService handles single sentences and dialogues gracefully', () => {
-  const service = new SpeechNarrationService();
-  const dialogue = '— Un vrai Anglais ne plaisante jamais quand il s\'agit d\'un pari, répondit Phileas Fogg. Je parie vingt mille livres!';
-  const sentences = service.splitIntoSentences(dialogue);
+  it('handles single sentences and dialogues gracefully', () => {
+    const service = new SpeechNarrationService();
+    const dialogue = '— Un vrai Anglais ne plaisante jamais quand il s\'agit d\'un pari, répondit Phileas Fogg. Je parie vingt mille livres!';
+    const sentences = service.splitIntoSentences(dialogue);
 
-  assert.equal(sentences.length, 2);
-  assert.equal(sentences[0], '— Un vrai Anglais ne plaisante jamais quand il s\'agit d\'un pari, répondit Phileas Fogg.');
-  assert.equal(sentences[1], 'Je parie vingt mille livres!');
-});
+    expect(sentences.length).toBe(2);
+    expect(sentences[0]).toBe('— Un vrai Anglais ne plaisante jamais quand il s\'agit d\'un pari, répondit Phileas Fogg.');
+    expect(sentences[1]).toBe('Je parie vingt mille livres!');
+  });
 
-test('SpeechNarrationService state signals initialize correctly', () => {
-  const service = new SpeechNarrationService();
-  assert.equal(service.isPlaying(), false);
-  assert.equal(service.isPaused(), false);
-  assert.equal(service.currentSpeed(), 1.0);
-  assert.equal(service.progressPercent(), 0);
+  it('state signals initialize correctly', () => {
+    const service = new SpeechNarrationService();
+    expect(service.isPlaying()).toBe(false);
+    expect(service.isPaused()).toBe(false);
+    expect(service.currentSpeed()).toBe(1.0);
+    expect(service.progressPercent()).toBe(0);
+  });
 });

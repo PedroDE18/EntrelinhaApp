@@ -5,8 +5,9 @@ import { StoryService } from '../core/services/story';
 import { LearnerProfileService } from '../core/services/learner-profile';
 import { SpeechNarrationService } from '../core/services/speech';
 import { I18nService } from '../core/services/i18n';
-import { GlossToken, Story, StoryParagraph } from '../core/models';
-import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/linguistics';
+import { TextRendererService } from '../core/services/text-renderer';
+import { RenderedTextItem, Story, StoryParagraph } from '../core/models';
+import { checkFalseCognate, checkGenderTrap } from '../core/linguistics';
 
 @Component({
   selector: 'app-reading-view',
@@ -55,7 +56,7 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
           </div>
         </div>
 
-        <!-- Audio Narration Bar: Only sticky when actively playing (Requirement 8) -->
+        <!-- Audio Narration Bar: Only sticky when actively playing -->
         <div
           [class.sticky]="speech.isPlaying()"
           [class.top-16]="speech.isPlaying()"
@@ -143,7 +144,7 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
           </div>
         </header>
 
-        <!-- Reading Canvas: Book-like line measure (68ch) & Paper warmth with book sheet styling -->
+        <!-- Reading Canvas: Book-like measure & Paper warmth with Lute Multi-Word Engine -->
         <div class="paper-page book-spine-left rounded-2xl p-6 sm:p-10 lg:p-12 shadow-sm">
           <article
             class="max-w-2xl mx-auto space-y-6 text-[#2E2824] dark:text-[#E2DDD3]"
@@ -151,26 +152,41 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
             [class.font-sans]="!useSerif()"
             [style.fontSize.px]="fontSize()"
             [style.lineHeight]="1.88">
-            @for (para of s.paragraphs; track para.id; let idx = $index) {
+            @for (para of s.paragraphs; track para.id; let pIdx = $index) {
               <p
-                [class.story-drop-cap]="idx === 0"
-                class="relative select-text transition-colors text-justify hyphens-auto">
-                @for (tok of getTokens(para); track tok.text + $index) {
-                  <span
-                    (click)="selectToken(tok, para.text)"
-                    (keydown.enter)="selectToken(tok, para.text)"
-                    tabindex="0"
-                    role="button"
-                    [attr.aria-label]="'Traduzir ' + tok.text"
-                    [class.text-[#7A2A18]]="tok.falseFriend"
-                    [class.dark:text-[#F3D5A5]]="tok.falseFriend"
-                    [class.font-semibold]="tok.falseFriend || tok.genderTrap"
-                    [class.underline]="tok.falseFriend || tok.genderTrap"
-                    [class.decoration-[#C07D2B]]="tok.falseFriend"
-                    [class.decoration-[#2B6CB0]]="tok.genderTrap"
-                    class="cursor-pointer hover:bg-[#F3E7D3] dark:hover:bg-[#382F26] rounded-xs px-0.5 py-0.5 inline-block transition-colors">
-                    {{ tok.text }}
-                  </span>{{ ' ' }}
+                [class.story-drop-cap]="pIdx === 0"
+                class="relative select-text transition-colors text-justify hyphens-auto leading-relaxed">
+                @for (tok of getParagraphItems(para, pIdx); track tok.id) {
+                  @if (tok.isWord) {
+                    <span
+                      (click)="selectToken(tok)"
+                      (keydown.enter)="selectToken(tok)"
+                      tabindex="0"
+                      role="button"
+                      [attr.aria-label]="'Traduzir ' + tok.fullText"
+                      [class.text-[#7A2A18]]="tok.falseFriend"
+                      [class.dark:text-[#F3D5A5]]="tok.falseFriend"
+                      [class.font-semibold]="tok.falseFriend || tok.genderTrap"
+                      [class.underline]="tok.falseFriend || tok.genderTrap"
+                      [class.decoration-[#C07D2B]]="tok.falseFriend"
+                      [class.decoration-[#2B6CB0]]="tok.genderTrap"
+                      [class.border-b-2]="tok.isMultiword"
+                      [class.border-dotted]="tok.isMultiword"
+                      [class.border-[#9C3823]/60]="tok.isMultiword"
+                      [class.bg-[#F7EFE1]/80]="tok.isMultiword"
+                      [class.dark:bg-[#342A22]/80]="tok.isMultiword"
+                      [class.rounded]="tok.isMultiword"
+                      [class.px-1]="tok.isMultiword"
+                      [class.bg-[#EAF5EC]/60]="tok.state === 'known'"
+                      [class.dark:bg-[#1E3324]/60]="tok.state === 'known'"
+                      [class.bg-[#FEF3C7]/60]="tok.state === 'learning'"
+                      [class.dark:bg-[#3E3018]/60]="tok.state === 'learning'"
+                      class="cursor-pointer hover:bg-[#F3E7D3] dark:hover:bg-[#382F26] rounded-xs px-0.5 py-0.5 inline transition-colors">
+                      {{ tok.text }}
+                    </span>
+                  } @else {
+                    <span class="whitespace-pre-wrap select-text">{{ tok.text }}</span>
+                  }
                 }
               </p>
             }
@@ -184,19 +200,26 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
               <!-- Header of gloss -->
               <div class="flex items-start justify-between gap-3">
                 <div class="space-y-1">
-                  <div class="flex items-center gap-2">
-                    <span class="text-lg font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ tok.text }}</span>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-lg font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ tok.fullText }}</span>
+                    @if (tok.isMultiword) {
+                      <span class="text-[10px] font-semibold uppercase tracking-wider bg-[#EDE6D8] dark:bg-[#2F2924] text-[#6C645C] dark:text-[#B5ADA3] px-2 py-0.5 rounded-full border border-[#D5CABB] dark:border-[#3E362F]">
+                        Expressão ({{ tok.tokenCount }} termos)
+                      </span>
+                    }
                     <button
                       type="button"
-                      (click)="speech.speakExcerpt(tok.text)"
+                      (click)="speech.speakExcerpt(tok.fullText)"
                       [attr.aria-label]="i18n.t('reader.gloss.aria_pronounce')"
                       class="text-[#6C645C] hover:text-[#231F1C] dark:hover:text-[#EAE4DA] p-1 rounded">
                       <mat-icon class="text-base leading-none !w-4 !h-4">volume_up</mat-icon>
                     </button>
                   </div>
-                  <p class="text-xs text-[#6C645C] dark:text-[#9C9387]">
-                    {{ i18n.t('reader.gloss.french_definition') }} <span class="italic text-[#231F1C] dark:text-[#EAE4DA]">{{ tok.definitionFr }}</span>
-                  </p>
+                  @if (tok.definitionFr) {
+                    <p class="text-xs text-[#6C645C] dark:text-[#9C9387]">
+                      {{ i18n.t('reader.gloss.french_definition') }} <span class="italic text-[#231F1C] dark:text-[#EAE4DA]">{{ tok.definitionFr }}</span>
+                    </p>
+                  }
                 </div>
 
                 <button
@@ -227,7 +250,7 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
                 </div>
 
                 <p class="text-sm font-semibold text-[#231F1C] dark:text-[#EAE4DA]">
-                  {{ tok.translationPt }}
+                  {{ tok.translationPt || 'Vocábulo no contexto narrativo' }}
                 </p>
 
                 @if (tok.falseFriend) {
@@ -243,6 +266,14 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
                 }
               </div>
 
+              <!-- Surrounding Sentence Context -->
+              @if (tok.sentenceContext) {
+                <div class="px-3 py-2 bg-[#F3ECE1] dark:bg-[#1D1917] rounded-lg text-xs space-y-0.5 border border-[#E4D9C8] dark:border-[#2F2925]">
+                  <span class="text-[10px] uppercase font-semibold text-[#8A8278] dark:text-[#7A7268] block">Contexto da Frase</span>
+                  <p class="italic text-[#4A423A] dark:text-[#C5BEB3] line-clamp-2">"{{ tok.sentenceContext.trim() }}"</p>
+                </div>
+              }
+
               <!-- State Discrimination Selection -->
               <div class="space-y-1.5 pt-1">
                 <span class="text-[11px] text-[#6C645C] dark:text-[#9C9387] block">{{ i18n.t('reader.gloss.classify_prompt') }}</span>
@@ -250,7 +281,7 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
                   <button
                     type="button"
                     (click)="classifyToken('want_to_learn', tok)"
-                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors">
+                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors border border-transparent hover:border-[#DDD6C8] dark:hover:border-[#38322C]">
                     <span class="font-semibold block">{{ i18n.t('reader.gloss.btn_want_to_learn') }}</span>
                     <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.gloss.btn_want_to_learn_sub') }}</span>
                   </button>
@@ -258,7 +289,7 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
                   <button
                     type="button"
                     (click)="classifyToken('mark_known', tok)"
-                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors">
+                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors border border-transparent hover:border-[#DDD6C8] dark:hover:border-[#38322C]">
                     <span class="font-semibold block">{{ i18n.t('reader.gloss.btn_known') }}</span>
                     <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.gloss.btn_known_sub') }}</span>
                   </button>
@@ -266,7 +297,7 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
                   <button
                     type="button"
                     (click)="classifyToken('mark_unknown', tok)"
-                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors">
+                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors border border-transparent hover:border-[#DDD6C8] dark:hover:border-[#38322C]">
                     <span class="font-semibold block">{{ i18n.t('reader.gloss.btn_unknown') }}</span>
                     <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.gloss.btn_unknown_sub') }}</span>
                   </button>
@@ -274,7 +305,7 @@ import { checkFalseCognate, checkGenderTrap, tokenizeParagraph } from '../core/l
                   <button
                     type="button"
                     (click)="classifyToken('mark_uncertain', tok)"
-                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors">
+                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors border border-transparent hover:border-[#DDD6C8] dark:hover:border-[#38322C]">
                     <span class="font-semibold block">{{ i18n.t('reader.gloss.btn_uncertain') }}</span>
                     <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.gloss.btn_uncertain_sub') }}</span>
                   </button>
@@ -406,6 +437,7 @@ export class ReadingView implements OnDestroy {
   private readonly learnerService = inject(LearnerProfileService);
   readonly speech = inject(SpeechNarrationService);
   readonly i18n = inject(I18nService);
+  readonly textRenderer = inject(TextRendererService);
 
   readonly storyId = signal<string>('ombre-du-marais');
   readonly story = computed(() => this.storyService.getStoryById(this.storyId()));
@@ -413,7 +445,7 @@ export class ReadingView implements OnDestroy {
   // Reading settings
   readonly useSerif = signal<boolean>(true);
   readonly fontSize = signal<number>(18);
-  readonly selectedToken = signal<GlossToken | null>(null);
+  readonly selectedToken = signal<RenderedTextItem | null>(null);
   readonly activeSentenceContext = signal<string>('');
 
   // Assessment state
@@ -462,34 +494,34 @@ export class ReadingView implements OnDestroy {
     }
   }
 
-  getTokens(para: StoryParagraph): GlossToken[] {
-    return tokenizeParagraph(para.text, para.tokens);
+  getParagraphItems(para: StoryParagraph, pIndex: number): RenderedTextItem[] {
+    return this.textRenderer.calculateTextItems(para.text, para.tokens, pIndex);
   }
 
-  selectToken(tok: GlossToken, sentence: string): void {
+  selectToken(tok: RenderedTextItem): void {
     const falseFriendCheck = checkFalseCognate(tok.cleanWord);
     const genderCheck = checkGenderTrap(tok.cleanWord);
 
-    const enriched: GlossToken = {
+    const enriched: RenderedTextItem = {
       ...tok,
       falseFriend: tok.falseFriend || (falseFriendCheck ? falseFriendCheck : undefined),
       genderTrap: tok.genderTrap || (genderCheck ? genderCheck : undefined),
     };
 
     this.selectedToken.set(enriched);
-    this.activeSentenceContext.set(sentence);
+    this.activeSentenceContext.set(tok.sentenceContext);
   }
 
   closeGloss(): void {
     this.selectedToken.set(null);
   }
 
-  classifyToken(action: 'mark_unknown' | 'want_to_learn' | 'mark_known' | 'mark_uncertain', tok: GlossToken): void {
+  classifyToken(action: 'mark_unknown' | 'want_to_learn' | 'mark_known' | 'mark_uncertain', tok: RenderedTextItem): void {
     this.learnerService.updateWordClassification(
-      tok.text,
+      tok.fullText,
       action,
-      this.activeSentenceContext(),
-      tok.translationPt,
+      tok.sentenceContext,
+      tok.translationPt || 'Vocábulo no contexto narrativo',
       !!tok.falseFriend,
       tok.falseFriend?.explanation
     );
@@ -540,3 +572,4 @@ export class ReadingView implements OnDestroy {
     this.completed.set(true);
   }
 }
+

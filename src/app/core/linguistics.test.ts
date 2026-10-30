@@ -1,5 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { describe, it, expect } from 'vitest';
 import {
   checkFalseCognate,
   checkGenderTrap,
@@ -10,75 +9,67 @@ import {
   tokenizeParagraph,
 } from './linguistics';
 
-test('tokenizeParagraph preserves complete narrative text and detects false friends', () => {
-  const sentence = 'Actuellement, elle attendait devant la librairie.';
-  const tokens = tokenizeParagraph(sentence);
-  assert.equal(tokens.length, 6);
-  assert.equal(tokens[0].cleanWord, 'actuellement');
-  assert.notEqual(tokens[0].falseFriend, undefined);
-  assert.equal(tokens[4].cleanWord, 'la');
-  assert.equal(tokens[5].cleanWord, 'librairie');
-  assert.notEqual(tokens[5].falseFriend, undefined);
-});
+describe('Linguistics Engine', () => {
+  it('tokenizeParagraph preserves complete narrative text and detects false friends', () => {
+    const sentence = 'Actuellement, elle attendait devant la librairie.';
+    const tokens = tokenizeParagraph(sentence);
+    expect(tokens.length).toBe(6);
+    expect(tokens[0].cleanWord).toBe('actuellement');
+    expect(tokens[0].falseFriend).not.toBeUndefined();
+    expect(tokens[4].cleanWord).toBe('la');
+    expect(tokens[5].cleanWord).toBe('librairie');
+    expect(tokens[5].falseFriend).not.toBeUndefined();
+  });
 
-test('normalizeToken cleans punctuation and trims lowercase', () => {
-  assert.equal(normalizeToken('«Actuellement...»'), 'actuellement');
-  assert.equal(normalizeToken('librairie,'), 'librairie');
-  assert.equal(normalizeToken('l’histoire'), 'lhistoire');
-});
+  it('normalizeToken cleans punctuation and trims lowercase', () => {
+    expect(normalizeToken('«Actuellement...»')).toBe('actuellement');
+    expect(normalizeToken('librairie,')).toBe('librairie');
+    expect(normalizeToken('l’histoire')).toBe('lhistoire');
+  });
 
-test('checkFalseCognate detects Portuguese false friends', () => {
-  const matchActuellement = checkFalseCognate('Actuellement');
-  assert.notEqual(matchActuellement, null);
-  assert.match(matchActuellement!.explanation, /maintenant|moment|maintenant|neste momento/i);
+  it('checkFalseCognate detects Portuguese false friends', () => {
+    const matchActuellement = checkFalseCognate('Actuellement');
+    expect(matchActuellement).not.toBeNull();
+    expect(matchActuellement!.explanation).toMatch(/maintenant|moment|neste momento/i);
 
-  const matchLibrairie = checkFalseCognate('librairie');
-  assert.notEqual(matchLibrairie, null);
-  assert.equal(matchLibrairie!.ptTrap, 'biblioteca');
+    const matchLibrairie = checkFalseCognate('librairie');
+    expect(matchLibrairie).not.toBeNull();
+    expect(matchLibrairie!.ptTrap).toBe('biblioteca');
 
-  const matchRandom = checkFalseCognate('bonjour');
-  assert.equal(matchRandom, null);
-});
+    const matchRandom = checkFalseCognate('bonjour');
+    expect(matchRandom).toBeNull();
+  });
 
-test('checkGenderTrap identifies words with inverted grammatical gender in PT vs FR', () => {
-  const voyage = checkGenderTrap('voyage');
-  assert.notEqual(voyage, null);
-  assert.equal(voyage!.frGender, 'masculin');
-  assert.equal(voyage!.ptGender, 'feminino');
+  it('checkGenderTrap identifies words with inverted grammatical gender in PT vs FR', () => {
+    const voyage = checkGenderTrap('voyage');
+    expect(voyage).not.toBeNull();
+    expect(voyage!.frGender).toBe('masculin');
+    expect(voyage!.ptGender).toBe('feminino');
 
-  assert.equal(checkGenderTrap('fin')?.frGender, 'féminin');
-  assert.equal(checkGenderTrap('fin')?.ptGender, 'masculino');
-});
+    expect(checkGenderTrap('fin')?.frGender).toBe('féminin');
+    expect(checkGenderTrap('fin')?.ptGender).toBe('masculino');
+  });
 
-test('calculateReadingMinutes scales gracefully across CEFR levels', () => {
-  // 300 words: A1 (75 wpm) -> 4 mins, C1 (185 wpm) -> 2 mins
-  assert.equal(calculateReadingMinutes(300, 'A1'), 4);
-  assert.equal(calculateReadingMinutes(300, 'C1'), 2);
-  assert.equal(calculateReadingMinutes(50, 'B1'), 1);
-  assert.equal(calculateReadingMinutes(0, 'A2'), 1);
-});
+  it('calculateReadingMinutes scales gracefully across CEFR levels', () => {
+    expect(calculateReadingMinutes(300, 'A1')).toBe(4);
+    expect(calculateReadingMinutes(300, 'C1')).toBe(2);
+    expect(calculateReadingMinutes(50, 'B1')).toBe(1);
+    expect(calculateReadingMinutes(0, 'A2')).toBe(1);
+  });
 
-test('transitionVocabularyState preserves nuanced learner feedback without blunt classifications', () => {
-  // Encountered when marked unknown
-  assert.equal(transitionVocabularyState('unseen', 'mark_unknown'), 'encountered');
-  
-  // Learning when deliberately flagged to learn
-  assert.equal(transitionVocabularyState('encountered', 'want_to_learn'), 'learning');
+  it('transitionVocabularyState preserves nuanced learner feedback without blunt classifications', () => {
+    expect(transitionVocabularyState('unseen', 'mark_unknown')).toBe('encountered');
+    expect(transitionVocabularyState('encountered', 'want_to_learn')).toBe('learning');
+    expect(transitionVocabularyState('learning', 'mark_known')).toBe('known');
+    expect(transitionVocabularyState('learning', 'quiz_correct')).toBe('known');
+    expect(transitionVocabularyState('known', 'quiz_correct')).toBe('mastered');
+    expect(transitionVocabularyState('mastered', 'quiz_incorrect')).toBe('known');
+  });
 
-  // Known when marked as already known
-  assert.equal(transitionVocabularyState('learning', 'mark_known'), 'known');
-
-  // Quiz promotion: learning -> known, known -> mastered
-  assert.equal(transitionVocabularyState('learning', 'quiz_correct'), 'known');
-  assert.equal(transitionVocabularyState('known', 'quiz_correct'), 'mastered');
-
-  // Quiz demotion: mastered -> known
-  assert.equal(transitionVocabularyState('mastered', 'quiz_incorrect'), 'known');
-});
-
-test('calculateComprehensionScore computes rounded percentage', () => {
-  assert.equal(calculateComprehensionScore(3, 4), 75);
-  assert.equal(calculateComprehensionScore(4, 4), 100);
-  assert.equal(calculateComprehensionScore(0, 4), 0);
-  assert.equal(calculateComprehensionScore(0, 0), 0);
+  it('calculateComprehensionScore computes rounded percentage', () => {
+    expect(calculateComprehensionScore(3, 4)).toBe(75);
+    expect(calculateComprehensionScore(4, 4)).toBe(100);
+    expect(calculateComprehensionScore(0, 4)).toBe(0);
+    expect(calculateComprehensionScore(0, 0)).toBe(0);
+  });
 });
