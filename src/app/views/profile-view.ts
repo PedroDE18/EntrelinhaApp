@@ -7,6 +7,8 @@ import { ThemeService } from '../core/services/theme';
 import { I18nService, SupportedLocale } from '../core/services/i18n';
 import { DevNotesService } from '../core/services/dev-notes';
 import { DatabaseStatusService } from '../core/services/database-status';
+import { AuthService } from '../core/services/auth';
+import { CEFRLevel } from '../core/models';
 
 @Component({
   selector: 'app-profile-view',
@@ -23,6 +25,249 @@ import { DatabaseStatusService } from '../core/services/database-status';
           {{ i18n.t('profile.subtitle') }}
         </p>
       </div>
+
+      <!-- Authentication & Profile Manager Section -->
+      <section class="paper-page p-6 sm:p-7 rounded-2xl space-y-5 border-l-4 border-l-[#9C3823] dark:border-l-[#DDA15E]">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
+            <mat-icon class="text-sm leading-none !w-4 !h-4">badge</mat-icon>
+            <span>Conta & Perfil de Aprendizagem</span>
+          </div>
+          <span
+            [class]="auth.isAdmin() ? 'bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-200 border-amber-300 dark:border-amber-800' : 'bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-200 border-stone-300 dark:border-stone-700'"
+            class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full border flex items-center gap-1">
+            <mat-icon class="text-[12px] !w-3 !h-3 leading-none">{{ auth.isAdmin() ? 'shield' : 'school' }}</mat-icon>
+            <span>{{ auth.isAdmin() ? 'Admin / Avaliador' : 'Perfil Aprendiz' }}</span>
+          </span>
+        </div>
+
+        <!-- Active User Hero Card -->
+        <div class="p-4 rounded-xl bg-[#F7F4EE] dark:bg-[#1A1715] border border-[#E6DFD3] dark:border-[#332D28] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-full bg-[#EFE9DD] dark:bg-[#2A2420] border border-[#DECDB3] dark:border-[#42362C] flex items-center justify-center text-lg font-serif font-bold text-[#7A2A18] dark:text-[#F3D5A5] shadow-xs">
+              {{ (auth.currentUser().name || 'U').charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-serif font-bold text-base text-[#231F1C] dark:text-[#EAE4DA]">
+                  {{ auth.currentUser().name }}
+                </span>
+                <span class="text-xs font-mono text-[#8A8278] dark:text-[#7A7268]">
+                  &#64;{{ auth.currentUser().username }}
+                </span>
+              </div>
+              <p class="text-xs text-[#5A524A] dark:text-[#B5ADA3] mt-0.5">
+                Nível Calibrado: <span class="font-semibold text-[#7A2A18] dark:text-[#F3D5A5]">CEFR {{ auth.currentUser().readingCEFR }}</span> • Vocabulário e radar isolados
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              type="button"
+              (click)="setAuthMode('switch')"
+              [class]="authMode() === 'switch' ? 'bg-[#9C3823] text-white shadow-xs' : 'bg-[#EFE9DD] dark:bg-[#2A2420] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#E5DDCF]'"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5">
+              <mat-icon class="text-xs !w-3.5 !h-3.5">swap_horiz</mat-icon>
+              <span>Alternar</span>
+            </button>
+            <button
+              type="button"
+              (click)="setAuthMode('register')"
+              [class]="authMode() === 'register' ? 'bg-[#9C3823] text-white shadow-xs' : 'bg-[#EFE9DD] dark:bg-[#2A2420] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#E5DDCF]'"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5">
+              <mat-icon class="text-xs !w-3.5 !h-3.5">person_add</mat-icon>
+              <span>Novo Perfil</span>
+            </button>
+            <button
+              type="button"
+              (click)="setAuthMode('login')"
+              [class]="authMode() === 'login' ? 'bg-[#9C3823] text-white shadow-xs' : 'bg-[#EFE9DD] dark:bg-[#2A2420] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#E5DDCF]'"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5">
+              <mat-icon class="text-xs !w-3.5 !h-3.5">login</mat-icon>
+              <span>Entrar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Feedback Alert Messages -->
+        @if (authError()) {
+          <div class="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200 text-xs flex items-center gap-2">
+            <mat-icon class="text-sm !w-4 !h-4 text-rose-600 dark:text-rose-400">error_outline</mat-icon>
+            <span>{{ authError() }}</span>
+          </div>
+        }
+        @if (authSuccess()) {
+          <div class="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs flex items-center gap-2">
+            <mat-icon class="text-sm !w-4 !h-4 text-emerald-600 dark:text-emerald-400">check_circle</mat-icon>
+            <span>{{ authSuccess() }}</span>
+          </div>
+        }
+
+        <!-- Mode: Switch Profiles List -->
+        @if (authMode() === 'switch') {
+          <div class="space-y-2 pt-1">
+            <span class="text-xs font-semibold text-[#6C645C] dark:text-[#9C9387] uppercase tracking-wider block">
+              Perfis de Leitura Disponíveis Neste Navegador
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              @for (usr of auth.availableProfiles(); track usr.id) {
+                <button
+                  type="button"
+                  (click)="switchProfile(usr.id)"
+                  [class]="usr.id === auth.currentUser().id ? 'border-[#9C3823] dark:border-[#DDA15E] bg-[#FAF6F0] dark:bg-[#25201C] ring-1 ring-[#9C3823]/30' : 'border-[#E6DFD3] dark:border-[#332D28] bg-[#FDFCFB] dark:bg-[#181513] hover:border-[#DECDB3] dark:hover:border-[#42362C]'"
+                  class="p-3 rounded-xl border text-left flex items-center justify-between gap-3 transition-all touch-target-min">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="w-8 h-8 rounded-full bg-[#EFE9DD] dark:bg-[#2A2420] flex items-center justify-center font-bold text-xs text-[#7A2A18] dark:text-[#F3D5A5] shrink-0">
+                      {{ usr.name.charAt(0).toUpperCase() }}
+                    </span>
+                    <div class="truncate">
+                      <span class="font-semibold text-xs text-[#231F1C] dark:text-[#EAE4DA] block truncate">{{ usr.name }}</span>
+                      <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] block">&#64;{{ usr.username }} • CEFR {{ usr.readingCEFR }}</span>
+                    </div>
+                  </div>
+                  @if (usr.id === auth.currentUser().id) {
+                    <span class="text-[11px] font-semibold text-[#9C3823] dark:text-[#DDA15E] flex items-center gap-1 shrink-0">
+                      <mat-icon class="text-xs !w-3.5 !h-3.5">check</mat-icon>
+                      <span>Ativo</span>
+                    </span>
+                  }
+                </button>
+              }
+            </div>
+            <p class="text-[11px] text-[#8A8278] dark:text-[#7A7268] pt-1">
+              Troque entre perfis instantaneamente sem perder histórico. As métricas do Admin (B2) e de cada aprendiz permanecem isoladas.
+            </p>
+          </div>
+        }
+
+        <!-- Mode: Login Form -->
+        @if (authMode() === 'login') {
+          <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" class="space-y-4 pt-1">
+            <div class="space-y-1">
+              <span class="text-xs font-semibold text-[#231F1C] dark:text-[#EAE4DA] block">Entrar com credenciais existentes</span>
+              <p class="text-[11px] text-[#6C645C] dark:text-[#9C9387]">
+                Acesse seu perfil ou entre com o usuário de teste de administração.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-[#6C645C] dark:text-[#9C9387] mb-1">Nome de Usuário</label>
+                <input
+                  type="text"
+                  formControlName="username"
+                  placeholder="Ex: Admin ou seu usuário"
+                  class="w-full px-3 py-2 text-xs rounded-lg border border-[#DDD6C8] dark:border-[#38322C] bg-[#FCFAF7] dark:bg-[#181513] text-[#231F1C] dark:text-[#EAE4DA] focus:outline-none focus:ring-1 focus:ring-[#9C3823]" />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-[#6C645C] dark:text-[#9C9387] mb-1">Senha ou PIN</label>
+                <input
+                  type="password"
+                  formControlName="password"
+                  placeholder="Ex: Admin123"
+                  class="w-full px-3 py-2 text-xs rounded-lg border border-[#DDD6C8] dark:border-[#38322C] bg-[#FCFAF7] dark:bg-[#181513] text-[#231F1C] dark:text-[#EAE4DA] focus:outline-none focus:ring-1 focus:ring-[#9C3823]" />
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1 flex-wrap gap-2">
+              <div class="text-[11px] text-[#8A8278] dark:text-[#7A7268]">
+                <span>Dica de teste: </span>
+                <button
+                  type="button"
+                  (click)="fillAdminCredentials()"
+                  class="underline font-semibold text-[#9C3823] dark:text-[#DDA15E] hover:opacity-80">
+                  Preencher Admin / Admin123
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  (click)="setAuthMode('switch')"
+                  class="px-3 py-1.5 text-xs text-[#6C645C] dark:text-[#9C9387] hover:underline">
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  [disabled]="loginForm.invalid"
+                  class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-[#9C3823] text-white hover:bg-[#7A2A18] disabled:opacity-50 transition-colors shadow-xs">
+                  Entrar na Conta
+                </button>
+              </div>
+            </div>
+          </form>
+        }
+
+        <!-- Mode: Register Form -->
+        @if (authMode() === 'register') {
+          <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" class="space-y-4 pt-1">
+            <div class="space-y-1">
+              <span class="text-xs font-semibold text-[#231F1C] dark:text-[#EAE4DA] block">Cadastrar Novo Perfil de Aprendiz</span>
+              <p class="text-[11px] text-[#6C645C] dark:text-[#9C9387]">
+                Crie um novo perfil independente com seu próprio nível CEFR, banco de vocabulário e radar de interferências.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-[#6C645C] dark:text-[#9C9387] mb-1">Seu Nome / Apelido</label>
+                <input
+                  type="text"
+                  formControlName="name"
+                  placeholder="Ex: Camille Claudel"
+                  class="w-full px-3 py-2 text-xs rounded-lg border border-[#DDD6C8] dark:border-[#38322C] bg-[#FCFAF7] dark:bg-[#181513] text-[#231F1C] dark:text-[#EAE4DA] focus:outline-none focus:ring-1 focus:ring-[#9C3823]" />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-[#6C645C] dark:text-[#9C9387] mb-1">Nome de Usuário (login)</label>
+                <input
+                  type="text"
+                  formControlName="username"
+                  placeholder="Ex: camille"
+                  class="w-full px-3 py-2 text-xs rounded-lg border border-[#DDD6C8] dark:border-[#38322C] bg-[#FCFAF7] dark:bg-[#181513] text-[#231F1C] dark:text-[#EAE4DA] focus:outline-none focus:ring-1 focus:ring-[#9C3823]" />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-[#6C645C] dark:text-[#9C9387] mb-1">Senha ou PIN</label>
+                <input
+                  type="password"
+                  formControlName="password"
+                  placeholder="Mínimo 4 caracteres"
+                  class="w-full px-3 py-2 text-xs rounded-lg border border-[#DDD6C8] dark:border-[#38322C] bg-[#FCFAF7] dark:bg-[#181513] text-[#231F1C] dark:text-[#EAE4DA] focus:outline-none focus:ring-1 focus:ring-[#9C3823]" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-[#6C645C] dark:text-[#9C9387] mb-1.5">Nível de Francês Inicial Estimado (CEFR)</label>
+              <div class="flex flex-wrap gap-2">
+                @for (lvl of ['A1', 'A2', 'B1', 'B2', 'C1']; track lvl) {
+                  <button
+                    type="button"
+                    (click)="registerForm.patchValue({ readingCEFR: lvl })"
+                    [class]="registerForm.get('readingCEFR')?.value === lvl ? 'bg-[#9C3823] text-white font-semibold' : 'bg-[#EFE9DD] dark:bg-[#2A2420] text-[#231F1C] dark:text-[#EAE4DA]'"
+                    class="px-3 py-1 text-xs rounded-lg border border-[#DDD6C8] dark:border-[#38322C] transition-colors">
+                    {{ lvl }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <button
+                type="button"
+                (click)="setAuthMode('switch')"
+                class="px-3 py-1.5 text-xs text-[#6C645C] dark:text-[#9C9387] hover:underline">
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                [disabled]="registerForm.invalid"
+                class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-[#9C3823] text-white hover:bg-[#7A2A18] disabled:opacity-50 transition-colors shadow-xs">
+                Criar Perfil e Começar
+              </button>
+            </div>
+          </form>
+        }
+      </section>
 
       <!-- Language Configuration Card -->
       <section class="paper-page p-6 sm:p-7 rounded-2xl space-y-4">
@@ -356,8 +601,102 @@ export class ProfileView {
   readonly i18n = inject(I18nService);
   readonly devNotes = inject(DevNotesService);
   readonly dbStatus = inject(DatabaseStatusService);
+  readonly auth = inject(AuthService);
 
   readonly profile = this.learnerService.profile;
+
+  readonly authMode = signal<'switch' | 'login' | 'register'>('switch');
+  readonly authError = signal<string | null>(null);
+  readonly authSuccess = signal<string | null>(null);
+
+  readonly loginForm = new FormGroup({
+    username: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    password: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+  });
+
+  readonly registerForm = new FormGroup({
+    name: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(2)],
+    }),
+    username: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(3)],
+    }),
+    password: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(4)],
+    }),
+    readingCEFR: new FormControl<string>('A2', { nonNullable: true }),
+  });
+
+  setAuthMode(mode: 'switch' | 'login' | 'register'): void {
+    this.authMode.set(mode);
+    this.authError.set(null);
+    this.authSuccess.set(null);
+  }
+
+  fillAdminCredentials(): void {
+    this.loginForm.patchValue({
+      username: 'Admin',
+      password: 'Admin123',
+    });
+  }
+
+  switchProfile(userId: string): void {
+    const success = this.auth.switchProfile(userId);
+    if (success) {
+      this.authSuccess.set(`Perfil alternado com sucesso para ${this.auth.currentUser()?.name}.`);
+      setTimeout(() => this.authSuccess.set(null), 3000);
+    }
+  }
+
+  async submitLogin(): Promise<void> {
+    if (this.loginForm.invalid) return;
+    this.authError.set(null);
+    this.authSuccess.set(null);
+
+    const { username, password } = this.loginForm.getRawValue();
+    const res = await this.auth.login(username, password);
+
+    if (res.success) {
+      this.authSuccess.set(`Bem-vindo(a), ${this.auth.currentUser()?.name}!`);
+      this.loginForm.reset();
+      this.authMode.set('switch');
+      setTimeout(() => this.authSuccess.set(null), 4000);
+    } else {
+      this.authError.set(res.error || 'Credenciais inválidas.');
+    }
+  }
+
+  async submitRegister(): Promise<void> {
+    if (this.registerForm.invalid) return;
+    this.authError.set(null);
+    this.authSuccess.set(null);
+
+    const { username, password, name, readingCEFR } = this.registerForm.getRawValue();
+    const res = await this.auth.register(
+      username,
+      password,
+      name,
+      readingCEFR as CEFRLevel
+    );
+
+    if (res.success && res.user) {
+      this.authSuccess.set(`Perfil "${res.user.name}" criado com sucesso e ativo!`);
+      this.registerForm.reset({ readingCEFR: 'A2' });
+      this.authMode.set('switch');
+      setTimeout(() => this.authSuccess.set(null), 4000);
+    } else {
+      this.authError.set(res.error || 'Erro ao registrar novo perfil.');
+    }
+  }
 
   readonly noteForm = new FormGroup({
     category: new FormControl<string>('Melhoria', { nonNullable: true }),

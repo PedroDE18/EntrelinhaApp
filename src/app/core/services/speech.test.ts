@@ -84,4 +84,25 @@ describe('SpeechNarrationService', () => {
     expect(narrative[3].sentenceIndexInParagraph).toBe(1);
     expect(narrative[3].globalIndex).toBe(3);
   });
+
+  it('computes natural prosody with pitch inflection and pause cadence', () => {
+    const service = new SpeechNarrationService();
+
+    // 1. Question with rising intonation
+    const questionProsody = service.computeSentenceProsody('Pourquoi êtes-vous venue ?', 0.92);
+    expect(questionProsody.pitch).toBeGreaterThan(1.0);
+    expect(questionProsody.pauseAfterMs).toBe(420);
+
+    // 2. Exclamation with energy
+    const exclamationProsody = service.computeSentenceProsody('C\'est magnifique !', 0.92);
+    expect(exclamationProsody.pitch).toBe(1.05);
+
+    // 3. Dialogue line
+    const dialogueProsody = service.computeSentenceProsody('« Entrez donc, dit le libraire. »', 0.92);
+    expect(dialogueProsody.pitch).toBe(1.02);
+
+    // 4. Standard declarative sentence
+    const periodProsody = service.computeSentenceProsody('Une bruine d\'automne tombait sur les pavés.', 0.92);
+    expect(periodProsody.pauseAfterMs).toBe(360);
+  });
 });

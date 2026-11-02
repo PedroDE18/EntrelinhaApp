@@ -28,6 +28,7 @@ export class SpeechNarrationService {
   readonly availableFrenchVoices = signal<FrenchVoiceOption[]>([]);
   readonly activeSentence = signal<NarrativeSentence | null>(null);
   readonly narrativeSentences = signal<NarrativeSentence[]>([]);
+  readonly selectedVoiceId = signal<string>('');
 
   private sentences: string[] = [];
   private synth: SpeechSynthesis | null = null;
@@ -70,13 +71,21 @@ export class SpeechNarrationService {
         const top = this.getBestFrenchVoice();
         if (top) {
           this.activeVoiceName.set(this.formatVoiceLabel(top));
+          this.selectedVoiceId.set(top.name);
         }
       }
     };
 
     update();
-    if (typeof window !== 'undefined' && this.synth.onvoiceschanged !== undefined) {
-      this.synth.onvoiceschanged = update;
+    if (typeof window !== 'undefined') {
+      if (this.synth.addEventListener) {
+        this.synth.addEventListener('voiceschanged', update);
+      } else if (this.synth.onvoiceschanged !== undefined) {
+        this.synth.onvoiceschanged = update;
+      }
+      // Retries for mobile web engines where voices load asynchronously
+      setTimeout(update, 500);
+      setTimeout(update, 1500);
     }
   }
 
@@ -91,12 +100,12 @@ export class SpeechNarrationService {
     if (lang === 'fr-fr') score += 40;
     else if (lang.startsWith('fr')) score += 20;
 
-    if (name.includes('natural') || name.includes('online')) score += 60;
-    if (name.includes('google') && name.includes('français')) score += 55;
-    if (name.includes('enhanced') || name.includes('premium') || name.includes('siri')) score += 50;
+    if (name.includes('natural') || name.includes('online')) score += 70;
+    if (name.includes('google') && name.includes('français')) score += 60;
+    if (name.includes('enhanced') || name.includes('premium') || name.includes('siri')) score += 55;
 
-    const favoredNames = ['henri', 'paul', 'julie', 'denise', 'thomas', 'audrey', 'amélie', 'céline', 'nicolas'];
-    if (favoredNames.some((n) => name.includes(n))) score += 25;
+    const favoredNames = ['paul', 'julie', 'henri', 'denise', 'thomas', 'audrey', 'amélie', 'céline', 'nicolas'];
+    if (favoredNames.some((n) => name.includes(n))) score += 30;
 
     if (name.includes('espeak') || name.includes('compact') || name.includes('sin-nombre')) score -= 80;
 
@@ -110,14 +119,19 @@ export class SpeechNarrationService {
       name.includes('online') ||
       name.includes('enhanced') ||
       name.includes('premium') ||
-      name.includes('google')
+      name.includes('google') ||
+      name.includes('siri')
     );
   }
 
   private formatVoiceLabel(voice: SpeechSynthesisVoice): string {
     const isNat = this.isNaturalVoice(voice);
-    const cleanName = voice.name.replace(/Microsoft\s+/i, '').replace(/Online\s*\(Natural\)\s*-\s*/i, '').trim();
-    return isNat ? `${cleanName} (Humana/Natural)` : cleanName;
+    const cleanName = voice.name
+      .replace(/Microsoft\s+/i, '')
+      .replace(/Online\s*\(Natural\)\s*-\s*/i, '')
+      .replace(/\s*\(France\)/i, '')
+      .trim();
+    return isNat ? `${cleanName} (Natural)` : cleanName;
   }
 
   private sortVoicesByNaturalQuality(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice[] {
@@ -141,10 +155,65 @@ export class SpeechNarrationService {
 
   setSelectedVoice(voiceName: string): void {
     this.selectedVoiceName = voiceName;
+    this.selectedVoiceId.set(voiceName);
     const voice = this.getBestFrenchVoice();
     if (voice) {
       this.activeVoiceName.set(this.formatVoiceLabel(voice));
     }
+  }
+
+  /**
+   * Prosody & Intonation Engine
+   * Calculates human-like pitch, speed cadence, and breathing pauses based on French syntax and punctuation.
+   */
+  computeSentenceProsody(sentenceText: string, baseSpeed: number): {
+    pitch: number;
+    rate: number;
+    pauseAfterMs: number;
+    cleanText: string;
+  } {
+    const trimmed = (sentenceText || '').trim();
+    let pitch = 1.0;
+    let rate = baseSpeed;
+    let pauseAfterMs = 360; // Natural period breathing pause
+
+    // 1. Interrogative intonation (Rising inflection in French questions)
+    if (trimmed.endsWith('?')) {
+      pitch = 1.08;
+      rate = Math.max(0.75, baseSpeed * 0.96);
+      pauseAfterMs = 420;
+    }
+    // 2. Exclamative and animated emphasis
+    else if (trimmed.endsWith('!')) {
+      pitch = 1.05;
+      rate = Math.min(1.2, baseSpeed * 1.02);
+      pauseAfterMs = 400;
+    }
+    // 3. Literary dialogue (Quoted speech or dash lines)
+    else if (trimmed.startsWith('«') || trimmed.endsWith('»') || trimmed.startsWith('—') || trimmed.startsWith('-')) {
+      pitch = 1.02;
+      rate = Math.max(0.78, baseSpeed * 0.98);
+      pauseAfterMs = 380;
+    }
+    // 4. Incomplete sentences or ellipsis (Trailing suspension)
+    else if (trimmed.endsWith('...') || trimmed.endsWith('…')) {
+      pitch = 0.98;
+      rate = Math.max(0.75, baseSpeed * 0.94);
+      pauseAfterMs = 480;
+    }
+    // 5. Semicolon or colon (Mid-thought pause)
+    else if (trimmed.endsWith(';') || trimmed.endsWith(':')) {
+      pitch = 1.0;
+      rate = baseSpeed;
+      pauseAfterMs = 280;
+    }
+
+    // Clean whitespace around French punctuation for smooth phonation
+    const cleanText = trimmed
+      .replace(/\s+([?!;:])/g, '$1') // Normalize French non-breaking spaces before punctuation to avoid hiccups
+      .replace(/\s+/g, ' ');
+
+    return { pitch, rate, pauseAfterMs, cleanText };
   }
 
   /**
@@ -391,13 +460,15 @@ export class SpeechNarrationService {
     const progress = Math.min(100, Math.round((idx / total) * 100));
     this.progressPercent.set(progress);
 
+    const prosody = this.computeSentenceProsody(sentence, this.currentSpeed());
+
     if (this.synth) {
       try {
         this.synth.cancel();
-        const utterance = new SpeechSynthesisUtterance(sentence);
+        const utterance = new SpeechSynthesisUtterance(prosody.cleanText);
         utterance.lang = 'fr-FR';
-        utterance.rate = this.currentSpeed();
-        utterance.pitch = 1.0;
+        utterance.rate = prosody.rate;
+        utterance.pitch = prosody.pitch;
 
         const bestVoice = this.getBestFrenchVoice();
         if (bestVoice) {
@@ -411,12 +482,17 @@ export class SpeechNarrationService {
           this.currentSentenceIndex.set(nextIdx);
 
           if (nextIdx < this.sentences.length) {
-            // Natural human pause between sentences (180ms) for breathing and cognitive absorption
+            // Check if sentence transitions to a new paragraph for natural narrative breath
+            const curP = narrative[idx]?.paragraphIndex;
+            const nextP = narrative[nextIdx]?.paragraphIndex;
+            const isParagraphChange = curP !== undefined && nextP !== undefined && curP !== nextP;
+            const pauseDuration = isParagraphChange ? 650 : prosody.pauseAfterMs;
+
             this.pauseTimeoutId = setTimeout(() => {
               if (this.isPlaying()) {
                 this.speakCurrentSentence();
               }
-            }, 180);
+            }, pauseDuration);
           } else {
             this.isPlaying.set(false);
             this.isPaused.set(false);

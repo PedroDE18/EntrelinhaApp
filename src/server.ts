@@ -214,22 +214,41 @@ app.get('/api/linguistics/contrastive', async (_req, res) => {
 });
 
 /**
- * Single-User Persistence Endpoints
- * Persists learner profile, settings, and vocabulary state across restarts.
+ * Single-User & Multi-Profile Persistence Endpoints with PostgreSQL/Supabase & Local Resilient Fallback
+ * Supports user switching, admin testing profile, and per-user state isolation.
  */
-/**
- * Single-User Persistence Endpoints with PostgreSQL/Supabase & Local Resilient Fallback
- * Persists learner profile, settings, radar, assessments, and vocabulary state.
- */
-app.get('/api/user/data', async (_req, res) => {
+app.post('/api/auth/session', async (req, res) => {
   try {
+    const { user } = req.body || {};
+    if (!user || !user.id) {
+      return res.status(400).json({ success: false, error: 'Usuário é obrigatório' });
+    }
+
+    const dir = join(process.cwd(), 'data');
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
+    }
+
+    const sessionFile = join(dir, 'active_session.json');
+    writeFileSync(sessionFile, JSON.stringify({ activeUserId: user.id, user, updatedAt: new Date().toISOString() }, null, 2), 'utf-8');
+
+    return res.json({ success: true, user });
+  } catch (err: unknown) {
+    return res.status(500).json({ success: false, error: err instanceof Error ? err.message : String(err) });
+  }
+});
+
+app.get('/api/user/data', async (req, res) => {
+  try {
+    const targetUserId = String(req.headers['x-user-id'] || req.query['userId'] || 'usr-admin').trim();
+
     // 1. Try PostgreSQL / Supabase
     if (db && hasDatabaseConnection) {
       try {
         const rows = await db
           .select()
           .from(schema.learnerProfiles)
-          .where(eq(schema.learnerProfiles.userId, 'learner-br-01'))
+          .where(eq(schema.learnerProfiles.userId, targetUserId))
           .limit(1);
 
         if (rows.length > 0) {
@@ -237,22 +256,22 @@ app.get('/api/user/data', async (_req, res) => {
           const meta = (row.metadata as Record<string, unknown>) || {};
           const profile = {
             id: row.userId,
-            name: (meta['name'] as string) || 'Pedro Henrique',
+            name: (meta['name'] as string) || (targetUserId === 'usr-admin' ? 'Administrateur Entrelinha' : 'Leitor Entrelinha'),
             nativeLanguage: row.nativeLanguageId as 'pt-BR',
             targetLanguage: row.targetLanguageId as 'fr-FR',
             readingCEFR: row.estimatedCefrReading as any,
             listeningCEFR: row.estimatedCefrListening as any,
-            storiesCompleted: (meta['storiesCompleted'] as number) || 4,
-            totalReadingMinutes: (meta['totalReadingMinutes'] as number) || 38,
-            totalListeningMinutes: (meta['totalListeningMinutes'] as number) || 24,
-            currentStreakDays: (meta['currentStreakDays'] as number) || 5,
-            wordsLearnedCount: (meta['wordsLearnedCount'] as number) || 142,
+            storiesCompleted: (meta['storiesCompleted'] as number) || (targetUserId === 'usr-admin' ? 5 : 0),
+            totalReadingMinutes: (meta['totalReadingMinutes'] as number) || (targetUserId === 'usr-admin' ? 45 : 0),
+            totalListeningMinutes: (meta['totalListeningMinutes'] as number) || (targetUserId === 'usr-admin' ? 30 : 0),
+            currentStreakDays: (meta['currentStreakDays'] as number) || 1,
+            wordsLearnedCount: (meta['wordsLearnedCount'] as number) || (targetUserId === 'usr-admin' ? 142 : 0),
             vocabularyMetrics: meta['vocabularyMetrics'] || {
               unseen: 520,
-              encountered: 86,
-              learning: 48,
-              known: 142,
-              mastered: 64,
+              encountered: targetUserId === 'usr-admin' ? 86 : 0,
+              learning: targetUserId === 'usr-admin' ? 48 : 0,
+              known: targetUserId === 'usr-admin' ? 142 : 0,
+              mastered: targetUserId === 'usr-admin' ? 64 : 0,
             },
             preferredGenres: meta['preferredGenres'] || ['Mystère & Suspense', 'Littérature Classique'],
             readingSpeedPreference: 'comfortable',
@@ -277,8 +296,19 @@ app.get('/api/user/data', async (_req, res) => {
       }
     }
 
-    // 2. Resilient file fallback
-    if (existsSync(userDataFilePath)) {
+    // 2. Resilient file fallback with user-specific isolation
+    const userSpecificFile = join(process.cwd(), 'data', `user_${targetUserId}.json`);
+    if (existsSync(userSpecificFile)) {
+      const parsed = JSON.parse(readFileSync(userSpecificFile, 'utf-8'));
+      return res.json({
+        success: true,
+        source: 'persistent_file',
+        data: parsed,
+      });
+    }
+
+    // Fallback to legacy single-user file if admin or learner-br-01
+    if (existsSync(userDataFilePath) && (targetUserId === 'learner-br-01' || targetUserId === 'usr-admin')) {
       const parsed = JSON.parse(readFileSync(userDataFilePath, 'utf-8'));
       return res.json({
         success: true,
@@ -303,24 +333,34 @@ app.get('/api/user/data', async (_req, res) => {
 app.post('/api/user/data', async (req, res) => {
   try {
     const { profile, words } = req.body || {};
+    const targetUserId = String(req.headers['x-user-id'] || profile?.id || 'usr-admin').trim();
+
     const dir = join(process.cwd(), 'data');
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }
     const payload = {
       updatedAt: new Date().toISOString(),
-      profile,
-      words,
+      profile: {
+        ...(profile || {}),
+        id: targetUserId,
+      },
+      words: words || [],
     };
 
-    // 1. Write to local file backup
-    writeFileSync(userDataFilePath, JSON.stringify(payload, null, 2), 'utf-8');
+    // 1. Write to user-isolated file backup
+    const userSpecificFile = join(dir, `user_${targetUserId}.json`);
+    writeFileSync(userSpecificFile, JSON.stringify(payload, null, 2), 'utf-8');
+
+    // Also update generic file if main profile
+    if (targetUserId === 'learner-br-01' || targetUserId === 'usr-admin') {
+      writeFileSync(userDataFilePath, JSON.stringify(payload, null, 2), 'utf-8');
+    }
 
     // 2. Persist directly to Supabase if connected
     let supabaseSuccess = false;
     if (db && hasDatabaseConnection && profile) {
       try {
-        const userId = profile.id || 'learner-br-01';
         const metadata = {
           name: profile.name,
           storiesCompleted: profile.storiesCompleted,
@@ -338,7 +378,7 @@ app.post('/api/user/data', async (req, res) => {
         await db
           .insert(schema.learnerProfiles)
           .values({
-            userId,
+            userId: targetUserId,
             nativeLanguageId: profile.nativeLanguage || 'pt-BR',
             targetLanguageId: profile.targetLanguage || 'fr-FR',
             interfaceLocale: 'pt-BR',
@@ -359,7 +399,7 @@ app.post('/api/user/data', async (req, res) => {
 
         supabaseSuccess = true;
       } catch (dbErr) {
-        console.warn('[API] Could not persist to Supabase PostgreSQL, saved to local store:', dbErr);
+        console.warn('[API] Could not persist user profile to Supabase PostgreSQL, saved to local store:', dbErr);
       }
     }
 
@@ -367,6 +407,7 @@ app.post('/api/user/data', async (req, res) => {
       success: true,
       message: 'Dados persistidos com sucesso!',
       persistedToSupabase: supabaseSuccess,
+      userId: targetUserId,
       updatedAt: payload.updatedAt,
     });
   } catch (err: unknown) {
@@ -383,6 +424,8 @@ app.post('/api/user/data', async (req, res) => {
 app.post('/api/user/session', async (req, res) => {
   try {
     const { storyId, score = 0, readingDurationSec = 0, testedCategories = [], mistakeCategories = [] } = req.body || {};
+    const activeUserId = String(req.headers['x-user-id'] || req.body?.userId || 'usr-admin').trim();
+
     if (!storyId) {
       return res.status(400).json({ success: false, error: 'storyId é obrigatório' });
     }
@@ -392,7 +435,7 @@ app.post('/api/user/session', async (req, res) => {
       try {
         // Insert into story_sessions
         await db.insert(schema.storySessions).values({
-          userId: 'learner-br-01',
+          userId: activeUserId,
           storyId,
           score: Math.round(Number(score)),
           readingDurationSec: Math.round(Number(readingDurationSec)),
@@ -400,10 +443,11 @@ app.post('/api/user/session', async (req, res) => {
 
         // Log learning event
         await db.insert(schema.learningEvents).values({
-          userId: 'learner-br-01',
+          userId: activeUserId,
           eventType: 'story_completed',
           storyId,
           payload: {
+            userId: activeUserId,
             score,
             readingDurationSec,
             testedCategories,
@@ -422,6 +466,7 @@ app.post('/api/user/session', async (req, res) => {
       success: true,
       sessionLogged,
       storyId,
+      userId: activeUserId,
     });
   } catch (err: unknown) {
     return res.status(500).json({

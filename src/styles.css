@@ -183,3 +183,67 @@ html.dark body {
   min-height: 44px;
   min-width: 44px;
 }
+
+/* =========================================================================
+   Global Material Icon Geometry & Sizing Normalization
+   Prevents glyph cutoff, baseline clipping, compression, and elipse distortions
+   ========================================================================= */
+mat-icon, .mat-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+  letter-spacing: normal !important;
+  white-space: nowrap !important;
+  word-wrap: normal !important;
+  direction: ltr !important;
+  -webkit-font-feature-settings: 'liga' !important;
+  font-feature-settings: 'liga' !important;
+  overflow: visible !important;
+  flex-shrink: 0 !important;
+  box-sizing: content-box;
+}
+
+/* Proportional auto-scaling matching Tailwind text size utilities */
+mat-icon.text-xs {
+  font-size: 0.75rem !important;
+  width: 0.75rem !important;
+  height: 0.75rem !important;
+}
+
+mat-icon.text-sm {
+  font-size: 0.875rem !important;
+  width: 0.875rem !important;
+  height: 0.875rem !important;
+}
+
+mat-icon.text-base {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+mat-icon.text-lg {
+  font-size: 1.125rem !important;
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+}
+
+mat-icon.text-xl {
+  font-size: 1.25rem !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+
+mat-icon.text-2xl {
+  font-size: 1.5rem !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+mat-icon.text-3xl {
+  font-size: 1.875rem !important;
+  width: 1.875rem !important;
+  height: 1.875rem !important;
+}

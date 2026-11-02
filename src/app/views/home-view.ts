@@ -116,7 +116,7 @@ import { rankStoriesForLearner, getRecommendedFocusAreas } from '../core/adaptiv
             type="button"
             (click)="playContrastExample()"
             class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#7A2A18] dark:text-[#F3D5A5] bg-[#F2E4D0] dark:bg-[#382D22] rounded-lg hover:bg-[#EBD8C0] dark:hover:bg-[#46382B] transition-colors shrink-0 touch-target-min">
-            <mat-icon class="text-base leading-none !w-4 !h-4">hearing</mat-icon>
+            <mat-icon class="text-base leading-none !w-4.5 !h-4.5 shrink-0">hearing</mat-icon>
             <span>{{ i18n.t('home.btn_audio_pronunciation') }}</span>
           </button>
         </div>

@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from '../core/services/theme';
 import { I18nService } from '../core/services/i18n';
+import { AuthService } from '../core/services/auth';
 
 @Component({
   selector: 'app-top-bar',
@@ -40,8 +41,23 @@ import { I18nService } from '../core/services/i18n';
           </a>
         </nav>
 
-        <!-- Zone 3: Primary action (Theme switch) -->
-        <div class="flex items-center gap-3 shrink-0">
+        <!-- Zone 3: User Badge & Theme switch -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <a
+            routerLink="/profile"
+            title="Perfil ativo: {{ auth.currentUser().name }} ({{ auth.currentUser().username }})"
+            class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg border border-[#DDD6C8] dark:border-[#38322C] bg-[#FCFAF7] dark:bg-[#221E1B] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#F2ECE1] dark:hover:bg-[#2C2723] transition-colors shadow-2xs">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px]"
+                  [class]="auth.isAdmin() ? 'bg-amber-200 text-amber-900 dark:bg-amber-900 dark:text-amber-200' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'">
+              {{ auth.currentUser().name.charAt(0) }}
+            </span>
+            <span class="font-medium max-w-[100px] truncate">{{ auth.currentUser().username }}</span>
+            <span class="text-[9px] font-mono px-1 py-0.2 rounded font-bold uppercase"
+                  [class]="auth.isAdmin() ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' : 'bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300'">
+              {{ auth.isAdmin() ? 'Admin' : auth.currentUser().readingCEFR }}
+            </span>
+          </a>
+
           <button
             type="button"
             (click)="theme.toggleTheme()"
@@ -98,4 +114,5 @@ import { I18nService } from '../core/services/i18n';
 export class TopBar {
   readonly theme = inject(ThemeService);
   readonly i18n = inject(I18nService);
+  readonly auth = inject(AuthService);
 }

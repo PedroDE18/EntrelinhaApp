@@ -201,6 +201,16 @@ export interface PortugueseInterferenceItem {
   severity: 'high' | 'medium';
 }
 
+export interface UserAccount {
+  id: string;
+  username: string;
+  name: string;
+  role: 'admin' | 'learner';
+  readingCEFR: CEFRLevel;
+  listeningCEFR: CEFRLevel;
+  createdAt: string;
+}
+
 export interface LearnerProfile {
   id: string;
   name: string;

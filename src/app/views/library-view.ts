@@ -209,7 +209,7 @@ import { CEFRLevel, Story } from '../core/models';
             <ng-container *ngTemplateOutlet="storyCard; context: { $implicit: story }"></ng-container>
           } @empty {
             <div class="col-span-full py-16 text-center space-y-3">
-              <mat-icon class="text-3xl text-[#8A8278]">filter_list_off</mat-icon>
+              <mat-icon class="text-3xl leading-none !w-8 !h-8 text-[#8A8278]">filter_list_off</mat-icon>
               <p class="text-[#5A524A] dark:text-[#B5ADA3] text-sm">{{ i18n.t('library.empty_state_msg') }}</p>
               <button
                 type="button"

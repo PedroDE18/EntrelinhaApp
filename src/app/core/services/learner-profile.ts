@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import {
   LearnerProfile,
   LearnerWord,
@@ -16,6 +16,7 @@ import {
   calculateSrsInterval,
   getDueWordsForReview,
 } from '../adaptive-learning';
+import { AuthService } from './auth';
 
 const INITIAL_PROFILE: LearnerProfile = {
   id: 'learner-br-01',
@@ -174,6 +175,8 @@ const INITIAL_INTERFERENCE_RADAR: PortugueseInterferenceItem[] = [
   providedIn: 'root',
 })
 export class LearnerProfileService {
+  private readonly auth = inject(AuthService);
+
   readonly profile = signal<LearnerProfile>(INITIAL_PROFILE);
   readonly words = signal<LearnerWord[]>(INITIAL_WORDS);
   readonly interferenceRadar = signal<PortugueseInterferenceItem[]>(INITIAL_INTERFERENCE_RADAR);
@@ -191,44 +194,98 @@ export class LearnerProfileService {
   });
 
   constructor() {
-    if (typeof window !== 'undefined') {
-      const savedProfile = localStorage.getItem('lingua_learner_profile');
-      if (savedProfile) {
-        try {
-          const parsed = JSON.parse(savedProfile);
-          const defaultRadar = createDefaultDifficultyRadar();
-          parsed.difficultyRadar = {
-            ...defaultRadar,
-            ...(parsed.difficultyRadar || {}),
-          };
-          if (!parsed.assessmentHistory) {
-            parsed.assessmentHistory = [];
-          }
-          this.profile.set(parsed);
-        } catch {
-          // keep initial
-        }
+    effect(() => {
+      const activeUser = this.auth.currentUser();
+      if (activeUser) {
+        this.loadUserScopedData(activeUser.id);
       }
-      const savedWords = localStorage.getItem('lingua_learner_words');
-      if (savedWords) {
-        try {
-          this.words.set(JSON.parse(savedWords));
-        } catch {
-          // keep initial
-        }
-      }
+    });
+  }
 
-      // Asynchronously hydrate from server persistence store
-      this.syncFromServer();
+  private getStorageKeys(userId: string): { profileKey: string; wordsKey: string } {
+    return {
+      profileKey: `entrelinha_profile_${userId}`,
+      wordsKey: `entrelinha_words_${userId}`,
+    };
+  }
+
+  loadUserScopedData(userId: string): void {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+
+    const { profileKey, wordsKey } = this.getStorageKeys(userId);
+    const savedProfile = localStorage.getItem(profileKey) || (userId === 'learner-br-01' ? localStorage.getItem('lingua_learner_profile') : null);
+
+    if (savedProfile) {
+      try {
+        const parsed = JSON.parse(savedProfile);
+        const defaultRadar = createDefaultDifficultyRadar();
+        parsed.difficultyRadar = {
+          ...defaultRadar,
+          ...(parsed.difficultyRadar || {}),
+        };
+        if (!parsed.assessmentHistory) {
+          parsed.assessmentHistory = [];
+        }
+        this.profile.set(parsed);
+      } catch {
+        // keep current
+      }
+    } else {
+      const activeUser = this.auth.currentUser();
+      const newProf: LearnerProfile = {
+        ...INITIAL_PROFILE,
+        id: userId,
+        name: activeUser?.name || (userId === 'usr-admin' ? 'Administrateur Entrelinha' : 'Leitor Entrelinha'),
+        readingCEFR: activeUser?.readingCEFR || 'A2',
+        listeningCEFR: activeUser?.listeningCEFR || 'A1',
+        storiesCompleted: userId === 'usr-admin' ? 5 : 0,
+        totalReadingMinutes: userId === 'usr-admin' ? 45 : 0,
+        totalListeningMinutes: userId === 'usr-admin' ? 30 : 0,
+        currentStreakDays: 1,
+        wordsLearnedCount: userId === 'usr-admin' ? 142 : 0,
+        vocabularyMetrics: {
+          unseen: 520,
+          encountered: userId === 'usr-admin' ? 86 : 0,
+          learning: userId === 'usr-admin' ? 48 : 0,
+          known: userId === 'usr-admin' ? 142 : 0,
+          mastered: userId === 'usr-admin' ? 64 : 0,
+        },
+        difficultyRadar: createDefaultDifficultyRadar(),
+        assessmentHistory: [],
+      };
+      this.profile.set(newProf);
+      localStorage.setItem(profileKey, JSON.stringify(newProf));
     }
+
+    const savedWords = localStorage.getItem(wordsKey) || (userId === 'learner-br-01' ? localStorage.getItem('lingua_learner_words') : null);
+    if (savedWords) {
+      try {
+        this.words.set(JSON.parse(savedWords));
+      } catch {
+        // keep current
+      }
+    } else {
+      this.words.set(userId === 'usr-admin' || userId === 'learner-br-01' ? INITIAL_WORDS : []);
+      localStorage.setItem(wordsKey, JSON.stringify(this.words()));
+    }
+
+    // Hydrate from server database
+    this.syncFromServer();
   }
 
   private syncFromServer(): void {
     if (typeof window === 'undefined' || typeof fetch === 'undefined') return;
-    fetch('/api/user/data')
+    const userId = this.profile().id || this.auth.currentUser()?.id || 'usr-admin';
+
+    fetch('/api/user/data', {
+      headers: {
+        'x-user-id': userId,
+      },
+    })
       .then((res) => (res.ok ? res.json() : null))
       .then((payload) => {
         if (payload?.success && payload.data) {
+          const { profileKey, wordsKey } = this.getStorageKeys(userId);
           if (payload.data.profile) {
             const defaultRadar = createDefaultDifficultyRadar();
             payload.data.profile.difficultyRadar = {
@@ -239,11 +296,11 @@ export class LearnerProfileService {
               payload.data.profile.assessmentHistory = [];
             }
             this.profile.set(payload.data.profile);
-            localStorage.setItem('lingua_learner_profile', JSON.stringify(payload.data.profile));
+            localStorage.setItem(profileKey, JSON.stringify(payload.data.profile));
           }
           if (payload.data.words && Array.isArray(payload.data.words)) {
             this.words.set(payload.data.words);
-            localStorage.setItem('lingua_learner_words', JSON.stringify(payload.data.words));
+            localStorage.setItem(wordsKey, JSON.stringify(payload.data.words));
           }
         }
       })
@@ -254,9 +311,14 @@ export class LearnerProfileService {
 
   private persistToServer(): void {
     if (typeof window === 'undefined' || typeof fetch === 'undefined') return;
+    const userId = this.profile().id || this.auth.currentUser()?.id || 'usr-admin';
+
     fetch('/api/user/data', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-id': userId,
+      },
       body: JSON.stringify({
         profile: this.profile(),
         words: this.words(),
@@ -479,6 +541,9 @@ export class LearnerProfileService {
 
   private saveProfile(): void {
     if (typeof window !== 'undefined') {
+      const userId = this.profile().id || this.auth.currentUser()?.id || 'usr-admin';
+      const { profileKey } = this.getStorageKeys(userId);
+      localStorage.setItem(profileKey, JSON.stringify(this.profile()));
       localStorage.setItem('lingua_learner_profile', JSON.stringify(this.profile()));
       this.persistToServer();
     }
@@ -486,6 +551,9 @@ export class LearnerProfileService {
 
   private saveWords(): void {
     if (typeof window !== 'undefined') {
+      const userId = this.profile().id || this.auth.currentUser()?.id || 'usr-admin';
+      const { wordsKey } = this.getStorageKeys(userId);
+      localStorage.setItem(wordsKey, JSON.stringify(this.words()));
       localStorage.setItem('lingua_learner_words', JSON.stringify(this.words()));
       this.persistToServer();
     }

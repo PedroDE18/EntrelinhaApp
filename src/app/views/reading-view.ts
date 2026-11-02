@@ -89,10 +89,30 @@ import { lookupFrenchLexicon } from '../core/lexicon';
               <div class="space-y-0.5">
                 <div class="text-xs font-semibold text-[#231F1C] dark:text-[#EAE4DA] flex items-center gap-2">
                   <span>{{ i18n.t('reader.audio_narration_title') }}</span>
-                  <span class="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2F2923] text-[#78350F] dark:text-[#FBBF24] font-medium border border-[#D5CABB]/60 dark:border-[#423930]">
-                    <mat-icon class="text-[12px] leading-none !w-3 !h-3">record_voice_over</mat-icon>
-                    <span>{{ speech.activeVoiceName() }}</span>
-                  </span>
+                  <!-- Interactive Natural Voice Selector -->
+                  @if (speech.availableFrenchVoices().length > 1) {
+                    <div class="relative inline-block">
+                      <select
+                        [value]="speech.selectedVoiceId()"
+                        (change)="onVoiceChange($event)"
+                        title="Escolha a voz francesa com maior naturalidade para seu dispositivo"
+                        class="text-[10px] pl-2 pr-5 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2F2923] text-[#78350F] dark:text-[#FBBF24] font-medium border border-[#D5CABB]/60 dark:border-[#423930] appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#78350F]">
+                        @for (v of speech.availableFrenchVoices(); track v.name) {
+                          <option [value]="v.name">
+                            {{ v.label }}
+                          </option>
+                        }
+                      </select>
+                      <mat-icon class="text-[10px] leading-none !w-3 !h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#78350F] dark:text-[#FBBF24]">
+                        arrow_drop_down
+                      </mat-icon>
+                    </div>
+                  } @else {
+                    <span class="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2F2923] text-[#78350F] dark:text-[#FBBF24] font-medium border border-[#D5CABB]/60 dark:border-[#423930]">
+                      <mat-icon class="text-[12px] leading-none !w-3 !h-3">record_voice_over</mat-icon>
+                      <span>{{ speech.activeVoiceName() }}</span>
+                    </span>
+                  }
                 </div>
                 <div class="text-[11px] text-[#6C645C] dark:text-[#9C9387]">
                   {{ i18n.t('reader.audio_narration_subtitle') }}
@@ -648,6 +668,13 @@ export class ReadingView implements OnDestroy {
 
   toggleAutoScroll(): void {
     this.autoScrollEnabled.update((v) => !v);
+  }
+
+  onVoiceChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    if (target?.value) {
+      this.speech.setSelectedVoice(target.value);
+    }
   }
 
   scrollToParagraph(pIndex: number): void {
