@@ -8,6 +8,7 @@ import { I18nService } from '../core/services/i18n';
 import { TextRendererService } from '../core/services/text-renderer';
 import { RenderedTextItem, Story, StoryParagraph } from '../core/models';
 import { checkFalseCognate, checkGenderTrap } from '../core/linguistics';
+import { lookupFrenchLexicon } from '../core/lexicon';
 
 @Component({
   selector: 'app-reading-view',
@@ -404,21 +405,106 @@ import { checkFalseCognate, checkGenderTrap } from '../core/linguistics';
             }
           </div>
 
-          <!-- Final Complete Button -->
-          <div class="pt-4 border-t border-[#E6DFD3] dark:border-[#332D28] flex items-center justify-between">
-            <div class="text-xs text-[#6C645C] dark:text-[#9C9387]">
-              {{ i18n.t('reader.quiz.progress_counter', { answered: answeredCount(), total: s.comprehensionQuestions.length }) }}
-            </div>
+          <!-- Final Complete Button & Diagnostic Outcome -->
+          @if (completed() && assessmentResult(); as res) {
+            <div class="p-5 rounded-xl bg-[#F7F4EE] dark:bg-[#1A1715] border border-[#2E8540]/40 space-y-4 animate-in fade-in duration-200">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E6DFD3] dark:border-[#332D28] pb-3">
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-2 text-xs font-semibold text-[#1B5E20] dark:text-[#86EFAC]">
+                    <mat-icon class="text-sm !w-4 !h-4">check_circle</mat-icon>
+                    <span>Avaliação Registrada com Sucesso</span>
+                  </div>
+                  <h3 class="text-lg font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+                    Diagnóstico de Compreensão & Interferência
+                  </h3>
+                </div>
 
-            <button
-              type="button"
-              (click)="finishStory(s)"
-              [disabled]="completed()"
-              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs text-white bg-[#231F1C] dark:bg-[#EAE4DA] dark:text-[#181513] hover:opacity-90 transition-opacity disabled:opacity-50">
-              <mat-icon class="text-base leading-none !w-4 !h-4">check_circle</mat-icon>
-              <span>{{ completed() ? i18n.t('reader.quiz.btn_validated') : i18n.t('reader.quiz.btn_validate') }}</span>
-            </button>
-          </div>
+                <div class="flex items-center gap-3">
+                  <div class="text-right">
+                    <span class="text-xs text-[#8A8278] dark:text-[#7A7268] block">Aproveitamento</span>
+                    <span class="text-xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+                      {{ res.scorePercent }}%
+                    </span>
+                  </div>
+                  <div class="w-px h-8 bg-[#E6DFD3] dark:bg-[#332D28]"></div>
+                  <div class="text-right">
+                    <span class="text-xs text-[#8A8278] dark:text-[#7A7268] block">Velocidade</span>
+                    <span class="text-xl font-mono font-bold text-[#9C3823] dark:text-[#DDA15E]">
+                      {{ readingWpm() }} <span class="text-[11px] font-normal text-[#8A8278] dark:text-[#7A7268]">ppm</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Categories tested vs mistakes -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="space-y-1">
+                  <span class="text-[11px] font-semibold text-[#6C645C] dark:text-[#9C9387] uppercase tracking-wider block">
+                    Tópicos Linguísticos Avaliados:
+                  </span>
+                  <div class="flex flex-wrap gap-1.5">
+                    @for (cat of res.testedCategories; track cat) {
+                      <span class="px-2 py-0.5 rounded bg-[#FCFAF7] dark:bg-[#25201B] border border-[#DDD6C8] dark:border-[#38322C] text-[#231F1C] dark:text-[#EAE4DA] font-mono text-[11px]">
+                        {{ cat }}
+                      </span>
+                    }
+                  </div>
+                </div>
+
+                <div class="space-y-1">
+                  <span class="text-[11px] font-semibold text-[#6C645C] dark:text-[#9C9387] uppercase tracking-wider block">
+                    Pontos de Atenção (Erros Identificados):
+                  </span>
+                  @if (res.mistakeCategories.length > 0) {
+                    <div class="flex flex-wrap gap-1.5">
+                      @for (cat of res.mistakeCategories; track cat) {
+                        <span class="px-2 py-0.5 rounded bg-[#FDF2F2] dark:bg-[#3D1A1A] border border-[#D32F2F]/40 text-[#B71C1C] dark:text-[#FCA5A5] font-mono text-[11px]">
+                          {{ cat }}
+                        </span>
+                      }
+                    </div>
+                  } @else {
+                    <span class="text-[11px] text-[#1B5E20] dark:text-[#86EFAC] font-medium block">
+                      ✓ Nenhuma armadilha de interferência acionada. Excelente precisão!
+                    </span>
+                  }
+                </div>
+              </div>
+
+              <div class="pt-2 flex items-center justify-between border-t border-[#E6DFD3] dark:border-[#332D28] text-xs">
+                <span class="text-[#6C645C] dark:text-[#9C9387]">
+                  O Radar de Dificuldades Contrastivas do seu perfil foi atualizado.
+                </span>
+                <a routerLink="/progress" class="font-medium text-[#9C3823] dark:text-[#DDA15E] hover:underline inline-flex items-center gap-1">
+                  <span>Ver Radar de Progresso</span>
+                  <mat-icon class="text-xs !w-3.5 !h-3.5">arrow_forward</mat-icon>
+                </a>
+              </div>
+            </div>
+          } @else {
+            <div class="pt-4 border-t border-[#E6DFD3] dark:border-[#332D28] flex items-center justify-between">
+              <div class="text-xs text-[#6C645C] dark:text-[#9C9387]">
+                {{ i18n.t('reader.quiz.progress_counter', { answered: answeredCount(), total: s.comprehensionQuestions.length }) }}
+              </div>
+
+              <button
+                type="button"
+                (click)="finishStory(s)"
+                [disabled]="completed() || answeredCount() === 0"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs text-white bg-[#231F1C] dark:bg-[#EAE4DA] dark:text-[#181513] hover:opacity-90 transition-opacity disabled:opacity-40">
+                <mat-icon class="text-base leading-none !w-4 !h-4">check_circle</mat-icon>
+                <span>
+                  {{
+                    completed()
+                      ? i18n.t('reader.quiz.btn_validated')
+                      : answeredCount() === 0
+                        ? 'Responda as questões para validar'
+                        : i18n.t('reader.quiz.btn_validate')
+                  }}
+                </span>
+              </button>
+            </div>
+          }
         </section>
       </div>
     } @else {
@@ -451,6 +537,13 @@ export class ReadingView implements OnDestroy {
   // Assessment state
   readonly answeredQuestions = signal<Record<string, string>>({});
   readonly completed = signal<boolean>(false);
+  readonly assessmentResult = signal<{
+    scorePercent: number;
+    testedCategories: string[];
+    mistakeCategories: string[];
+  } | null>(null);
+  readonly readingWpm = signal<number>(140);
+  private readingStartTime = Date.now();
 
   readonly answeredCount = computed(() => Object.keys(this.answeredQuestions()).length);
 
@@ -462,6 +555,8 @@ export class ReadingView implements OnDestroy {
         this.speech.stop();
         this.answeredQuestions.set({});
         this.completed.set(false);
+        this.assessmentResult.set(null);
+        this.readingStartTime = Date.now();
       }
     });
   }
@@ -501,9 +596,12 @@ export class ReadingView implements OnDestroy {
   selectToken(tok: RenderedTextItem): void {
     const falseFriendCheck = checkFalseCognate(tok.cleanWord);
     const genderCheck = checkGenderTrap(tok.cleanWord);
+    const lexiconMatch = !tok.translationPt ? lookupFrenchLexicon(tok.cleanWord) : null;
 
     const enriched: RenderedTextItem = {
       ...tok,
+      translationPt: tok.translationPt || lexiconMatch?.translationPt,
+      definitionFr: tok.definitionFr || lexiconMatch?.definitionFr,
       falseFriend: tok.falseFriend || (falseFriendCheck ? falseFriendCheck : undefined),
       genderTrap: tok.genderTrap || (genderCheck ? genderCheck : undefined),
     };
@@ -555,20 +653,32 @@ export class ReadingView implements OnDestroy {
   }
 
   finishStory(story: Story): void {
-    let score = 80;
+    const elapsedSec = Math.max(15, Math.round((Date.now() - this.readingStartTime) / 1000));
     const answered = this.answeredQuestions();
-    const questions = story.comprehensionQuestions;
-    if (questions.length > 0) {
-      let correct = 0;
-      for (const q of questions) {
-        if (answered[q.id] === q.correctOptionId) {
-          correct++;
-        }
-      }
-      score = Math.round((correct / questions.length) * 100);
-    }
+    const questions = story.comprehensionQuestions || [];
 
-    this.learnerService.recordStoryCompleted(story.id, story.readingMinutes, score);
+    const questionResults = questions.map((q) => ({
+      question: q,
+      isCorrect: answered[q.id] === q.correctOptionId,
+    }));
+
+    const outcome = this.learnerService.recordAssessmentOutcome(
+      story.id,
+      story.title,
+      questionResults,
+      elapsedSec,
+      story.wordCount
+    );
+
+    const minutes = elapsedSec / 60;
+    const calculatedWpm = Math.max(40, Math.round(story.wordCount / minutes));
+    this.readingWpm.set(calculatedWpm);
+
+    this.assessmentResult.set({
+      scorePercent: outcome.scorePercent,
+      testedCategories: outcome.testedCategories,
+      mistakeCategories: outcome.mistakeCategories,
+    });
     this.completed.set(true);
   }
 }

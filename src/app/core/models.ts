@@ -1,5 +1,51 @@
 export type CEFRLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 
+export type DifficultyCategory =
+  | 'faux_ami'
+  | 'divergence_genre'
+  | 'temps_verbal_aspect'
+  | 'preposition_complementation'
+  | 'pronom_en_y'
+  | 'declencheur_subjonctif'
+  | 'accord_participe';
+
+export interface CategoryMasteryState {
+  category: DifficultyCategory;
+  labelFr: string;
+  labelPt: string;
+  descriptionPt: string;
+  attemptsCount: number;
+  errorCount: number;
+  correctCount: number;
+  masteryScore: number; // 0 to 100
+  lastAssessedAt?: string;
+  trend: 'improving' | 'stable' | 'declining' | 'untested';
+}
+
+export type DifficultyRadar = Record<DifficultyCategory, CategoryMasteryState>;
+
+export interface AssessmentHistoryItem {
+  id: string;
+  storyId: string;
+  storyTitle: string;
+  completedAt: string;
+  scorePercent: number;
+  totalQuestions: number;
+  correctQuestions: number;
+  readingDurationSec: number;
+  estimatedWpm: number;
+  testedCategories: DifficultyCategory[];
+  mistakeCategories: DifficultyCategory[];
+}
+
+export interface RecommendedFocusArea {
+  category: DifficultyCategory;
+  categoryLabelPt: string;
+  masteryScore: number;
+  rationalePt: string;
+  recommendedStoryIds: string[];
+}
+
 export type ContentSourceType =
   | 'ai_original'
   | 'public_domain'
@@ -36,6 +82,7 @@ export interface GlossToken {
 export interface ComprehensionQuestion {
   id: string;
   type: 'narrative' | 'inference' | 'vocabulary' | 'grammar';
+  difficultyCategory?: DifficultyCategory;
   questionFr: string;
   questionPt: string;
   options: {
@@ -76,6 +123,7 @@ export interface Story {
   excerpt: string;
   paragraphs: StoryParagraph[];
   comprehensionQuestions: ComprehensionQuestion[];
+  targetDifficultyCategories?: DifficultyCategory[];
   serializedInfo?: {
     seriesName: string;
     episodeNumber: number;
@@ -168,4 +216,6 @@ export interface LearnerProfile {
   audioPlaybackSpeed: number;
   firebaseSyncEnabled: boolean;
   lastSyncedAt?: string;
+  difficultyRadar?: DifficultyRadar;
+  assessmentHistory?: AssessmentHistoryItem[];
 }

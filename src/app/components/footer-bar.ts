@@ -11,7 +11,7 @@ import { I18nService } from '../core/services/i18n';
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[#E6DFD3] dark:border-[#332D28]">
           <div>
-            <span class="text-xl font-serif font-semibold tracking-wider text-[#231F1C] dark:text-[#EAE4DA]">LINGUA</span>
+            <span class="text-xl font-serif font-semibold tracking-wider text-[#231F1C] dark:text-[#EAE4DA]">Entrelinha</span>
             <p class="text-sm italic font-reading text-[#6C645C] dark:text-[#9C9387] mt-1">
               {{ i18n.t('footer.tagline') }}
             </p>

@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "LINGUA — Apprentissage du français par la lecture immersive",
+    "title": "Entrelinha — Apprentissage du français par la lecture immersive",
     "tagline": "Lisez pour l'histoire. Apprenez par la langue."
   },
   "nav": {
@@ -105,7 +105,7 @@
       "heading": "Provenance & Statut Juridique",
       "source_origin": "Source d'origine :",
       "license": "Licence de diffusion :",
-      "disclaimer": "LINGUA distingue rigoureusement les oeuvres originales du domaine public (Wikisource, Gallica), les traductions littéraires et les récits générés par IA."
+      "disclaimer": "Entrelinha distingue rigoureusement les oeuvres originales du domaine public (Wikisource, Gallica), les traductions littéraires et les récits générés par IA."
     },
     "quiz": {
       "badge": "Évaluation Active de Compréhension",
@@ -169,7 +169,7 @@
     "theme_sub": "Papier d'archive clair ou encrier sombre",
     "btn_toggle_theme": "Changer de thème",
     "db_heading": "Architecture PostgreSQL & Relationnelle (Phase 1.5)",
-    "db_desc": "LINGUA utilise PostgreSQL pour structurer sa base de connaissances linguistiques (entrées lexicales, acceptions, faux-amis, divergences de genre et concepts grammaticaux) de manière relationnelle.",
+    "db_desc": "Entrelinha utilise PostgreSQL pour structurer sa base de connaissances linguistiques (entrées lexicales, acceptions, faux-amis, divergences de genre et concepts grammaticaux) de manière relationnelle.",
     "db_status_ready": "Schéma relationnel Drizzle ORM configuré",
     "pwa_cache_ready": "Cache PWA & hors-ligne actif"
   },
@@ -177,7 +177,7 @@
     "tagline": "Lisez pour l'histoire. Apprenez par la langue.",
     "config_line": "Configuration : Português do Brasil (pt-BR) → Français de France (fr-FR)",
     "phase_label": "Phase 1.5 : Raffinement UX, Localisation & PostgreSQL",
-    "copyright": "© 2026 LINGUA. Textes issus du Domaine Public (Wikisource, Project Gutenberg) et fictions originales didactisées.",
+    "copyright": "© 2026 Entrelinha. Textes issus du Domaine Public (Wikisource, Project Gutenberg) et fictions originales didactisées.",
     "link_catalog": "Catalogue",
     "link_radar": "Radar Faux-Amis",
     "link_db": "Architecture PostgreSQL"

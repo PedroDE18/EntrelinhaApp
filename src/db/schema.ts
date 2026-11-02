@@ -143,6 +143,7 @@ export const learnerProfiles = pgTable('learner_profiles', {
   interfaceLocale: varchar('interface_locale', { length: 16 }).default('pt-BR').notNull(),
   estimatedCefrReading: varchar('estimated_cefr_reading', { length: 8 }).default('A2').notNull(),
   estimatedCefrListening: varchar('estimated_cefr_listening', { length: 8 }).default('A1').notNull(),
+  metadata: jsonb('metadata'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

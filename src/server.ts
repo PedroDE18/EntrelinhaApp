@@ -32,7 +32,7 @@ interface DevNoteItem {
 
 function parseDevNotes(): { notes: DevNoteItem[]; raw: string } {
   if (!existsSync(devNotesFilePath)) {
-    const initialText = `# LINGUA — Caderno de Desenvolvimento & Registro de Ideias\n\nRegistro contínuo de observações, sugestões e bugs.\n\n---\n`;
+    const initialText = `# Entrelinha — Caderno de Desenvolvimento & Registro de Ideias\n\nRegistro contínuo de observações, sugestões e bugs.\n\n---\n`;
     writeFileSync(devNotesFilePath, initialText, 'utf-8');
     return { notes: [], raw: initialText };
   }
@@ -136,7 +136,7 @@ app.get('/api/health', async (_req, res) => {
   const dbHealth = await checkDatabaseHealth();
   res.json({
     status: 'ok',
-    app: 'LINGUA',
+    app: 'Entrelinha',
     locale: 'pt-BR',
     learningTarget: 'fr-FR',
     timestamp: new Date().toISOString(),
@@ -217,33 +217,90 @@ app.get('/api/linguistics/contrastive', async (_req, res) => {
  * Single-User Persistence Endpoints
  * Persists learner profile, settings, and vocabulary state across restarts.
  */
-app.get('/api/user/data', (_req, res) => {
+/**
+ * Single-User Persistence Endpoints with PostgreSQL/Supabase & Local Resilient Fallback
+ * Persists learner profile, settings, radar, assessments, and vocabulary state.
+ */
+app.get('/api/user/data', async (_req, res) => {
   try {
+    // 1. Try PostgreSQL / Supabase
+    if (db && hasDatabaseConnection) {
+      try {
+        const rows = await db
+          .select()
+          .from(schema.learnerProfiles)
+          .where(eq(schema.learnerProfiles.userId, 'learner-br-01'))
+          .limit(1);
+
+        if (rows.length > 0) {
+          const row = rows[0];
+          const meta = (row.metadata as Record<string, unknown>) || {};
+          const profile = {
+            id: row.userId,
+            name: (meta['name'] as string) || 'Pedro Henrique',
+            nativeLanguage: row.nativeLanguageId as 'pt-BR',
+            targetLanguage: row.targetLanguageId as 'fr-FR',
+            readingCEFR: row.estimatedCefrReading as any,
+            listeningCEFR: row.estimatedCefrListening as any,
+            storiesCompleted: (meta['storiesCompleted'] as number) || 4,
+            totalReadingMinutes: (meta['totalReadingMinutes'] as number) || 38,
+            totalListeningMinutes: (meta['totalListeningMinutes'] as number) || 24,
+            currentStreakDays: (meta['currentStreakDays'] as number) || 5,
+            wordsLearnedCount: (meta['wordsLearnedCount'] as number) || 142,
+            vocabularyMetrics: meta['vocabularyMetrics'] || {
+              unseen: 520,
+              encountered: 86,
+              learning: 48,
+              known: 142,
+              mastered: 64,
+            },
+            preferredGenres: meta['preferredGenres'] || ['Mystère & Suspense', 'Littérature Classique'],
+            readingSpeedPreference: 'comfortable',
+            audioPlaybackSpeed: 1.0,
+            firebaseSyncEnabled: true,
+            difficultyRadar: meta['difficultyRadar'],
+            assessmentHistory: meta['assessmentHistory'] || [],
+            lastSyncedAt: row.updatedAt?.toISOString() || new Date().toISOString(),
+          };
+
+          return res.json({
+            success: true,
+            source: 'supabase_postgresql',
+            data: {
+              profile,
+              words: meta['words'] || [],
+            },
+          });
+        }
+      } catch (dbErr) {
+        console.warn('[API] Supabase query for user data failed, falling back to local file:', dbErr);
+      }
+    }
+
+    // 2. Resilient file fallback
     if (existsSync(userDataFilePath)) {
       const parsed = JSON.parse(readFileSync(userDataFilePath, 'utf-8'));
-      res.json({
+      return res.json({
         success: true,
         source: 'persistent_file',
         data: parsed,
       });
-      return;
     }
-    res.json({
+
+    return res.json({
       success: true,
       source: 'initial_mock',
       data: null,
     });
-    return;
   } catch (err: unknown) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
-    return;
   }
 });
 
-app.post('/api/user/data', (req, res) => {
+app.post('/api/user/data', async (req, res) => {
   try {
     const { profile, words } = req.body || {};
     const dir = join(process.cwd(), 'data');
@@ -255,19 +312,122 @@ app.post('/api/user/data', (req, res) => {
       profile,
       words,
     };
+
+    // 1. Write to local file backup
     writeFileSync(userDataFilePath, JSON.stringify(payload, null, 2), 'utf-8');
-    res.json({
+
+    // 2. Persist directly to Supabase if connected
+    let supabaseSuccess = false;
+    if (db && hasDatabaseConnection && profile) {
+      try {
+        const userId = profile.id || 'learner-br-01';
+        const metadata = {
+          name: profile.name,
+          storiesCompleted: profile.storiesCompleted,
+          totalReadingMinutes: profile.totalReadingMinutes,
+          totalListeningMinutes: profile.totalListeningMinutes,
+          currentStreakDays: profile.currentStreakDays,
+          wordsLearnedCount: profile.wordsLearnedCount,
+          vocabularyMetrics: profile.vocabularyMetrics,
+          preferredGenres: profile.preferredGenres,
+          difficultyRadar: profile.difficultyRadar,
+          assessmentHistory: profile.assessmentHistory,
+          words: words || [],
+        };
+
+        await db
+          .insert(schema.learnerProfiles)
+          .values({
+            userId,
+            nativeLanguageId: profile.nativeLanguage || 'pt-BR',
+            targetLanguageId: profile.targetLanguage || 'fr-FR',
+            interfaceLocale: 'pt-BR',
+            estimatedCefrReading: profile.readingCEFR || 'B1',
+            estimatedCefrListening: profile.listeningCEFR || 'A2',
+            metadata,
+            updatedAt: new Date(),
+          })
+          .onConflictDoUpdate({
+            target: schema.learnerProfiles.userId,
+            set: {
+              estimatedCefrReading: profile.readingCEFR || 'B1',
+              estimatedCefrListening: profile.listeningCEFR || 'A2',
+              metadata,
+              updatedAt: new Date(),
+            },
+          });
+
+        supabaseSuccess = true;
+      } catch (dbErr) {
+        console.warn('[API] Could not persist to Supabase PostgreSQL, saved to local store:', dbErr);
+      }
+    }
+
+    return res.json({
       success: true,
       message: 'Dados persistidos com sucesso!',
+      persistedToSupabase: supabaseSuccess,
       updatedAt: payload.updatedAt,
     });
-    return;
   } catch (err: unknown) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: err instanceof Error ? err.message : String(err),
     });
-    return;
+  }
+});
+
+/**
+ * Log reading session & assessment outcome into Supabase
+ */
+app.post('/api/user/session', async (req, res) => {
+  try {
+    const { storyId, score = 0, readingDurationSec = 0, testedCategories = [], mistakeCategories = [] } = req.body || {};
+    if (!storyId) {
+      return res.status(400).json({ success: false, error: 'storyId é obrigatório' });
+    }
+
+    let sessionLogged = false;
+    if (db && hasDatabaseConnection) {
+      try {
+        // Insert into story_sessions
+        await db.insert(schema.storySessions).values({
+          userId: 'learner-br-01',
+          storyId,
+          score: Math.round(Number(score)),
+          readingDurationSec: Math.round(Number(readingDurationSec)),
+        });
+
+        // Log learning event
+        await db.insert(schema.learningEvents).values({
+          userId: 'learner-br-01',
+          eventType: 'story_completed',
+          storyId,
+          payload: {
+            score,
+            readingDurationSec,
+            testedCategories,
+            mistakeCategories,
+            timestamp: new Date().toISOString(),
+          },
+        });
+
+        sessionLogged = true;
+      } catch (err) {
+        console.warn('[API] Supabase session logging fallback:', err);
+      }
+    }
+
+    return res.json({
+      success: true,
+      sessionLogged,
+      storyId,
+    });
+  } catch (err: unknown) {
+    return res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 });
 

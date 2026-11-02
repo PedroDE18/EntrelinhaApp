@@ -14,7 +14,7 @@ import { I18nService } from '../core/services/i18n';
       <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
         <!-- Zone 1: Single text element wordmark -->
         <a routerLink="/" class="text-xl sm:text-2xl font-serif font-bold tracking-wider text-[#231F1C] dark:text-[#EAE4DA] whitespace-nowrap shrink-0 hover:opacity-85 transition-opacity flex items-center gap-2">
-          <span>LINGUA</span>
+          <span>Entrelinha</span>
         </a>
 
         <!-- Zone 2: Desktop navigation links -->
@@ -33,6 +33,10 @@ import { I18nService } from '../core/services/i18n';
           </a>
           <a routerLink="/profile" routerLinkActive="text-[#231F1C] dark:text-[#EAE4DA] font-semibold border-b-2 border-[#231F1C] dark:border-[#EAE4DA] pb-0.5" class="hover:text-[#231F1C] dark:hover:text-[#EAE4DA] transition-colors whitespace-nowrap shrink-0">
             {{ i18n.t('nav.profile') }}
+          </a>
+          <a routerLink="/placement" routerLinkActive="text-[#231F1C] dark:text-[#EAE4DA] font-semibold border-b-2 border-[#231F1C] dark:border-[#EAE4DA] pb-0.5" class="hover:text-[#231F1C] dark:hover:text-[#EAE4DA] transition-colors whitespace-nowrap shrink-0 flex items-center gap-1 text-xs">
+            <mat-icon class="text-sm !w-3.5 !h-3.5 text-[#9C3823] dark:text-[#DDA15E]">explore</mat-icon>
+            <span>Nivelamento</span>
           </a>
         </nav>
 

@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "LINGUA — Aprendizado de Francês por Leitura Imersiva",
+    "title": "Entrelinha — Aprendizado de Francês por Leitura Imersiva",
     "tagline": "Leia pela história. Aprenda pela língua."
   },
   "nav": {
@@ -105,7 +105,7 @@
       "heading": "Procedência & Estatuto Jurídico",
       "source_origin": "Fonte de origem:",
       "license": "Licença de distribuição:",
-      "disclaimer": "O LINGUA distingue rigorosamente obras do domínio público (Wikisource, Gallica), traduções literárias e narrativas pedagógicas originais."
+      "disclaimer": "O Entrelinha distingue rigorosamente obras do domínio público (Wikisource, Gallica), traduções literárias e narrativas pedagógicas originais."
     },
     "quiz": {
       "badge": "Avaliação Ativa de Compreensão",
@@ -169,7 +169,7 @@
     "theme_sub": "Papel marfim clássico ou encadernação escura",
     "btn_toggle_theme": "Alternar Tema",
     "db_heading": "Arquitetura PostgreSQL Relacional (Fase 1.5)",
-    "db_desc": "O LINGUA utiliza PostgreSQL para modelar a base de conhecimento linguístico (entradas lexicais, sentidos, falsos cognatos, gêneros invertidos e conceitos gramaticais) de forma relacional.",
+    "db_desc": "O Entrelinha utiliza PostgreSQL para modelar a base de conhecimento linguístico (entradas lexicais, sentidos, falsos cognatos, gêneros invertidos e conceitos gramaticais) de forma relacional.",
     "db_status_ready": "Estrutura relacional Drizzle ORM configurada",
     "pwa_cache_ready": "PWA & Cache offline ativos"
   },
@@ -177,7 +177,7 @@
     "tagline": "Leia pela história. Aprenda pela língua.",
     "config_line": "Configuração: Português do Brasil (pt-BR) → Francês da França (fr-FR)",
     "phase_label": "Fase 1.5: Refinamento UX, Localização & PostgreSQL",
-    "copyright": "© 2026 LINGUA. Textos do Domínio Público (Wikisource, Project Gutenberg) e ficções pedagógicas originais.",
+    "copyright": "© 2026 Entrelinha. Textos do Domínio Público (Wikisource, Project Gutenberg) e ficções pedagógicas originais.",
     "link_catalog": "Catálogo",
     "link_radar": "Radar Falsos Cognatos",
     "link_db": "Arquitetura PostgreSQL"

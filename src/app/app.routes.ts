@@ -22,6 +22,10 @@ export const routes: Routes = [
     loadComponent: () => import('./views/profile-view').then((m) => m.ProfileView),
   },
   {
+    path: 'placement',
+    loadComponent: () => import('./views/placement-test-view').then((m) => m.PlacementTestView),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

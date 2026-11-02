@@ -3,8 +3,16 @@ import {
   LearnerProfile,
   LearnerWord,
   PortugueseInterferenceItem,
+  ComprehensionQuestion,
+  DifficultyCategory,
+  DifficultyRadar,
+  AssessmentHistoryItem,
 } from '../models';
 import { transitionVocabularyState } from '../linguistics';
+import {
+  createDefaultDifficultyRadar,
+  updateRadarWithAssessment,
+} from '../adaptive-learning';
 
 const INITIAL_PROFILE: LearnerProfile = {
   id: 'learner-br-01',
@@ -30,6 +38,8 @@ const INITIAL_PROFILE: LearnerProfile = {
   audioPlaybackSpeed: 1.0,
   firebaseSyncEnabled: true,
   lastSyncedAt: new Date().toISOString(),
+  difficultyRadar: createDefaultDifficultyRadar(),
+  assessmentHistory: [],
 };
 
 const INITIAL_WORDS: LearnerWord[] = [
@@ -169,13 +179,28 @@ export class LearnerProfileService {
   readonly learningWordsCount = computed(() => this.words().filter((w) => w.state === 'learning').length);
   readonly knownWordsCount = computed(() => this.words().filter((w) => w.state === 'known').length);
   readonly masteredWordsCount = computed(() => this.words().filter((w) => w.state === 'mastered').length);
+  readonly difficultyRadar = computed(() => this.profile().difficultyRadar || createDefaultDifficultyRadar());
+  readonly assessmentHistory = computed(() => this.profile().assessmentHistory || []);
+  readonly weakestCategories = computed(() => {
+    const list = Object.values(this.difficultyRadar());
+    return list.sort((a, b) => a.masteryScore - b.masteryScore);
+  });
 
   constructor() {
     if (typeof window !== 'undefined') {
       const savedProfile = localStorage.getItem('lingua_learner_profile');
       if (savedProfile) {
         try {
-          this.profile.set(JSON.parse(savedProfile));
+          const parsed = JSON.parse(savedProfile);
+          const defaultRadar = createDefaultDifficultyRadar();
+          parsed.difficultyRadar = {
+            ...defaultRadar,
+            ...(parsed.difficultyRadar || {}),
+          };
+          if (!parsed.assessmentHistory) {
+            parsed.assessmentHistory = [];
+          }
+          this.profile.set(parsed);
         } catch {
           // keep initial
         }
@@ -201,6 +226,14 @@ export class LearnerProfileService {
       .then((payload) => {
         if (payload?.success && payload.data) {
           if (payload.data.profile) {
+            const defaultRadar = createDefaultDifficultyRadar();
+            payload.data.profile.difficultyRadar = {
+              ...defaultRadar,
+              ...(payload.data.profile.difficultyRadar || {}),
+            };
+            if (!payload.data.profile.assessmentHistory) {
+              payload.data.profile.assessmentHistory = [];
+            }
             this.profile.set(payload.data.profile);
             localStorage.setItem('lingua_learner_profile', JSON.stringify(payload.data.profile));
           }
@@ -281,6 +314,88 @@ export class LearnerProfileService {
       lastSyncedAt: new Date().toISOString(),
     }));
     this.saveProfile();
+  }
+
+  recordAssessmentOutcome(
+    storyId: string,
+    storyTitle: string,
+    questionResults: { question: ComprehensionQuestion; isCorrect: boolean }[],
+    readingDurationSec: number,
+    wordCount: number
+  ): {
+    scorePercent: number;
+    testedCategories: DifficultyCategory[];
+    mistakeCategories: DifficultyCategory[];
+    updatedRadar: DifficultyRadar;
+  } {
+    const currentRadar = this.difficultyRadar();
+    const { updatedRadar, testedCategories, mistakeCategories } = updateRadarWithAssessment(
+      currentRadar,
+      questionResults
+    );
+
+    const totalQuestions = questionResults.length;
+    const correctQuestions = questionResults.filter((r) => r.isCorrect).length;
+    const scorePercent = totalQuestions > 0 ? Math.round((correctQuestions / totalQuestions) * 100) : 100;
+    const minutes = readingDurationSec > 0 ? readingDurationSec / 60 : 1;
+    const estimatedWpm = Math.round(wordCount / minutes);
+
+    const assessmentItem: AssessmentHistoryItem = {
+      id: `assess-${Date.now()}`,
+      storyId,
+      storyTitle,
+      completedAt: new Date().toISOString(),
+      scorePercent,
+      totalQuestions,
+      correctQuestions,
+      readingDurationSec,
+      estimatedWpm,
+      testedCategories,
+      mistakeCategories,
+    };
+
+    const readingMinutes = Math.max(1, Math.round(minutes));
+
+    this.profile.update((p) => {
+      const history = p.assessmentHistory ? [assessmentItem, ...p.assessmentHistory] : [assessmentItem];
+      return {
+        ...p,
+        storiesCompleted: p.storiesCompleted + 1,
+        totalReadingMinutes: p.totalReadingMinutes + readingMinutes,
+        vocabularyMetrics: {
+          ...p.vocabularyMetrics,
+          known: p.vocabularyMetrics.known + (scorePercent >= 75 ? 2 : 1),
+        },
+        difficultyRadar: updatedRadar,
+        assessmentHistory: history.slice(0, 50), // keep recent 50
+        lastSyncedAt: new Date().toISOString(),
+      };
+    });
+
+    this.saveProfile();
+
+    if (typeof window !== 'undefined' && typeof fetch !== 'undefined') {
+      fetch('/api/user/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          storyId,
+          score: scorePercent,
+          readingDurationSec,
+          testedCategories,
+          mistakeCategories,
+        }),
+      }).catch(() => {
+        // Safe offline fallback
+      });
+    }
+
+    return {
+      scorePercent,
+      testedCategories,
+      mistakeCategories,
+      updatedRadar,
+    };
   }
 
   recordListeningCompleted(minutes: number): void {

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { LearnerProfileService } from '../core/services/learner-profile';
@@ -10,7 +11,7 @@ import { DatabaseStatusService } from '../core/services/database-status';
 @Component({
   selector: 'app-profile-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatIconModule, ReactiveFormsModule],
+  imports: [RouterLink, MatIconModule, ReactiveFormsModule],
   template: `
     <div class="space-y-10 max-w-3xl mx-auto pb-12">
       <!-- Section Header -->
@@ -46,6 +47,20 @@ import { DatabaseStatusService } from '../core/services/database-status';
             </span>
             <span class="text-[11px] text-[#6C645C] dark:text-[#9C9387] mt-0.5 block">{{ i18n.t('profile.target_language_sub') }}</span>
           </div>
+        </div>
+
+        <!-- Starting Point Placement Test Action -->
+        <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-[#EFE9DD] dark:border-[#2C2723] text-xs">
+          <div>
+            <span class="font-semibold text-[#231F1C] dark:text-[#EAE4DA] block">Nível de Leitura Calibrado: CEFR {{ profile().readingCEFR }}</span>
+            <span class="text-[#8A8278] dark:text-[#7A7268] block">Descubra seu ponto de partida ou recalibre seu radar de dificuldades</span>
+          </div>
+          <a
+            routerLink="/placement"
+            class="px-3.5 py-2 rounded-lg border border-[#DECDB3] dark:border-[#42362C] bg-[#F7F4EE] dark:bg-[#1A1715] font-semibold text-[#7A2A18] dark:text-[#F3D5A5] hover:bg-[#EFE9DD] dark:hover:bg-[#2A2420] transition-colors inline-flex items-center gap-1.5 touch-target-min self-start sm:self-auto shadow-xs">
+            <mat-icon class="text-sm !w-4 !h-4">explore</mat-icon>
+            <span>Fazer Teste de Nivelamento</span>
+          </a>
         </div>
 
         <!-- Interface Language Switcher -->
@@ -86,7 +101,7 @@ import { DatabaseStatusService } from '../core/services/database-status';
         </div>
 
         <p class="text-xs font-reading text-[#5A524A] dark:text-[#B5ADA3] leading-relaxed">
-          Registre aqui ideias de melhorias, relatórios de bugs ou notas pedagógicas. Suas anotações são salvas diretamente no arquivo <strong>DEV_NOTES.md</strong> na raiz do repositório no GitHub para acompanhamento contínuo da evolução do LINGUA.
+          Registre aqui ideias de melhorias, relatórios de bugs ou notas pedagógicas. Suas anotações são salvas diretamente no arquivo <strong>DEV_NOTES.md</strong> na raiz do repositório no GitHub para acompanhamento contínuo da evolução do Entrelinha.
         </p>
 
         <!-- Form for Adding Notes -->
@@ -282,7 +297,7 @@ import { DatabaseStatusService } from '../core/services/database-status';
         </div>
 
         <p class="text-xs font-reading text-[#5A524A] dark:text-[#B5ADA3] leading-relaxed">
-          O LINGUA está hospedado na nuvem e totalmente acessível em qualquer dispositivo sem necessidade de configurações adicionais.
+          O Entrelinha está hospedado na nuvem e totalmente acessível em qualquer dispositivo sem necessidade de configurações adicionais.
         </p>
 
         <div class="p-4 rounded-xl bg-[#F7F4EE] dark:bg-[#1A1715] border border-[#E6DFD3] dark:border-[#332D28] space-y-2 text-xs">
@@ -291,7 +306,7 @@ import { DatabaseStatusService } from '../core/services/database-status';
             <li>Abra o link compartilhado no Safari do seu iPhone 13.</li>
             <li>Toque no botão <strong>Compartilhar</strong> (ícone do quadrado com a seta para cima na barra inferior).</li>
             <li>Role a lista e selecione <strong>"Adicionar à Tela de Início"</strong> (Add to Home Screen).</li>
-            <li>O LINGUA abrirá em tela cheia, com respeito total à barra de navegação inferior (Home Indicator) e entalhe superior (Notch).</li>
+            <li>O Entrelinha abrirá em tela cheia, com respeito total à barra de navegação inferior (Home Indicator) e entalhe superior (Notch).</li>
           </ol>
         </div>
       </section>

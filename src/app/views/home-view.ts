@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { StoryService } from '../core/services/story';
 import { LearnerProfileService } from '../core/services/learner-profile';
 import { SpeechNarrationService } from '../core/services/speech';
 import { I18nService } from '../core/services/i18n';
+import { rankStoriesForLearner, getRecommendedFocusAreas } from '../core/adaptive-learning';
 
 @Component({
   selector: 'app-home-view',
@@ -73,6 +74,29 @@ import { I18nService } from '../core/services/i18n';
         </div>
       </section>
 
+      <!-- Diagnostic Starting Point Banner -->
+      <section class="paper-page rounded-xl p-5 border border-[#DECDB3] dark:border-[#42362C] bg-gradient-to-r from-[#F9F5EE] to-[#F4EDE0] dark:from-[#201C19] dark:to-[#1A1614] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-1.5 text-xs font-semibold text-[#9C3823] dark:text-[#DDA15E] uppercase tracking-wider">
+            <mat-icon class="text-sm !w-4 !h-4">explore</mat-icon>
+            <span>Teste de Nivelamento Diagnóstico</span>
+          </div>
+          <h2 class="text-base sm:text-lg font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+            Descubra seu Ponto de Partida no Francês
+          </h2>
+          <p class="text-xs font-reading text-[#5A524A] dark:text-[#B5ADA3] max-w-2xl leading-relaxed">
+            Responda a 6 questões práticas para calibrar seu nível de leitura (A1–B2) e mapear antecipadamente suas armadilhas contrastivas.
+          </p>
+        </div>
+
+        <a
+          routerLink="/placement"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#231F1C] dark:bg-[#EAE4DA] dark:text-[#181513] hover:opacity-90 transition-opacity shrink-0 shadow-xs">
+          <span>Fazer Teste (3 min)</span>
+          <mat-icon class="text-sm !w-4 !h-4">arrow_forward</mat-icon>
+        </a>
+      </section>
+
       <!-- Portuguese-French Contrast Spotlight (Piège Lusophone / Falso Cognato) -->
       <section class="paper-page rounded-xl p-6 transition-colors">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -138,24 +162,42 @@ import { I18nService } from '../core/services/i18n';
         </div>
       </section>
 
-      <!-- Continue Reading / Recent Stories -->
+      <!-- Adaptive Recommendations: Tailored to Learner Difficulties -->
       <section class="space-y-6">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-[#9C3823] dark:text-[#DDA15E] uppercase tracking-wider mb-1">
+              <mat-icon class="text-sm !w-4 !h-4">auto_awesome</mat-icon>
+              <span>Recomendações Personalizadas pelo Diagnóstico</span>
+            </div>
             <h2 class="text-xl sm:text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
-              {{ i18n.t('home.recommended_heading') }}
+              Fortaleça seus pontos sensíveis
             </h2>
             <p class="text-xs text-[#6C645C] dark:text-[#9C9387] mt-0.5">
-              {{ i18n.t('home.recommended_subheading') }}
+              Histórias priorizadas pelo algoritmo adaptativo com base nos seus tópicos de maior interferência linguística.
             </p>
           </div>
-          <a routerLink="/library" class="text-xs font-medium text-[#231F1C] dark:text-[#EAE4DA] hover:underline">
+          <a routerLink="/library" class="text-xs font-medium text-[#231F1C] dark:text-[#EAE4DA] hover:underline self-start sm:self-auto">
             {{ i18n.t('home.see_all_library') }}
           </a>
         </div>
 
+        <!-- Focus areas badges -->
+        @if (focusAreas().length > 0) {
+          <div class="flex flex-wrap items-center gap-2 p-3.5 rounded-xl bg-[#F7F4EE] dark:bg-[#1A1715] border border-[#E6DFD3] dark:border-[#332D28] text-xs">
+            <span class="text-[#8A8278] dark:text-[#7A7268] font-medium">Foco prioritário sugerido:</span>
+            @for (area of focusAreas(); track area.category) {
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#FCFAF7] dark:bg-[#25201B] border border-[#DDD6C8] dark:border-[#38322C] text-[#231F1C] dark:text-[#EAE4DA] text-[11px] font-medium">
+                <span class="w-1.5 h-1.5 rounded-full" [class]="area.masteryScore < 60 ? 'bg-amber-500' : 'bg-emerald-500'"></span>
+                <span>{{ area.categoryLabelPt }}</span>
+                <span class="font-mono text-[#8A8278] dark:text-[#7A7268]">({{ area.masteryScore }}%)</span>
+              </span>
+            }
+          </div>
+        }
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          @for (story of secondaryStories; track story.id) {
+          @for (story of secondaryStories(); track story.id) {
             <article class="flex flex-col justify-between paper-page rounded-xl p-5 hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all duration-200 shadow-xs">
               <div class="space-y-3">
                 <div class="overflow-hidden rounded-lg aspect-[16/10] bg-[#EFE9DD] dark:bg-[#1A1715]">
@@ -211,7 +253,17 @@ export class HomeView {
 
   readonly profile = this.learnerService.profile;
   readonly featuredStory = this.storyService.getFeaturedStory();
-  readonly secondaryStories = this.storyService.stories().slice(1, 4);
+
+  readonly secondaryStories = computed(() => {
+    const all = this.storyService.stories();
+    const ranked = rankStoriesForLearner(all, this.profile());
+    const featuredId = this.featuredStory.id;
+    return ranked.filter((s) => s.id !== featuredId).slice(0, 3);
+  });
+
+  readonly focusAreas = computed(() =>
+    getRecommendedFocusAreas(this.profile(), this.storyService.stories())
+  );
 
   playContrastExample(): void {
     this.speech.speakExcerpt("Actuellement, l'inspectrice examine le carnet. En fait, tout était prémédité.");

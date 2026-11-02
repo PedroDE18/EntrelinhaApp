@@ -1,6 +1,18 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 import * as schema from './schema';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+
+// Automatically load local .env if present and running in Node
+if (typeof process.loadEnvFile === 'function') {
+  const envPath = join(process.cwd(), '.env');
+  if (existsSync(envPath)) {
+    try {
+      process.loadEnvFile(envPath);
+    } catch {}
+  }
+}
 
 const rawConnectionString = process.env['DATABASE_URL']?.trim() || '';
 
