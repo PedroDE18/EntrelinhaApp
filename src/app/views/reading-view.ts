@@ -63,7 +63,7 @@ import { lookupFrenchLexicon } from '../core/lexicon';
           [class.top-16]="speech.isPlaying()"
           [class.z-30]="speech.isPlaying()"
           [class.shadow-md]="speech.isPlaying()"
-          class="bg-[#FCFAF7]/95 dark:bg-[#221E1B]/95 backdrop-blur-md rounded-xl p-4 border border-[#E6DFD3] dark:border-[#332D28] transition-all space-y-2">
+          class="bg-[#FCFAF7]/95 dark:bg-[#221E1B]/95 backdrop-blur-md rounded-xl p-4 border border-[#E6DFD3] dark:border-[#332D28] transition-all space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
               <!-- Play / Pause primary toggle button -->
@@ -71,7 +71,7 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                 type="button"
                 (click)="toggleAudio(s)"
                 [attr.aria-label]="speech.isPlaying() ? i18n.t('reader.aria_pause') : i18n.t('reader.aria_play')"
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#231F1C] text-white dark:bg-[#EAE4DA] dark:text-[#181513] hover:opacity-90 transition-opacity">
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#9C3823] text-white hover:bg-[#832F1D] dark:bg-[#DDA15E] dark:text-[#181513] hover:opacity-95 transition-all shadow-sm">
                 <mat-icon class="text-xl leading-none !w-5 !h-5">
                   {{ speech.isPlaying() ? 'pause' : 'play_arrow' }}
                 </mat-icon>
@@ -87,9 +87,12 @@ import { lookupFrenchLexicon } from '../core/lexicon';
               </button>
 
               <div class="space-y-0.5">
-                <div class="text-xs font-semibold text-[#231F1C] dark:text-[#EAE4DA] flex items-center gap-1.5">
+                <div class="text-xs font-semibold text-[#231F1C] dark:text-[#EAE4DA] flex items-center gap-2">
                   <span>{{ i18n.t('reader.audio_narration_title') }}</span>
-                  <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] font-normal">({{ s.audioDurationSec }}s)</span>
+                  <span class="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2F2923] text-[#78350F] dark:text-[#FBBF24] font-medium border border-[#D5CABB]/60 dark:border-[#423930]">
+                    <mat-icon class="text-[12px] leading-none !w-3 !h-3">record_voice_over</mat-icon>
+                    <span>{{ speech.activeVoiceName() }}</span>
+                  </span>
                 </div>
                 <div class="text-[11px] text-[#6C645C] dark:text-[#9C9387]">
                   {{ i18n.t('reader.audio_narration_subtitle') }}
@@ -100,13 +103,13 @@ import { lookupFrenchLexicon } from '../core/lexicon';
             <!-- Playback Speed Controls -->
             <div class="flex items-center gap-1 text-xs">
               <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] mr-1">{{ i18n.t('reader.speed_label') }}</span>
-              @for (speed of [0.75, 0.9, 1.0, 1.25]; track speed) {
+              @for (speed of [0.75, 0.92, 1.0, 1.25]; track speed) {
                 <button
                   type="button"
                   (click)="speech.setSpeed(speed)"
                   [class]="speech.currentSpeed() === speed ? 'bg-[#231F1C] text-white dark:bg-[#EAE4DA] dark:text-[#181513] font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
                   class="px-2 py-0.5 rounded text-[11px] transition-colors">
-                  {{ speed }}x
+                  {{ speed === 0.92 ? '0.9x' : speed + 'x' }}
                 </button>
               }
             </div>
@@ -120,27 +123,41 @@ import { lookupFrenchLexicon } from '../core/lexicon';
           </div>
         </div>
 
-        <!-- Story Header: Clean Editorial Title & Metadata -->
-        <header class="space-y-3 pt-2">
-          <div class="flex flex-wrap items-center gap-2 text-xs text-[#6C645C] dark:text-[#9C9387]">
-            <span class="font-medium text-[#9C3823] dark:text-[#DDA15E]">{{ i18n.t('home.level', { level: s.estimatedCEFR }) }}</span>
-            <span aria-hidden="true">·</span>
-            <span>{{ i18n.t('reader.reading_time_words', { minutes: s.readingMinutes, words: s.wordCount }) }}</span>
-            <span aria-hidden="true">·</span>
-            <span>{{ s.genre }}</span>
+        <!-- Story Header: Clean Editorial Title & Frontispiece Vignette -->
+        <header class="flex flex-col sm:flex-row items-center sm:items-start gap-5 pt-3 pb-4 border-b border-[#E6DFD3] dark:border-[#332D28]">
+          <div class="w-24 sm:w-32 md:w-36 flex-shrink-0 rounded-lg overflow-hidden book-cover-shadow border border-[#D5CABB] dark:border-[#3E362F] bg-[#181513]">
+            <img [src]="s.coverImage" [alt]="s.title" class="w-full h-auto object-cover aspect-[4/5] block" />
           </div>
 
-          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] tracking-tight leading-tight">
-            {{ s.title }}
-          </h1>
-
-          <div class="text-sm text-[#5A524A] dark:text-[#B5ADA3] flex flex-wrap items-center gap-2">
-            <span>Par <strong class="font-medium text-[#231F1C] dark:text-[#EAE4DA]">{{ s.author }}</strong></span>
-            @if (s.sourceUrl) {
+          <div class="flex-1 space-y-2.5 text-center sm:text-left">
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs text-[#6C645C] dark:text-[#9C9387]">
+              <span class="px-2.5 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2C2621] font-semibold text-[#9C3823] dark:text-[#DDA15E]">
+                {{ i18n.t('home.level', { level: s.estimatedCEFR }) }}
+              </span>
               <span aria-hidden="true">·</span>
-              <a [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer" class="hover:underline text-[#9C3823] dark:text-[#DDA15E]">
-                {{ i18n.t('reader.source_link') }}
-              </a>
+              <span>{{ i18n.t('reader.reading_time_words', { minutes: s.readingMinutes, words: s.wordCount }) }}</span>
+              <span aria-hidden="true">·</span>
+              <span>{{ s.genre }}</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] tracking-tight leading-tight">
+              {{ s.title }}
+            </h1>
+
+            <div class="text-xs sm:text-sm text-[#5A524A] dark:text-[#B5ADA3] flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <span>Par <strong class="font-medium text-[#231F1C] dark:text-[#EAE4DA]">{{ s.author }}</strong></span>
+              @if (s.sourceUrl) {
+                <span aria-hidden="true">·</span>
+                <a [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer" class="hover:underline text-[#9C3823] dark:text-[#DDA15E]">
+                  {{ i18n.t('reader.source_link') }}
+                </a>
+              }
+            </div>
+
+            @if (s.excerpt) {
+              <p class="text-xs sm:text-sm font-reading italic text-[#6C645C] dark:text-[#9C9387] max-w-xl leading-relaxed pt-1 hidden sm:block">
+                « {{ s.excerpt }} »
+              </p>
             }
           </div>
         </header>
@@ -210,9 +227,9 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                     }
                     <button
                       type="button"
-                      (click)="speech.speakExcerpt(tok.fullText)"
+                      (click)="speech.speakWord(tok.fullText)"
                       [attr.aria-label]="i18n.t('reader.gloss.aria_pronounce')"
-                      class="text-[#6C645C] hover:text-[#231F1C] dark:hover:text-[#EAE4DA] p-1 rounded">
+                      class="text-[#6C645C] hover:text-[#9C3823] dark:hover:text-[#DDA15E] p-1 rounded transition-colors">
                       <mat-icon class="text-base leading-none !w-4 !h-4">volume_up</mat-icon>
                     </button>
                   </div>

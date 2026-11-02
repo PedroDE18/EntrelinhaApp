@@ -72,17 +72,19 @@ import { I18nService } from '../core/services/i18n';
       </div>
 
       <!-- Story Catalog Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @for (story of filteredStories(); track story.id) {
-          <article class="flex flex-col justify-between paper-page rounded-xl overflow-hidden shadow-xs hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all duration-200">
+          <article class="flex flex-col justify-between paper-page rounded-2xl overflow-hidden shadow-xs hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all duration-300 group">
             <div>
-              <div class="relative aspect-[16/10] overflow-hidden bg-[#EFE9DD] dark:bg-[#1A1715]">
-                <img
-                  [src]="story.coverImage"
-                  [alt]="story.title"
-                  referrerpolicy="no-referrer"
-                  class="w-full h-full object-cover" />
-                <div class="absolute top-3 right-3 bg-[#181513]/85 backdrop-blur-xs text-[#EAE4DA] text-[11px] font-semibold px-2.5 py-0.5 rounded">
+              <div class="relative aspect-[4/5] overflow-hidden bg-[#1A1715] flex items-center justify-center p-3 border-b border-[#E6DFD3] dark:border-[#332D28]">
+                <div class="relative w-full h-full rounded-lg overflow-hidden book-cover-shadow">
+                  <img
+                    [src]="story.coverImage"
+                    [alt]="story.title"
+                    loading="lazy"
+                    class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />
+                </div>
+                <div class="absolute top-4 right-4 bg-[#181513]/90 backdrop-blur-xs text-[#EAE4DA] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border border-[#3E362F] shadow-sm">
                   CEFR {{ story.estimatedCEFR }}
                 </div>
               </div>
@@ -96,7 +98,7 @@ import { I18nService } from '../core/services/i18n';
                   <span>{{ story.genre }}</span>
                 </div>
 
-                <h2 class="text-xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] leading-snug">
+                <h2 class="text-xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] leading-snug group-hover:text-[#9C3823] dark:group-hover:text-[#DDA15E] transition-colors">
                   {{ story.title }}
                 </h2>
 
@@ -116,8 +118,8 @@ import { I18nService } from '../core/services/i18n';
 
             <div class="p-5 pt-0 border-t border-[#EFE9DD] dark:border-[#2C2723] mt-4 flex items-center justify-between">
               @if (story.audioAvailable) {
-                <span class="inline-flex items-center gap-1 text-[11px] text-[#6C645C] dark:text-[#9C9387]">
-                  <mat-icon class="text-sm leading-none !w-3.5 !h-3.5">volume_up</mat-icon>
+                <span class="inline-flex items-center gap-1.5 text-[11px] text-[#78350F] dark:text-[#FBBF24] font-medium">
+                  <mat-icon class="text-sm leading-none !w-3.5 !h-3.5">record_voice_over</mat-icon>
                   <span>{{ i18n.t('library.audio_included') }}</span>
                 </span>
               } @else {
@@ -126,7 +128,7 @@ import { I18nService } from '../core/services/i18n';
 
               <a
                 [routerLink]="['/read', story.id]"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#231F1C] dark:bg-[#EAE4DA] text-white dark:text-[#181513] hover:opacity-90 transition-opacity">
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-[#231F1C] dark:bg-[#EAE4DA] text-white dark:text-[#181513] hover:opacity-90 transition-opacity shadow-xs">
                 <span>{{ i18n.t('library.btn_read_story') }}</span>
                 <mat-icon class="text-sm leading-none !w-3.5 !h-3.5">arrow_forward</mat-icon>
               </a>

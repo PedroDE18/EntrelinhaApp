@@ -1,24 +1,144 @@
 import { Injectable, signal } from '@angular/core';
 
+export interface FrenchVoiceOption {
+  name: string;
+  lang: string;
+  isNatural: boolean;
+  label: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class SpeechNarrationService {
   readonly isPlaying = signal<boolean>(false);
   readonly isPaused = signal<boolean>(false);
-  readonly currentSpeed = signal<number>(1.0);
+  readonly currentSpeed = signal<number>(0.92);
   readonly progressPercent = signal<number>(0);
   readonly currentSentenceIndex = signal<number>(0);
   readonly totalSentences = signal<number>(0);
+  readonly activeVoiceName = signal<string>('Voz Natural Francesa');
+  readonly availableFrenchVoices = signal<FrenchVoiceOption[]>([]);
 
   private sentences: string[] = [];
   private synth: SpeechSynthesis | null = null;
   private activeUtterance: SpeechSynthesisUtterance | null = null;
   private isProcessing = false;
+  private selectedVoiceName: string | null = null;
+  private pauseTimeoutId: any = null;
 
   constructor() {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       this.synth = window.speechSynthesis;
+      this.initVoices();
+    }
+  }
+
+  /**
+   * Initializes and listens for asynchronous voice loading from browser engine
+   */
+  private initVoices(): void {
+    if (!this.synth) return;
+
+    const update = () => {
+      const voices = this.synth?.getVoices() || [];
+      const frenchVoices = voices.filter((v) => {
+        const l = (v.lang || '').toLowerCase().replace('_', '-');
+        return l.startsWith('fr');
+      });
+
+      const ranked = this.sortVoicesByNaturalQuality(frenchVoices);
+      const options: FrenchVoiceOption[] = ranked.map((v) => ({
+        name: v.name,
+        lang: v.lang,
+        isNatural: this.isNaturalVoice(v),
+        label: this.formatVoiceLabel(v),
+      }));
+
+      this.availableFrenchVoices.set(options);
+
+      if (ranked.length > 0) {
+        const top = this.getBestFrenchVoice();
+        if (top) {
+          this.activeVoiceName.set(this.formatVoiceLabel(top));
+        }
+      }
+    };
+
+    update();
+    if (typeof window !== 'undefined' && this.synth.onvoiceschanged !== undefined) {
+      this.synth.onvoiceschanged = update;
+    }
+  }
+
+  /**
+   * Quality scoring heuristic to prefer human-like neural and enhanced voices
+   */
+  private scoreVoice(voice: SpeechSynthesisVoice): number {
+    let score = 0;
+    const name = voice.name.toLowerCase();
+    const lang = (voice.lang || '').toLowerCase().replace('_', '-');
+
+    // Prefer France French (fr-FR) for standard target phonology
+    if (lang === 'fr-fr') score += 40;
+    else if (lang.startsWith('fr')) score += 20;
+
+    // High quality neural / online natural synthesis
+    if (name.includes('natural') || name.includes('online')) score += 60;
+    if (name.includes('google') && name.includes('français')) score += 55;
+    if (name.includes('enhanced') || name.includes('premium') || name.includes('siri')) score += 50;
+
+    // Well-regarded human voice models
+    const favoredNames = ['henri', 'paul', 'julie', 'denise', 'thomas', 'audrey', 'amélie', 'céline', 'nicolas'];
+    if (favoredNames.some((n) => name.includes(n))) score += 25;
+
+    // Penalize mechanical robotic fallbacks
+    if (name.includes('espeak') || name.includes('compact') || name.includes('sin-nombre')) score -= 80;
+
+    return score;
+  }
+
+  isNaturalVoice(voice: SpeechSynthesisVoice): boolean {
+    const name = voice.name.toLowerCase();
+    return (
+      name.includes('natural') ||
+      name.includes('online') ||
+      name.includes('enhanced') ||
+      name.includes('premium') ||
+      name.includes('google')
+    );
+  }
+
+  private formatVoiceLabel(voice: SpeechSynthesisVoice): string {
+    const isNat = this.isNaturalVoice(voice);
+    const cleanName = voice.name.replace(/Microsoft\s+/i, '').replace(/Online\s*\(Natural\)\s*-\s*/i, '').trim();
+    return isNat ? `${cleanName} (Humana/Natural)` : cleanName;
+  }
+
+  private sortVoicesByNaturalQuality(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice[] {
+    return [...voices].sort((a, b) => this.scoreVoice(b) - this.scoreVoice(a));
+  }
+
+  getBestFrenchVoice(): SpeechSynthesisVoice | null {
+    if (!this.synth) return null;
+    const allVoices = this.synth.getVoices();
+    const french = allVoices.filter((v) => (v.lang || '').toLowerCase().replace('_', '-').startsWith('fr'));
+    if (french.length === 0) return null;
+
+    if (this.selectedVoiceName) {
+      const match = french.find((v) => v.name === this.selectedVoiceName);
+      if (match) return match;
+    }
+
+    const sorted = this.sortVoicesByNaturalQuality(french);
+    return sorted[0] || french[0];
+  }
+
+  setSelectedVoice(voiceName: string): void {
+    this.selectedVoiceName = voiceName;
+    const voice = this.getBestFrenchVoice();
+    if (voice) {
+      this.activeVoiceName.set(this.formatVoiceLabel(voice));
     }
   }
 
@@ -27,7 +147,6 @@ export class SpeechNarrationService {
    */
   splitIntoSentences(text: string): string[] {
     if (!text) return [];
-    // Match sentence terminators (. ! ? ...) while preserving French quotations
     const raw = text
       .replace(/\r\n/g, ' ')
       .replace(/\n/g, ' ')
@@ -43,6 +162,7 @@ export class SpeechNarrationService {
     this.isProcessing = true;
 
     try {
+      this.clearPauseTimeout();
       this.stop();
       this.sentences = this.splitIntoSentences(fullText);
       this.totalSentences.set(this.sentences.length);
@@ -57,11 +177,11 @@ export class SpeechNarrationService {
   }
 
   pause(): void {
+    this.clearPauseTimeout();
     if (!this.isPlaying()) return;
 
     if (this.synth) {
       try {
-        // Immediate audio cutoff: cancel active utterance to silence output instantaneously
         this.synth.cancel();
       } catch {
         // ignore
@@ -74,6 +194,7 @@ export class SpeechNarrationService {
   }
 
   resume(): void {
+    this.clearPauseTimeout();
     if (!this.isPaused() && !this.isPlaying()) {
       if (this.sentences.length > 0) {
         this.speakCurrentSentence();
@@ -91,6 +212,7 @@ export class SpeechNarrationService {
   }
 
   replay(): void {
+    this.clearPauseTimeout();
     this.stop();
     this.currentSentenceIndex.set(0);
     this.progressPercent.set(0);
@@ -102,6 +224,7 @@ export class SpeechNarrationService {
   }
 
   stop(): void {
+    this.clearPauseTimeout();
     if (this.synth) {
       try {
         this.synth.cancel();
@@ -117,24 +240,27 @@ export class SpeechNarrationService {
   setSpeed(speed: number): void {
     this.currentSpeed.set(speed);
     if (this.isPlaying()) {
-      // Re-trigger current sentence with updated speed seamlessly
       this.speakCurrentSentence();
     }
   }
 
-  speakExcerpt(frenchText: string): void {
-    if (!this.synth) return;
+  /**
+   * Pronounce a single vocabulary word or short expression with clear phonetics
+   */
+  speakWord(frenchWord: string): void {
+    if (!this.synth || !frenchWord) return;
 
     try {
       this.synth.cancel();
-      const utterance = new SpeechSynthesisUtterance(frenchText);
+      const utterance = new SpeechSynthesisUtterance(frenchWord);
       utterance.lang = 'fr-FR';
-      utterance.rate = this.currentSpeed();
+      // Slightly relaxed tempo for maximum phoneme clarity
+      utterance.rate = Math.max(0.82, this.currentSpeed() * 0.95);
+      utterance.pitch = 1.0;
 
-      const voices = this.synth.getVoices();
-      const frenchVoice = voices.find((v) => v.lang.startsWith('fr') || v.lang.includes('FR'));
-      if (frenchVoice) {
-        utterance.voice = frenchVoice;
+      const voice = this.getBestFrenchVoice();
+      if (voice) {
+        utterance.voice = voice;
       }
 
       this.synth.speak(utterance);
@@ -143,10 +269,20 @@ export class SpeechNarrationService {
     }
   }
 
+  speakExcerpt(frenchText: string): void {
+    this.speakWord(frenchText);
+  }
+
+  private clearPauseTimeout(): void {
+    if (this.pauseTimeoutId) {
+      clearTimeout(this.pauseTimeoutId);
+      this.pauseTimeoutId = null;
+    }
+  }
+
   private speakCurrentSentence(): void {
     const idx = this.currentSentenceIndex();
     if (idx >= this.sentences.length) {
-      // Reached the end
       this.isPlaying.set(false);
       this.isPaused.set(false);
       this.progressPercent.set(100);
@@ -164,11 +300,12 @@ export class SpeechNarrationService {
         const utterance = new SpeechSynthesisUtterance(sentence);
         utterance.lang = 'fr-FR';
         utterance.rate = this.currentSpeed();
+        utterance.pitch = 1.0;
 
-        const voices = this.synth.getVoices();
-        const frenchVoice = voices.find((v) => v.lang.startsWith('fr') || v.lang.includes('FR'));
-        if (frenchVoice) {
-          utterance.voice = frenchVoice;
+        const bestVoice = this.getBestFrenchVoice();
+        if (bestVoice) {
+          utterance.voice = bestVoice;
+          this.activeVoiceName.set(this.formatVoiceLabel(bestVoice));
         }
 
         utterance.onend = () => {
@@ -177,7 +314,12 @@ export class SpeechNarrationService {
           this.currentSentenceIndex.set(nextIdx);
 
           if (nextIdx < this.sentences.length) {
-            this.speakCurrentSentence();
+            // Natural human pause between sentences (180ms) for breathing and cognitive absorption
+            this.pauseTimeoutId = setTimeout(() => {
+              if (this.isPlaying()) {
+                this.speakCurrentSentence();
+              }
+            }, 180);
           } else {
             this.isPlaying.set(false);
             this.isPaused.set(false);
@@ -199,7 +341,6 @@ export class SpeechNarrationService {
         this.isPaused.set(false);
       }
     } else {
-      // In headless environment without speech synthesis, simulate play state for UI
       this.isPlaying.set(true);
       this.isPaused.set(false);
     }

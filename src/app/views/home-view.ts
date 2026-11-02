@@ -59,14 +59,13 @@ import { rankStoriesForLearner, getRecommendedFocusAreas } from '../core/adaptiv
           </div>
 
           <!-- Cover Image -->
-          <div class="lg:col-span-5">
-            <div class="relative overflow-hidden rounded-xl aspect-[4/3] shadow-sm border border-[#E6DFD3] dark:border-[#332D28] bg-[#EFE9DD] dark:bg-[#1A1715]">
+          <div class="lg:col-span-5 flex justify-center items-center">
+            <div class="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[4/5] overflow-hidden rounded-2xl book-cover-shadow border border-[#E6DFD3] dark:border-[#332D28] bg-[#1A1715]">
               <img
                 [src]="featuredStory.coverImage"
                 [alt]="featuredStory.title"
-                referrerpolicy="no-referrer"
                 class="w-full h-full object-cover" />
-              <div class="absolute bottom-3 left-3 bg-[#181513]/85 backdrop-blur-xs px-3 py-1 rounded text-[11px] text-[#EAE4DA]">
+              <div class="absolute bottom-3 left-3 bg-[#181513]/90 backdrop-blur-xs px-3 py-1 rounded-md text-[11px] text-[#EAE4DA] border border-[#3E362F]">
                 {{ i18n.t('home.serialized_badge', { current: featuredStory.serializedInfo?.episodeNumber || 1, total: featuredStory.serializedInfo?.totalEpisodes || 3 }) }}
               </div>
             </div>
@@ -198,14 +197,16 @@ import { rankStoriesForLearner, getRecommendedFocusAreas } from '../core/adaptiv
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           @for (story of secondaryStories(); track story.id) {
-            <article class="flex flex-col justify-between paper-page rounded-xl p-5 hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all duration-200 shadow-xs">
-              <div class="space-y-3">
-                <div class="overflow-hidden rounded-lg aspect-[16/10] bg-[#EFE9DD] dark:bg-[#1A1715]">
-                  <img
-                    [src]="story.coverImage"
-                    [alt]="story.title"
-                    referrerpolicy="no-referrer"
-                    class="w-full h-full object-cover" />
+            <article class="flex flex-col justify-between paper-page rounded-2xl p-5 hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all duration-300 shadow-xs group">
+              <div class="space-y-4">
+                <div class="overflow-hidden rounded-xl aspect-[4/5] bg-[#1A1715] p-2 flex items-center justify-center border border-[#E6DFD3] dark:border-[#332D28]">
+                  <div class="w-full h-full rounded-lg overflow-hidden book-cover-shadow">
+                    <img
+                      [src]="story.coverImage"
+                      [alt]="story.title"
+                      loading="lazy"
+                      class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />
+                  </div>
                 </div>
 
                 <div class="flex items-center gap-2 text-xs text-[#6C645C] dark:text-[#9C9387]">
@@ -216,11 +217,11 @@ import { rankStoriesForLearner, getRecommendedFocusAreas } from '../core/adaptiv
                   <span>{{ story.genre }}</span>
                 </div>
 
-                <h3 class="text-lg font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] line-clamp-1">
+                <h3 class="text-lg font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] line-clamp-1 group-hover:text-[#9C3823] dark:group-hover:text-[#DDA15E] transition-colors">
                   {{ story.title }}
                 </h3>
 
-                <p class="text-xs text-[#6C645C] dark:text-[#9C9387]">
+                <p class="text-xs text-[#5A524A] dark:text-[#B5ADA3]">
                   {{ story.author }}
                 </p>
 

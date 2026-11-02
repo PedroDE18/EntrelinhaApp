@@ -107,6 +107,51 @@ html.dark body {
   box-shadow: inset 18px 0 24px -16px rgba(0, 0, 0, 0.4);
 }
 
+/* Book cover 3D elevation and realistic shelf shadow */
+.book-cover-shadow {
+  box-shadow: 
+    -4px 4px 10px -2px rgba(40, 25, 15, 0.18),
+    -1px 1px 3px 0 rgba(40, 25, 15, 0.12),
+    0 16px 28px -6px rgba(40, 25, 15, 0.15);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .book-cover-shadow {
+  box-shadow: 
+    -4px 4px 12px -2px rgba(0, 0, 0, 0.6),
+    0 16px 28px -6px rgba(0, 0, 0, 0.7);
+}
+
+.book-cover-shadow:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 
+    -6px 8px 18px -2px rgba(40, 25, 15, 0.24),
+    0 22px 34px -8px rgba(40, 25, 15, 0.22);
+}
+
+.dark .book-cover-shadow:hover {
+  box-shadow: 
+    -6px 8px 20px -2px rgba(0, 0, 0, 0.8),
+    0 24px 38px -8px rgba(0, 0, 0, 0.85);
+}
+
+/* Bookmark ribbon ornament */
+.bookmark-ribbon {
+  position: absolute;
+  top: 0;
+  right: 18px;
+  width: 14px;
+  height: 28px;
+  background: #9C3823;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  z-index: 10;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+}
+
+.dark .bookmark-ribbon {
+  background: #DDA15E;
+}
+
 /* Smooth bookish text selection */
 ::selection {
   background-color: #eeddbb;

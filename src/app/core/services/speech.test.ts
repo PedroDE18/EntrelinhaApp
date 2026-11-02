@@ -24,11 +24,34 @@ describe('SpeechNarrationService', () => {
     expect(sentences[1]).toBe('Je parie vingt mille livres!');
   });
 
-  it('state signals initialize correctly', () => {
+  it('state signals initialize correctly with natural storytelling speed', () => {
     const service = new SpeechNarrationService();
     expect(service.isPlaying()).toBe(false);
     expect(service.isPaused()).toBe(false);
-    expect(service.currentSpeed()).toBe(1.0);
+    expect(service.currentSpeed()).toBe(0.92);
     expect(service.progressPercent()).toBe(0);
+    expect(service.activeVoiceName()).toBeDefined();
+  });
+
+  it('detects natural and online voices correctly', () => {
+    const service = new SpeechNarrationService();
+    const mockNaturalVoice = {
+      name: 'Microsoft Henri Online (Natural) - French (France)',
+      lang: 'fr-FR',
+      default: true,
+      localService: false,
+      voiceURI: 'henri',
+    } as SpeechSynthesisVoice;
+
+    const mockRoboticVoice = {
+      name: 'espeak-fr',
+      lang: 'fr-FR',
+      default: false,
+      localService: true,
+      voiceURI: 'espeak',
+    } as SpeechSynthesisVoice;
+
+    expect(service.isNaturalVoice(mockNaturalVoice)).toBe(true);
+    expect(service.isNaturalVoice(mockRoboticVoice)).toBe(false);
   });
 });
