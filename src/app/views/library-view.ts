@@ -229,13 +229,13 @@ import { CEFRLevel, Story } from '../core/models';
             <div class="relative aspect-[4/5] overflow-hidden bg-[#1A1715] flex items-center justify-center p-3 border-b border-[#E6DFD3] dark:border-[#332D28]">
               <div class="relative w-full h-full rounded-lg overflow-hidden book-cover-shadow">
                 <img
-                  [src]="story.coverImage"
+                  [src]="story.coverImage || story.coverImageUrl || '/images/cover-marais.svg'"
                   [alt]="story.title"
                   loading="lazy"
                   class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />
               </div>
               <div class="absolute top-4 right-4 bg-[#181513]/90 backdrop-blur-xs text-[#EAE4DA] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border border-[#3E362F] shadow-sm">
-                CEFR {{ story.estimatedCEFR }}
+                CEFR {{ story.estimatedCEFR || story.estimatedCefr || 'B1' }}
               </div>
             </div>
 

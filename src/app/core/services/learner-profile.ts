@@ -7,11 +7,14 @@ import {
   DifficultyCategory,
   DifficultyRadar,
   AssessmentHistoryItem,
+  SrsRating,
 } from '../models';
 import { transitionVocabularyState } from '../linguistics';
 import {
   createDefaultDifficultyRadar,
   updateRadarWithAssessment,
+  calculateSrsInterval,
+  getDueWordsForReview,
 } from '../adaptive-learning';
 
 const INITIAL_PROFILE: LearnerProfile = {
@@ -179,6 +182,7 @@ export class LearnerProfileService {
   readonly learningWordsCount = computed(() => this.words().filter((w) => w.state === 'learning').length);
   readonly knownWordsCount = computed(() => this.words().filter((w) => w.state === 'known').length);
   readonly masteredWordsCount = computed(() => this.words().filter((w) => w.state === 'mastered').length);
+  readonly dueReviewWords = computed(() => getDueWordsForReview(this.words()));
   readonly difficultyRadar = computed(() => this.profile().difficultyRadar || createDefaultDifficultyRadar());
   readonly assessmentHistory = computed(() => this.profile().assessmentHistory || []);
   readonly weakestCategories = computed(() => {
@@ -300,6 +304,72 @@ export class LearnerProfileService {
 
     this.words.set(list);
     this.saveWords();
+  }
+
+  recordWordReview(
+    wordId: string,
+    rating: SrsRating
+  ): { nextIntervalDays: number; nextReviewDate: string; nextState: string } | null {
+    const list = [...this.words()];
+    const index = list.findIndex((w) => w.id === wordId);
+    if (index === -1) return null;
+
+    const word = list[index];
+    const srs = calculateSrsInterval(
+      word.srsRepetitions || 0,
+      word.srsEaseFactor || 2.5,
+      rating,
+      word.srsIntervalDays || 1
+    );
+
+    let nextState = word.state;
+    if (rating === 'again') {
+      nextState = 'learning';
+    } else if (rating === 'hard') {
+      nextState = 'learning';
+    } else if (rating === 'good') {
+      nextState = srs.repetitions >= 3 ? 'mastered' : 'known';
+    } else if (rating === 'easy') {
+      nextState = 'mastered';
+    }
+
+    list[index] = {
+      ...word,
+      state: nextState,
+      srsRepetitions: srs.repetitions,
+      srsEaseFactor: srs.easeFactor,
+      srsIntervalDays: srs.intervalDays,
+      srsNextReviewDate: srs.nextReviewDate,
+      encounterCount: (word.encounterCount || 1) + 1,
+      lastEncountered: new Date().toISOString().split('T')[0],
+    };
+
+    this.words.set(list);
+    this.saveWords();
+
+    // Recalculate vocabulary funnel metrics
+    const learning = list.filter((w) => w.state === 'learning').length;
+    const known = list.filter((w) => w.state === 'known').length;
+    const mastered = list.filter((w) => w.state === 'mastered').length;
+
+    this.profile.update((p) => ({
+      ...p,
+      vocabularyMetrics: {
+        ...p.vocabularyMetrics,
+        learning,
+        known,
+        mastered,
+      },
+      wordsLearnedCount: known + mastered,
+      lastSyncedAt: new Date().toISOString(),
+    }));
+    this.saveProfile();
+
+    return {
+      nextIntervalDays: srs.intervalDays,
+      nextReviewDate: srs.nextReviewDate,
+      nextState,
+    };
   }
 
   recordStoryCompleted(storyId: string, readingMinutes: number, score: number): void {

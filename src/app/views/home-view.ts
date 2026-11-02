@@ -62,7 +62,7 @@ import { rankStoriesForLearner, getRecommendedFocusAreas } from '../core/adaptiv
           <div class="lg:col-span-5 flex justify-center items-center">
             <div class="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[4/5] overflow-hidden rounded-2xl book-cover-shadow border border-[#E6DFD3] dark:border-[#332D28] bg-[#1A1715]">
               <img
-                [src]="featuredStory.coverImage"
+                [src]="featuredStory.coverImage || featuredStory.coverImageUrl || '/images/cover-marais.svg'"
                 [alt]="featuredStory.title"
                 class="w-full h-full object-cover" />
               <div class="absolute bottom-3 left-3 bg-[#181513]/90 backdrop-blur-xs px-3 py-1 rounded-md text-[11px] text-[#EAE4DA] border border-[#3E362F]">
@@ -202,7 +202,7 @@ import { rankStoriesForLearner, getRecommendedFocusAreas } from '../core/adaptiv
                 <div class="overflow-hidden rounded-xl aspect-[4/5] bg-[#1A1715] p-2 flex items-center justify-center border border-[#E6DFD3] dark:border-[#332D28]">
                   <div class="w-full h-full rounded-lg overflow-hidden book-cover-shadow">
                     <img
-                      [src]="story.coverImage"
+                      [src]="story.coverImage || story.coverImageUrl || '/images/cover-marais.svg'"
                       [alt]="story.title"
                       loading="lazy"
                       class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />

@@ -440,11 +440,28 @@ app.get('/api/stories', async (_req, res) => {
     if (db && hasDatabaseConnection) {
       const dbStories = await db.select().from(schema.stories);
       if (dbStories.length > 0) {
+        // Enrich database records with curated tokens, questions and normalize field aliases (coverImage / coverImageUrl)
+        const enriched = dbStories.map((dbs) => {
+          const fallback = SAMPLE_STORIES.find((s) => s.id === dbs.id);
+          const cover = dbs.coverImageUrl || fallback?.coverImage || '/images/cover-marais.svg';
+          const cefr = dbs.estimatedCefr || fallback?.estimatedCEFR || 'B1';
+          return {
+            ...fallback,
+            ...dbs,
+            coverImage: cover,
+            coverImageUrl: cover,
+            estimatedCEFR: cefr,
+            estimatedCefr: cefr,
+            paragraphs: fallback?.paragraphs || [],
+            comprehensionQuestions: fallback?.comprehensionQuestions || [],
+          };
+        });
+
         res.json({
           success: true,
           source: 'postgresql',
-          count: dbStories.length,
-          stories: dbStories,
+          count: enriched.length,
+          stories: enriched,
         });
         return;
       }
@@ -463,19 +480,27 @@ app.get('/api/stories', async (_req, res) => {
 
 app.get('/api/stories/:id', async (req, res) => {
   const { id } = req.params;
+  const memoryStory = SAMPLE_STORIES.find((s) => s.id === id);
   try {
     if (db && hasDatabaseConnection) {
       const dbStories = await db.select().from(schema.stories).where(eq(schema.stories.id, id));
       if (dbStories.length > 0) {
-        const paragraphs = await db.select().from(schema.storyParagraphs).where(eq(schema.storyParagraphs.storyId, id));
-        const questions = await db.select().from(schema.comprehensionQuestions).where(eq(schema.comprehensionQuestions.storyId, id));
+        const dbs = dbStories[0];
+        const cover = dbs.coverImageUrl || memoryStory?.coverImage || '/images/cover-marais.svg';
+        const cefr = dbs.estimatedCefr || memoryStory?.estimatedCEFR || 'B1';
+
         res.json({
           success: true,
           source: 'postgresql',
           story: {
-            ...dbStories[0],
-            paragraphs,
-            comprehensionQuestions: questions,
+            ...memoryStory,
+            ...dbs,
+            coverImage: cover,
+            coverImageUrl: cover,
+            estimatedCEFR: cefr,
+            estimatedCefr: cefr,
+            paragraphs: memoryStory?.paragraphs || [],
+            comprehensionQuestions: memoryStory?.comprehensionQuestions || [],
           },
         });
         return;
@@ -485,7 +510,6 @@ app.get('/api/stories/:id', async (req, res) => {
     console.warn(`[API] PostgreSQL story query for ${id} failed:`, err);
   }
 
-  const memoryStory = SAMPLE_STORIES.find((s) => s.id === id);
   if (!memoryStory) {
     res.status(404).json({
       success: false,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, computed, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed, effect, OnDestroy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { StoryService } from '../core/services/story';
@@ -100,9 +100,19 @@ import { lookupFrenchLexicon } from '../core/lexicon';
               </div>
             </div>
 
-            <!-- Playback Speed Controls -->
-            <div class="flex items-center gap-1 text-xs">
-              <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] mr-1">{{ i18n.t('reader.speed_label') }}</span>
+            <!-- Auto-scroll & Playback Speed Controls -->
+            <div class="flex items-center gap-2 text-xs flex-wrap">
+              <button
+                type="button"
+                (click)="toggleAutoScroll()"
+                [class]="autoScrollEnabled() ? 'bg-[#9C3823] text-white dark:bg-[#DDA15E] dark:text-[#181513] font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] border border-[#DDD6C8] dark:border-[#38322C] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
+                title="Rastreamento cinematográfico e centralização automática durante a narração"
+                class="px-2 py-0.5 rounded text-[11px] flex items-center gap-1 transition-colors">
+                <mat-icon class="text-xs leading-none !w-3 !h-3">center_focus_strong</mat-icon>
+                <span>Auto-scroll</span>
+              </button>
+
+              <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] mr-0.5">{{ i18n.t('reader.speed_label') }}</span>
               @for (speed of [0.75, 0.92, 1.0, 1.25]; track speed) {
                 <button
                   type="button"
@@ -126,7 +136,7 @@ import { lookupFrenchLexicon } from '../core/lexicon';
         <!-- Story Header: Clean Editorial Title & Frontispiece Vignette -->
         <header class="flex flex-col sm:flex-row items-center sm:items-start gap-5 pt-3 pb-4 border-b border-[#E6DFD3] dark:border-[#332D28]">
           <div class="w-24 sm:w-32 md:w-36 flex-shrink-0 rounded-lg overflow-hidden book-cover-shadow border border-[#D5CABB] dark:border-[#3E362F] bg-[#181513]">
-            <img [src]="s.coverImage" [alt]="s.title" class="w-full h-auto object-cover aspect-[4/5] block" />
+            <img [src]="s.coverImage || s.coverImageUrl || '/images/cover-marais.svg'" [alt]="s.title" class="w-full h-auto object-cover aspect-[4/5] block" />
           </div>
 
           <div class="flex-1 space-y-2.5 text-center sm:text-left">
@@ -162,6 +172,31 @@ import { lookupFrenchLexicon } from '../core/lexicon';
           </div>
         </header>
 
+        <!-- Reading Bookmark Notification (Retomar Leitura) -->
+        @if (savedBookmarkParagraph(); as bookmarkIdx) {
+          <div class="flex items-center justify-between p-3 px-4 rounded-xl bg-[#F7EFE1] dark:bg-[#28221D] border border-[#E6DFD3] dark:border-[#3D342C] text-xs text-[#5A524A] dark:text-[#B5ADA3]">
+            <div class="flex items-center gap-2">
+              <mat-icon class="text-sm text-[#9C3823] dark:text-[#DDA15E] !w-4 !h-4">bookmark</mat-icon>
+              <span>Você parou a leitura no <strong>parágrafo {{ bookmarkIdx + 1 }}</strong>.</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <button
+                type="button"
+                (click)="scrollToParagraph(bookmarkIdx)"
+                class="font-semibold text-[#9C3823] dark:text-[#DDA15E] hover:underline cursor-pointer">
+                Retomar aqui
+              </button>
+              <button
+                type="button"
+                (click)="clearBookmark(s.id)"
+                title="Dispensar marcador"
+                class="text-[#8A8278] hover:text-[#231F1C] dark:hover:text-[#EAE4DA] p-0.5 cursor-pointer">
+                <mat-icon class="text-xs !w-3.5 !h-3.5">close</mat-icon>
+              </button>
+            </div>
+          </div>
+        }
+
         <!-- Reading Canvas: Book-like measure & Paper warmth with Lute Multi-Word Engine -->
         <div class="paper-page book-spine-left rounded-2xl p-6 sm:p-10 lg:p-12 shadow-sm">
           <article
@@ -172,6 +207,7 @@ import { lookupFrenchLexicon } from '../core/lexicon';
             [style.lineHeight]="1.88">
             @for (para of s.paragraphs; track para.id; let pIdx = $index) {
               <p
+                [id]="'para-' + pIdx"
                 [class.story-drop-cap]="pIdx === 0"
                 class="relative select-text transition-colors text-justify hyphens-auto leading-relaxed group/para">
                 <!-- Quick listen button for this paragraph in left margin -->
@@ -191,6 +227,7 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                       tabindex="0"
                       role="button"
                       [attr.aria-label]="'Traduzir ' + tok.fullText"
+                      [attr.data-sentence-id]="pIdx + '-' + tok.sentenceNumber"
                       [class.bg-amber-100/90]="isSentenceActive(pIdx, tok.sentenceNumber)"
                       [class.dark:bg-amber-950/60]="isSentenceActive(pIdx, tok.sentenceNumber)"
                       [class.text-[#7A2A18]]="tok.falseFriend && !isSentenceActive(pIdx, tok.sentenceNumber)"
@@ -215,6 +252,7 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                     </span>
                   } @else {
                     <span
+                      [attr.data-sentence-id]="pIdx + '-' + tok.sentenceNumber"
                       [class.bg-amber-100/90]="isSentenceActive(pIdx, tok.sentenceNumber)"
                       [class.dark:bg-amber-950/60]="isSentenceActive(pIdx, tok.sentenceNumber)"
                       class="whitespace-pre-wrap select-text transition-colors duration-200">{{ tok.text }}</span>
@@ -502,14 +540,16 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                 </div>
               </div>
 
-              <div class="pt-2 flex items-center justify-between border-t border-[#E6DFD3] dark:border-[#332D28] text-xs">
+              <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-[#E6DFD3] dark:border-[#332D28] text-xs">
                 <span class="text-[#6C645C] dark:text-[#9C9387]">
                   O Radar de Dificuldades Contrastivas do seu perfil foi atualizado.
                 </span>
-                <a routerLink="/progress" class="font-medium text-[#9C3823] dark:text-[#DDA15E] hover:underline inline-flex items-center gap-1">
-                  <span>Ver Radar de Progresso</span>
-                  <mat-icon class="text-xs !w-3.5 !h-3.5">arrow_forward</mat-icon>
-                </a>
+                <div class="flex items-center gap-3">
+                  <a routerLink="/progress" class="font-medium text-[#9C3823] dark:text-[#DDA15E] hover:underline inline-flex items-center gap-1">
+                    <span>Revisar Vocabulário no SRS</span>
+                    <mat-icon class="text-xs !w-3.5 !h-3.5">arrow_forward</mat-icon>
+                  </a>
+                </div>
               </div>
             </div>
           } @else {
@@ -559,11 +599,13 @@ export class ReadingView implements OnDestroy {
   readonly storyId = signal<string>('ombre-du-marais');
   readonly story = computed(() => this.storyService.getStoryById(this.storyId()));
 
-  // Reading settings
+  // Reading settings & Auto-scroll
   readonly useSerif = signal<boolean>(true);
   readonly fontSize = signal<number>(18);
   readonly selectedToken = signal<RenderedTextItem | null>(null);
   readonly activeSentenceContext = signal<string>('');
+  readonly autoScrollEnabled = signal<boolean>(true);
+  readonly savedBookmarkParagraph = signal<number | null>(null);
 
   // Assessment state
   readonly answeredQuestions = signal<Record<string, string>>({});
@@ -588,8 +630,66 @@ export class ReadingView implements OnDestroy {
         this.completed.set(false);
         this.assessmentResult.set(null);
         this.readingStartTime = Date.now();
+        this.loadBookmark(id);
       }
     });
+
+    effect(() => {
+      const active = this.speech.activeSentence();
+      if (active && this.autoScrollEnabled() && typeof document !== 'undefined') {
+        const el = document.querySelector(`[data-sentence-id="${active.paragraphIndex}-${active.sentenceIndexInParagraph}"]`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          this.updateBookmark(active.paragraphIndex);
+        }
+      }
+    });
+  }
+
+  toggleAutoScroll(): void {
+    this.autoScrollEnabled.update((v) => !v);
+  }
+
+  scrollToParagraph(pIndex: number): void {
+    if (typeof document === 'undefined') return;
+    const el = document.getElementById(`para-${pIndex}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  private loadBookmark(storyId: string): void {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    try {
+      const raw = localStorage.getItem(`entrelinha_bookmark_${storyId}`);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed?.pIndex === 'number' && parsed.pIndex > 0) {
+          this.savedBookmarkParagraph.set(parsed.pIndex);
+          return;
+        }
+      }
+    } catch {
+      // Ignore storage error
+    }
+    this.savedBookmarkParagraph.set(null);
+  }
+
+  updateBookmark(pIndex: number): void {
+    const id = this.storyId();
+    if (!id || typeof window === 'undefined' || !window.localStorage) return;
+    try {
+      localStorage.setItem(`entrelinha_bookmark_${id}`, JSON.stringify({ pIndex, timestamp: Date.now() }));
+    } catch {
+      // Ignore storage error
+    }
+  }
+
+  clearBookmark(storyId: string): void {
+    this.savedBookmarkParagraph.set(null);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem(`entrelinha_bookmark_${storyId}`);
+    }
   }
 
   ngOnDestroy(): void {

@@ -303,3 +303,78 @@ export function updateRadarWithAssessment(
     mistakeCategories: Array.from(mistakeSet),
   };
 }
+
+/**
+ * Spaced Repetition System (FSRS / SM-2 based interval spacing)
+ * Optimizes retention for contextual literary vocabulary and contrastive traps.
+ */
+export function calculateSrsInterval(
+  repetitions: number,
+  easeFactor: number,
+  rating: 'again' | 'hard' | 'good' | 'easy',
+  prevIntervalDays = 1
+): {
+  intervalDays: number;
+  easeFactor: number;
+  repetitions: number;
+  nextReviewDate: string;
+} {
+  let newRepetitions = repetitions || 0;
+  let newEase = easeFactor || 2.5;
+  let nextInterval = 1;
+
+  switch (rating) {
+    case 'again':
+      newRepetitions = 0;
+      nextInterval = 1;
+      newEase = Math.max(1.3, newEase - 0.2);
+      break;
+    case 'hard':
+      newRepetitions = Math.max(1, newRepetitions);
+      nextInterval = Math.max(1, Math.round(prevIntervalDays * 1.2));
+      newEase = Math.max(1.3, newEase - 0.15);
+      break;
+    case 'good':
+      newRepetitions += 1;
+      if (newRepetitions === 1) nextInterval = 1;
+      else if (newRepetitions === 2) nextInterval = 3;
+      else nextInterval = Math.max(1, Math.round(prevIntervalDays * newEase));
+      break;
+    case 'easy':
+      newRepetitions += 1;
+      if (newRepetitions === 1) nextInterval = 3;
+      else if (newRepetitions === 2) nextInterval = 6;
+      else nextInterval = Math.max(1, Math.round(prevIntervalDays * newEase * 1.3));
+      newEase = Math.min(3.2, newEase + 0.15);
+      break;
+  }
+
+  const nextDate = new Date();
+  nextDate.setDate(nextDate.getDate() + nextInterval);
+  const nextReviewDate = nextDate.toISOString().split('T')[0];
+
+  return {
+    intervalDays: nextInterval,
+    easeFactor: Math.round(newEase * 100) / 100,
+    repetitions: newRepetitions,
+    nextReviewDate,
+  };
+}
+
+/**
+ * Filters words that are due or optimal for active recall in literary context.
+ */
+export function getDueWordsForReview<T extends { state: string; srsNextReviewDate?: string; encounterCount: number }>(
+  words: T[],
+  limit = 10
+): T[] {
+  const today = new Date().toISOString().split('T')[0];
+  const due = words.filter((w) => {
+    if (w.state === 'mastered') return false;
+    if (w.srsNextReviewDate && w.srsNextReviewDate <= today) return true;
+    if (!w.srsNextReviewDate && (w.state === 'learning' || w.encounterCount > 0)) return true;
+    return false;
+  });
+
+  return due.slice(0, limit);
+}

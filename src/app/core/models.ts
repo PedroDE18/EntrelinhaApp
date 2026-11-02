@@ -110,9 +110,11 @@ export interface Story {
   authorBio?: string;
   genre: string;
   estimatedCEFR: CEFRLevel;
+  estimatedCefr?: string;
   readingMinutes: number;
   wordCount: number;
   coverImage: string;
+  coverImageUrl?: string;
   sourceType: ContentSourceType;
   sourceLabel: string;
   sourceUrl?: string;
@@ -131,6 +133,8 @@ export interface Story {
   };
 }
 
+export type SrsRating = 'again' | 'hard' | 'good' | 'easy';
+
 export interface LearnerWord {
   id: string;
   french: string;
@@ -142,6 +146,11 @@ export interface LearnerWord {
   contextSentence: string;
   isFalseFriend?: boolean;
   falseFriendNote?: string;
+  // SRS properties (Spaced Repetition / FSRS-inspired)
+  srsIntervalDays?: number;
+  srsEaseFactor?: number;
+  srsNextReviewDate?: string;
+  srsRepetitions?: number;
 }
 
 export interface RenderedTextItem {

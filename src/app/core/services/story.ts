@@ -3202,8 +3202,27 @@ export class StoryService {
       const res = await fetch('/api/stories');
       if (res.ok) {
         const json = await res.json();
-        if (json.success && Array.isArray(json.stories) && json.stories.length >= this.stories().length) {
-          this.stories.set(json.stories);
+        if (json.success && Array.isArray(json.stories) && json.stories.length > 0) {
+          const merged: Story[] = json.stories.map((s: any) => {
+            const local = SAMPLE_STORIES.find((item) => item.id === s.id);
+            const cover = s.coverImage || s.coverImageUrl || local?.coverImage || '/images/cover-marais.svg';
+            const cefr = s.estimatedCEFR || s.estimatedCefr || local?.estimatedCEFR || 'B1';
+            return {
+              ...(local || {}),
+              ...s,
+              coverImage: cover,
+              coverImageUrl: cover,
+              estimatedCEFR: cefr,
+              paragraphs: (s.paragraphs && s.paragraphs.length > 0) ? s.paragraphs : (local?.paragraphs || []),
+              comprehensionQuestions: (s.comprehensionQuestions && s.comprehensionQuestions.length > 0)
+                ? s.comprehensionQuestions
+                : (local?.comprehensionQuestions || []),
+            } as Story;
+          });
+
+          if (merged.length >= this.stories().length) {
+            this.stories.set(merged);
+          }
         }
       }
     } catch {

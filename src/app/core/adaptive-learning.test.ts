@@ -6,6 +6,8 @@ import {
   calculateStoryScore,
   rankStoriesForLearner,
   getRecommendedFocusAreas,
+  calculateSrsInterval,
+  getDueWordsForReview,
 } from './adaptive-learning';
 import { ComprehensionQuestion, LearnerProfile, Story } from './models';
 
@@ -287,5 +289,50 @@ describe('AdaptiveLearningModule', () => {
 
     const ranked = rankStoriesForLearner([storyRead, storyFresh], profile);
     expect(ranked[0].id).toBe('story-fresh');
+  });
+
+  describe('Spaced Repetition System (SRS)', () => {
+    it('resets interval and reduces ease factor on rating "again"', () => {
+      const result = calculateSrsInterval(3, 2.5, 'again', 6);
+      expect(result.repetitions).toBe(0);
+      expect(result.intervalDays).toBe(1);
+      expect(result.easeFactor).toBe(2.3);
+      expect(result.nextReviewDate).toBeDefined();
+    });
+
+    it('advances interval progressively on rating "good"', () => {
+      // First review
+      const first = calculateSrsInterval(0, 2.5, 'good', 1);
+      expect(first.repetitions).toBe(1);
+      expect(first.intervalDays).toBe(1);
+
+      // Second review
+      const second = calculateSrsInterval(1, 2.5, 'good', 1);
+      expect(second.repetitions).toBe(2);
+      expect(second.intervalDays).toBe(3);
+
+      // Third review with ease factor multiplication
+      const third = calculateSrsInterval(2, 2.5, 'good', 3);
+      expect(third.repetitions).toBe(3);
+      expect(third.intervalDays).toBe(8); // Math.round(3 * 2.5)
+    });
+
+    it('gives accelerated spacing and bonus ease on rating "easy"', () => {
+      const result = calculateSrsInterval(0, 2.5, 'easy', 1);
+      expect(result.repetitions).toBe(1);
+      expect(result.intervalDays).toBe(3);
+      expect(result.easeFactor).toBe(2.65);
+    });
+
+    it('filters due words correctly based on review date and learning state', () => {
+      const words = [
+        { id: '1', french: 'un', state: 'mastered', encounterCount: 5, srsNextReviewDate: '2020-01-01' },
+        { id: '2', french: 'deux', state: 'learning', encounterCount: 2, srsNextReviewDate: '2026-11-01' },
+        { id: '3', french: 'trois', state: 'known', encounterCount: 3, srsNextReviewDate: '2099-01-01' },
+      ];
+      const due = getDueWordsForReview(words);
+      expect(due).toHaveLength(1);
+      expect(due[0].id).toBe('2');
+    });
   });
 });

@@ -5,7 +5,7 @@ import { LearnerProfileService } from '../core/services/learner-profile';
 import { StoryService } from '../core/services/story';
 import { SpeechNarrationService } from '../core/services/speech';
 import { I18nService } from '../core/services/i18n';
-import { DifficultyCategory, Story } from '../core/models';
+import { DifficultyCategory, Story, LearnerWord, SrsRating } from '../core/models';
 import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
 
 @Component({
@@ -95,6 +95,146 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
             {{ i18n.t('progress.listening_matrix_desc') }}
           </p>
         </div>
+      </section>
+
+      <!-- Literary Spaced Repetition (SRS Flash-Review em Contexto) -->
+      <section id="srs-review" class="p-6 sm:p-8 rounded-2xl paper-page space-y-6 border border-[#DDD6C8] dark:border-[#38322C] shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
+              <mat-icon class="text-sm leading-none !w-4 !h-4">auto_stories</mat-icon>
+              <span>Sessão Diária de Fixação</span>
+            </div>
+            <h2 class="text-xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+              Flash-Review Literário em Contexto
+            </h2>
+            <p class="text-xs font-reading text-[#6C645C] dark:text-[#9C9387]">
+              Repetição espaçada inteligente baseada em frases narrativas autênticas e contraste sistemático com o português.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-[#EFE8DC] dark:bg-[#2C2621] text-[#9C3823] dark:text-[#DDA15E] font-semibold border border-[#D5CABB] dark:border-[#3E362F]">
+              {{ srsDueWords().length }} para revisar hoje
+            </span>
+          </div>
+        </div>
+
+        @if (srsDueWords().length > 0 && currentSrsIndex() < srsDueWords().length) {
+          @let word = srsDueWords()[currentSrsIndex()];
+          <div class="p-6 sm:p-8 rounded-xl bg-[#FCFAF7] dark:bg-[#1A1715] border border-[#E6DFD3] dark:border-[#332D28] space-y-6">
+            <!-- Progress indicator inside review -->
+            <div class="flex items-center justify-between text-xs text-[#8A8278] dark:text-[#7A7268]">
+              <span>Cartão {{ currentSrsIndex() + 1 }} de {{ srsDueWords().length }}</span>
+              <span class="font-mono text-[11px]">{{ word.state === 'learning' ? 'Em aprendizado' : 'Consolidação' }}</span>
+            </div>
+
+            <!-- Cloze narrative context sentence -->
+            <div class="p-5 rounded-xl bg-[#F7F2E7] dark:bg-[#231D18] border border-[#E8DFD0] dark:border-[#3A3228] text-center space-y-2">
+              <span class="text-[10px] uppercase tracking-wider text-[#8A8278] dark:text-[#7A7268] font-semibold">
+                Contexto na narrativa
+              </span>
+              <p class="font-reading italic text-base sm:text-lg text-[#231F1C] dark:text-[#EAE4DA] leading-relaxed">
+                « {{ getClozeSentence(word) }} »
+              </p>
+            </div>
+
+            <!-- Hidden answer / Revealed state -->
+            @if (!srsCardRevealed()) {
+              <div class="text-center pt-2">
+                <button
+                  type="button"
+                  (click)="revealSrsCard()"
+                  class="px-6 py-2.5 rounded-xl bg-[#231F1C] dark:bg-[#EAE4DA] text-white dark:text-[#181513] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-xs inline-flex items-center gap-2">
+                  <mat-icon class="text-sm !w-4 !h-4">visibility</mat-icon>
+                  <span>Revelar Vocábulo & Tradução</span>
+                </button>
+              </div>
+            } @else {
+              <!-- Revealed details -->
+              <div class="space-y-4 animate-in fade-in duration-200">
+                <div class="text-center space-y-1">
+                  <div class="flex items-center justify-center gap-2">
+                    <span class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+                      {{ word.french }}
+                    </span>
+                    <button
+                      type="button"
+                      (click)="speech.speakWord(word.french)"
+                      title="Ouvir pronúncia autêntica em francês"
+                      class="p-1 rounded text-[#8A8278] hover:text-[#9C3823] dark:hover:text-[#DDA15E] cursor-pointer">
+                      <mat-icon class="text-base !w-4 !h-4">volume_up</mat-icon>
+                    </button>
+                  </div>
+                  <p class="text-sm font-semibold text-[#9C3823] dark:text-[#DDA15E]">
+                    {{ word.translationPt }}
+                  </p>
+                  @if (word.isFalseFriend) {
+                    <p class="text-xs text-[#B71C1C] dark:text-[#FCA5A5] bg-[#FDF2F2] dark:bg-[#3D1A1A] p-2.5 rounded-lg max-w-md mx-auto">
+                      ⚠️ <strong>Atenção ao Falso Cognato:</strong> {{ word.falseFriendNote || 'Sentido diferente do esperado em português.' }}
+                    </p>
+                  }
+                </div>
+
+                <!-- SRS Rating Buttons (SM-2 / FSRS) -->
+                <div class="pt-4 border-t border-[#E6DFD3] dark:border-[#332D28] space-y-2">
+                  <span class="text-[11px] text-center block text-[#8A8278] dark:text-[#7A7268]">
+                    Como foi a sua recordação deste termo?
+                  </span>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <button
+                      type="button"
+                      (click)="rateSrsCard('again')"
+                      class="p-2.5 rounded-lg border border-[#D32F2F]/30 bg-[#FDF2F2] dark:bg-[#3D1A1A] text-[#B71C1C] dark:text-[#FCA5A5] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer">
+                      <span>❌ Novamente</span>
+                      <span class="text-[10px] block opacity-75 font-normal">1 dia</span>
+                    </button>
+                    <button
+                      type="button"
+                      (click)="rateSrsCard('hard')"
+                      class="p-2.5 rounded-lg border border-[#C07D2B]/30 bg-[#FFFBEB] dark:bg-[#3D3019] text-[#B45309] dark:text-[#FDE68A] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer">
+                      <span>⚠️ Difícil</span>
+                      <span class="text-[10px] block opacity-75 font-normal">curto prazo</span>
+                    </button>
+                    <button
+                      type="button"
+                      (click)="rateSrsCard('good')"
+                      class="p-2.5 rounded-lg border border-[#2E8540]/30 bg-[#EBF7EE] dark:bg-[#1E3324] text-[#1B5E20] dark:text-[#86EFAC] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer">
+                      <span>✓ Bom</span>
+                      <span class="text-[10px] block opacity-75 font-normal">espaçado</span>
+                    </button>
+                    <button
+                      type="button"
+                      (click)="rateSrsCard('easy')"
+                      class="p-2.5 rounded-lg border border-[#1E40AF]/30 bg-[#EFF6FF] dark:bg-[#1E293B] text-[#1D4ED8] dark:text-[#93C5FD] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer">
+                      <span>⚡ Fácil</span>
+                      <span class="text-[10px] block opacity-75 font-normal">longo prazo</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <!-- All caught up state -->
+          <div class="p-8 text-center rounded-xl bg-[#FCFAF7] dark:bg-[#1A1715] border border-dashed border-[#DDD6C8] dark:border-[#38322C] space-y-3">
+            <mat-icon class="text-3xl text-[#1B5E20] dark:text-[#86EFAC] !w-8 !h-8">task_alt</mat-icon>
+            <div class="space-y-1">
+              <h3 class="font-serif font-bold text-base text-[#231F1C] dark:text-[#EAE4DA]">
+                Parabéns! Sua sessão diária está em dia.
+              </h3>
+              <p class="text-xs text-[#6C645C] dark:text-[#9C9387] max-w-md mx-auto font-reading">
+                Todos os termos agendados foram revisados. Novos vocábulos serão propostos conforme suas próximas leituras.
+              </p>
+            </div>
+            <button
+              type="button"
+              (click)="restartSrsReview()"
+              class="px-4 py-1.5 rounded-lg border border-[#DDD6C8] dark:border-[#38322C] text-xs text-[#5A524A] dark:text-[#B5ADA3] hover:bg-[#F2ECE1] dark:hover:bg-[#2C2723] transition-colors cursor-pointer">
+              Praticar novamente com todos os termos
+            </button>
+          </div>
+        }
       </section>
 
       <!-- Vocabulary Funnel (Section 9) -->
@@ -419,6 +559,43 @@ export class ProgressView {
   readonly assessmentHistory = this.learnerService.assessmentHistory;
 
   readonly vocabFilter = signal<'all' | 'learning' | 'false_friends'>('all');
+
+  // Literary SRS Review State
+  readonly srsDueWords = computed(() => {
+    const list = this.learnerService.dueReviewWords();
+    if (list.length > 0) return list;
+    return this.learnerService.words().slice(0, 6);
+  });
+  readonly currentSrsIndex = signal<number>(0);
+  readonly srsCardRevealed = signal<boolean>(false);
+
+  revealSrsCard(): void {
+    this.srsCardRevealed.set(true);
+  }
+
+  rateSrsCard(rating: SrsRating): void {
+    const words = this.srsDueWords();
+    const idx = this.currentSrsIndex();
+    if (idx < words.length) {
+      const word = words[idx];
+      this.learnerService.recordWordReview(word.id, rating);
+    }
+    this.srsCardRevealed.set(false);
+    this.currentSrsIndex.update((i) => i + 1);
+  }
+
+  restartSrsReview(): void {
+    this.currentSrsIndex.set(0);
+    this.srsCardRevealed.set(false);
+  }
+
+  getClozeSentence(word: LearnerWord): string {
+    if (!word.contextSentence) return `... ${word.french} ...`;
+    const escaped = word.french.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
+    const replaced = word.contextSentence.replace(regex, '[ ... ]');
+    return replaced !== word.contextSentence ? replaced : `[ ... ] — ${word.contextSentence}`;
+  }
 
   readonly falseFriendsCount = computed(() => {
     return this.learnerService.words().filter((w) => !!w.isFalseFriend).length;
