@@ -173,7 +173,16 @@ import { lookupFrenchLexicon } from '../core/lexicon';
             @for (para of s.paragraphs; track para.id; let pIdx = $index) {
               <p
                 [class.story-drop-cap]="pIdx === 0"
-                class="relative select-text transition-colors text-justify hyphens-auto leading-relaxed">
+                class="relative select-text transition-colors text-justify hyphens-auto leading-relaxed group/para">
+                <!-- Quick listen button for this paragraph in left margin -->
+                <button
+                  type="button"
+                  (click)="playFromParagraph(s, pIdx)"
+                  title="Ouvir este parágrafo com voz natural"
+                  class="opacity-0 group-hover/para:opacity-100 transition-opacity absolute -left-7 top-1 text-[#8A8278] hover:text-[#9C3823] dark:hover:text-[#DDA15E] p-0.5 cursor-pointer">
+                  <mat-icon class="text-base leading-none !w-4 !h-4">play_circle</mat-icon>
+                </button>
+
                 @for (tok of getParagraphItems(para, pIdx); track tok.id) {
                   @if (tok.isWord) {
                     <span
@@ -182,8 +191,10 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                       tabindex="0"
                       role="button"
                       [attr.aria-label]="'Traduzir ' + tok.fullText"
-                      [class.text-[#7A2A18]]="tok.falseFriend"
-                      [class.dark:text-[#F3D5A5]]="tok.falseFriend"
+                      [class.bg-amber-100/90]="isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:bg-amber-950/60]="isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.text-[#7A2A18]]="tok.falseFriend && !isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:text-[#F3D5A5]]="tok.falseFriend && !isSentenceActive(pIdx, tok.sentenceNumber)"
                       [class.font-semibold]="tok.falseFriend || tok.genderTrap"
                       [class.underline]="tok.falseFriend || tok.genderTrap"
                       [class.decoration-[#C07D2B]]="tok.falseFriend"
@@ -191,19 +202,22 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                       [class.border-b-2]="tok.isMultiword"
                       [class.border-dotted]="tok.isMultiword"
                       [class.border-[#9C3823]/60]="tok.isMultiword"
-                      [class.bg-[#F7EFE1]/80]="tok.isMultiword"
-                      [class.dark:bg-[#342A22]/80]="tok.isMultiword"
+                      [class.bg-[#F7EFE1]/80]="tok.isMultiword && !isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:bg-[#342A22]/80]="tok.isMultiword && !isSentenceActive(pIdx, tok.sentenceNumber)"
                       [class.rounded]="tok.isMultiword"
                       [class.px-1]="tok.isMultiword"
-                      [class.bg-[#EAF5EC]/60]="tok.state === 'known'"
-                      [class.dark:bg-[#1E3324]/60]="tok.state === 'known'"
-                      [class.bg-[#FEF3C7]/60]="tok.state === 'learning'"
-                      [class.dark:bg-[#3E3018]/60]="tok.state === 'learning'"
+                      [class.bg-[#EAF5EC]/60]="tok.state === 'known' && !isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:bg-[#1E3324]/60]="tok.state === 'known' && !isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.bg-[#FEF3C7]/60]="tok.state === 'learning' && !isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:bg-[#3E3018]/60]="tok.state === 'learning' && !isSentenceActive(pIdx, tok.sentenceNumber)"
                       class="cursor-pointer hover:bg-[#F3E7D3] dark:hover:bg-[#382F26] rounded-xs px-0.5 py-0.5 inline transition-colors">
                       {{ tok.text }}
                     </span>
                   } @else {
-                    <span class="whitespace-pre-wrap select-text">{{ tok.text }}</span>
+                    <span
+                      [class.bg-amber-100/90]="isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:bg-amber-950/60]="isSentenceActive(pIdx, tok.sentenceNumber)"
+                      class="whitespace-pre-wrap select-text transition-colors duration-200">{{ tok.text }}</span>
                   }
                 }
               </p>
@@ -601,9 +615,21 @@ export class ReadingView implements OnDestroy {
     } else if (this.speech.isPaused()) {
       this.speech.resume();
     } else {
-      const fullText = story.paragraphs.map((p) => p.text).join(' ');
-      this.speech.playStory(fullText);
+      this.speech.playStoryParagraphs(story.paragraphs);
     }
+  }
+
+  playFromParagraph(story: Story, pIdx: number): void {
+    const narrative = this.speech.prepareStory(story.paragraphs);
+    const target = narrative.find((n) => n.paragraphIndex === pIdx);
+    const startIdx = target ? target.globalIndex : 0;
+    this.speech.playStoryParagraphs(story.paragraphs, startIdx);
+  }
+
+  isSentenceActive(pIdx: number, sNum: number): boolean {
+    if (!this.speech.isPlaying()) return false;
+    const active = this.speech.activeSentence();
+    return active !== null && active.paragraphIndex === pIdx && active.sentenceIndexInParagraph === sNum;
   }
 
   getParagraphItems(para: StoryParagraph, pIndex: number): RenderedTextItem[] {

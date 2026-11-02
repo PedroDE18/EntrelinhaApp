@@ -31,6 +31,7 @@ describe('SpeechNarrationService', () => {
     expect(service.currentSpeed()).toBe(0.92);
     expect(service.progressPercent()).toBe(0);
     expect(service.activeVoiceName()).toBeDefined();
+    expect(service.activeSentence()).toBeNull();
   });
 
   it('detects natural and online voices correctly', () => {
@@ -53,5 +54,34 @@ describe('SpeechNarrationService', () => {
 
     expect(service.isNaturalVoice(mockNaturalVoice)).toBe(true);
     expect(service.isNaturalVoice(mockRoboticVoice)).toBe(false);
+  });
+
+  it('prepareStory maps paragraphs and sentences accurately for read-along', () => {
+    const service = new SpeechNarrationService();
+    const paragraphs = [
+      { text: "Une bruine d'automne tombait. Les pavés brillaient." },
+      { text: "Elle ouvrit la porte. La clochette tinta." }
+    ];
+
+    const narrative = service.prepareStory(paragraphs);
+    expect(narrative).toHaveLength(4);
+
+    expect(narrative[0].paragraphIndex).toBe(0);
+    expect(narrative[0].sentenceIndexInParagraph).toBe(0);
+    expect(narrative[0].globalIndex).toBe(0);
+    expect(narrative[0].text).toBe("Une bruine d'automne tombait.");
+
+    expect(narrative[1].paragraphIndex).toBe(0);
+    expect(narrative[1].sentenceIndexInParagraph).toBe(1);
+    expect(narrative[1].globalIndex).toBe(1);
+
+    expect(narrative[2].paragraphIndex).toBe(1);
+    expect(narrative[2].sentenceIndexInParagraph).toBe(0);
+    expect(narrative[2].globalIndex).toBe(2);
+    expect(narrative[2].text).toBe("Elle ouvrit la porte.");
+
+    expect(narrative[3].paragraphIndex).toBe(1);
+    expect(narrative[3].sentenceIndexInParagraph).toBe(1);
+    expect(narrative[3].globalIndex).toBe(3);
   });
 });

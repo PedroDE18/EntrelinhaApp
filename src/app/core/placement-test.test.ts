@@ -5,6 +5,12 @@ import {
 } from './placement-test';
 
 describe('PlacementTestModule', () => {
+  const getCorrect = (id: string) => PLACEMENT_QUESTIONS.find((q) => q.id === id)!.correctOptionId;
+  const getWrong = (id: string) => {
+    const q = PLACEMENT_QUESTIONS.find((q) => q.id === id)!;
+    return q.options.find((opt) => opt.id !== q.correctOptionId)!.id;
+  };
+
   it('has 6 calibrated contrastive questions spanning A1 to B2', () => {
     expect(PLACEMENT_QUESTIONS).toHaveLength(6);
     expect(PLACEMENT_QUESTIONS[0].targetCefr).toBe('A1');
@@ -21,8 +27,8 @@ describe('PlacementTestModule', () => {
     expect(result0.assignedCefr).toBe('A1');
 
     const result1 = evaluatePlacementScore({
-      'pq-1': 'a', // correct
-      'pq-2': 'b', // wrong
+      'pq-1': getCorrect('pq-1'),
+      'pq-2': getWrong('pq-2'),
     });
     expect(result1.score).toBe(1);
     expect(result1.assignedCefr).toBe('A1');
@@ -30,9 +36,9 @@ describe('PlacementTestModule', () => {
 
   it('assigns A2 for 2 or 3 correct answers', () => {
     const result = evaluatePlacementScore({
-      'pq-1': 'a', // correct
-      'pq-2': 'a', // correct
-      'pq-3': 'c', // wrong
+      'pq-1': getCorrect('pq-1'),
+      'pq-2': getCorrect('pq-2'),
+      'pq-3': getWrong('pq-3'),
     });
     expect(result.score).toBe(2);
     expect(result.assignedCefr).toBe('A2');
@@ -40,11 +46,11 @@ describe('PlacementTestModule', () => {
 
   it('assigns B1 for 4 or 5 correct answers', () => {
     const result = evaluatePlacementScore({
-      'pq-1': 'a',
-      'pq-2': 'a',
-      'pq-3': 'a',
-      'pq-4': 'a',
-      'pq-5': 'b', // wrong
+      'pq-1': getCorrect('pq-1'),
+      'pq-2': getCorrect('pq-2'),
+      'pq-3': getCorrect('pq-3'),
+      'pq-4': getCorrect('pq-4'),
+      'pq-5': getWrong('pq-5'),
     });
     expect(result.score).toBe(4);
     expect(result.assignedCefr).toBe('B1');

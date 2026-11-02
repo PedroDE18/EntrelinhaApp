@@ -185,8 +185,24 @@ export class TextRendererService {
   }
 
   /**
+   * Splits text into sentences matching SpeechNarrationService boundary rules
+   */
+  splitIntoSentences(text: string): string[] {
+    if (!text) return [];
+    const raw = text
+      .replace(/\r\n/g, ' ')
+      .replace(/\n/g, ' ')
+      .split(/(?<=[.!?…])\s+(?=[A-ZÀÂÉÈÊËÎÏÔÙÛÜÇ«"—])/g)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    return raw.length > 0 ? raw : [text];
+  }
+
+  /**
    * Splits narrative text into atomic raw tokens (words, whitespace, punctuation).
    * French word characters include standard Latin letters and all accented forms.
+   * Aligns sentence numbers 1:1 with SpeechNarrationService sentences.
    */
   tokenizeToRaw(text: string): ParsedRawToken[] {
     const normalized = this.normalizeText(text);
@@ -194,50 +210,59 @@ export class TextRendererService {
 
     // Word characters for French: letters + accented vowels + cedilla
     const wordPattern = /[a-zA-ZÀ-ÖØ-öø-ȳáéíóúÁÉÍÓÚñÑçÇ]+/g;
-    const sentenceTerminators = new Set(['.', '!', '?', '…', ':']);
+
+    // Build sentence bounds matching SpeechNarrationService exactly
+    const sents = this.splitIntoSentences(normalized);
+    let searchIdx = 0;
+    const sentenceBounds = sents.map((s) => {
+      const idx = normalized.indexOf(s, searchIdx);
+      if (idx !== -1) {
+        searchIdx = idx + s.length;
+        return { start: idx, end: idx + s.length };
+      }
+      const fallbackStart = searchIdx;
+      searchIdx = fallbackStart + s.length;
+      return { start: fallbackStart, end: searchIdx };
+    });
+
+    const getSentenceIndexForOffset = (offset: number): number => {
+      for (let i = 0; i < sentenceBounds.length; i++) {
+        if (offset >= sentenceBounds[i].start && offset <= sentenceBounds[i].end) {
+          return i;
+        }
+      }
+      return Math.max(0, sentenceBounds.length - 1);
+    };
 
     const tokens: ParsedRawToken[] = [];
     let lastIndex = 0;
-    let sentenceNumber = 0;
-    let nextIsSentenceStart = true;
 
     let match: RegExpExecArray | null;
     while ((match = wordPattern.exec(normalized)) !== null) {
       const matchStart = match.index;
       const matchEnd = matchStart + match[0].length;
+      const wordSentenceIdx = getSentenceIndexForOffset(matchStart);
 
       // Capture any preceding non-word text (spaces, punctuation, symbols)
       if (matchStart > lastIndex) {
         const nonWord = normalized.substring(lastIndex, matchStart);
-        // Check if non-word contains sentence boundary
-        let hasSentenceEnd = false;
-        for (const ch of nonWord) {
-          if (sentenceTerminators.has(ch)) {
-            hasSentenceEnd = true;
-          }
-        }
+        const nonWordSentenceIdx = getSentenceIndexForOffset(lastIndex);
 
         tokens.push({
           text: nonWord,
           isWord: false,
-          sentenceNumber,
+          sentenceNumber: nonWordSentenceIdx,
           isSentenceStart: false,
         });
-
-        if (hasSentenceEnd) {
-          sentenceNumber++;
-          nextIsSentenceStart = true;
-        }
       }
 
       // Add the word token
       tokens.push({
         text: match[0],
         isWord: true,
-        sentenceNumber,
-        isSentenceStart: nextIsSentenceStart,
+        sentenceNumber: wordSentenceIdx,
+        isSentenceStart: sentenceBounds[wordSentenceIdx]?.start === matchStart,
       });
-      nextIsSentenceStart = false;
 
       lastIndex = matchEnd;
     }
@@ -248,7 +273,7 @@ export class TextRendererService {
       tokens.push({
         text: trailing,
         isWord: false,
-        sentenceNumber,
+        sentenceNumber: getSentenceIndexForOffset(lastIndex),
         isSentenceStart: false,
       });
     }

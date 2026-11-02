@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { LearnerProfileService } from '../core/services/learner-profile';
@@ -146,31 +146,113 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
           </div>
         </div>
 
-        <!-- Recent Words Under Active Learning -->
-        <div class="space-y-3 pt-2">
-          <h3 class="text-sm font-semibold text-[#231F1C] dark:text-[#EAE4DA]">
-            {{ i18n.t('progress.notebook_title') }}
-          </h3>
-          <div class="divide-y divide-[#EFE9DD] dark:divide-[#2C2723]">
-            @for (w of learnerService.words(); track w.id) {
-              <div class="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div class="space-y-0.5">
-                  <div class="flex items-center gap-2">
-                    <span class="font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ w.french }}</span>
-                    @if (w.isFalseFriend) {
-                      <span class="text-[10px] font-semibold bg-[#FDE8E8] dark:bg-[#3D1A1A] text-[#9C3823] dark:text-[#F8B4B4] px-1.5 py-0.5 rounded">
-                        {{ i18n.t('reader.gloss.badge_false_friend') }}
-                      </span>
-                    }
+        <!-- Literary Notebook: Carnet de Mots & Export Section -->
+        <div class="space-y-4 pt-4 border-t border-[#E6DFD3] dark:border-[#332D28]">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 class="text-base font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] flex items-center gap-2">
+                <span>Carnet de Mots — Caderno de Leituras</span>
+                <span class="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2C2621] text-[#9C3823] dark:text-[#DDA15E]">
+                  {{ learnerService.words().length }} vocábulos
+                </span>
+              </h3>
+              <p class="text-xs font-reading text-[#6C645C] dark:text-[#9C9387]">
+                Seu léxico coletado em contexto, pronto para revisão fonética e exportação.
+              </p>
+            </div>
+
+            <!-- Export Buttons (Markdown & Anki TSV) -->
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                (click)="exportMarkdown()"
+                [disabled]="learnerService.words().length === 0"
+                [class.opacity-50]="learnerService.words().length === 0"
+                [class.cursor-not-allowed]="learnerService.words().length === 0"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#FCFAF7] dark:bg-[#221E1B] text-[#231F1C] dark:text-[#EAE4DA] border border-[#DDD6C8] dark:border-[#38322C] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors shadow-2xs">
+                <mat-icon class="text-sm leading-none !w-4 !h-4">description</mat-icon>
+                <span>Exportar .md</span>
+              </button>
+
+              <button
+                type="button"
+                (click)="exportAnkiTsv()"
+                [disabled]="learnerService.words().length === 0"
+                [class.opacity-50]="learnerService.words().length === 0"
+                [class.cursor-not-allowed]="learnerService.words().length === 0"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#231F1C] dark:bg-[#EAE4DA] text-white dark:text-[#181513] hover:opacity-90 transition-opacity shadow-2xs">
+                <mat-icon class="text-sm leading-none !w-4 !h-4">file_download</mat-icon>
+                <span>Exportar Anki (.tsv)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Pills for Notebook -->
+          <div class="flex items-center gap-2 text-xs">
+            <button
+              type="button"
+              (click)="vocabFilter.set('all')"
+              [class]="vocabFilter() === 'all' ? 'bg-[#231F1C] text-white dark:bg-[#EAE4DA] dark:text-[#181513] font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
+              class="px-2.5 py-1 rounded-md transition-colors">
+              Todos ({{ learnerService.words().length }})
+            </button>
+            <button
+              type="button"
+              (click)="vocabFilter.set('learning')"
+              [class]="vocabFilter() === 'learning' ? 'bg-[#9C3823] text-white font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
+              class="px-2.5 py-1 rounded-md transition-colors">
+              Quero Aprender ({{ learnerService.learningWordsCount() }})
+            </button>
+            <button
+              type="button"
+              (click)="vocabFilter.set('false_friends')"
+              [class]="vocabFilter() === 'false_friends' ? 'bg-[#7A2A18] text-white font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
+              class="px-2.5 py-1 rounded-md transition-colors">
+              Falsos Amigos ({{ falseFriendsCount() }})
+            </button>
+          </div>
+
+          <!-- Vocabulary Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+            @for (w of filteredNotebookWords(); track w.id) {
+              <div class="p-4 rounded-xl bg-[#FCFAF7] dark:bg-[#1A1715] border border-[#E6DFD3] dark:border-[#332D28] hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="space-y-0.5">
+                    <div class="flex items-center gap-2">
+                      <span class="font-serif font-bold text-base text-[#231F1C] dark:text-[#EAE4DA]">{{ w.french }}</span>
+                      <button
+                        type="button"
+                        (click)="speech.speakWord(w.french)"
+                        title="Ouvir pronúncia autêntica em francês"
+                        class="p-1 rounded text-[#8A8278] hover:text-[#9C3823] dark:hover:text-[#DDA15E] transition-colors">
+                        <mat-icon class="text-sm leading-none !w-4 !h-4">volume_up</mat-icon>
+                      </button>
+                      @if (w.isFalseFriend) {
+                        <span class="text-[10px] font-bold bg-[#FDE8E8] dark:bg-[#3D1A1A] text-[#9C3823] dark:text-[#F8B4B4] px-1.5 py-0.5 rounded">
+                          Falso Cognato
+                        </span>
+                      }
+                    </div>
+                    <span class="text-xs font-semibold text-[#9C3823] dark:text-[#DDA15E] block">
+                      {{ w.translationPt }}
+                    </span>
                   </div>
-                  <p class="text-xs text-[#5A524A] dark:text-[#B5ADA3] font-reading italic">
+
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EFE8DC] dark:bg-[#26211C] text-[#8A8278] dark:text-[#7A7268] shrink-0">
+                    {{ w.encounterCount }}× visto
+                  </span>
+                </div>
+
+                @if (w.contextSentence) {
+                  <p class="text-xs text-[#5A524A] dark:text-[#B5ADA3] font-reading italic line-clamp-2 pt-1 border-t border-[#F2ECE1] dark:border-[#26221E]">
                     « {{ w.contextSentence }} »
                   </p>
-                </div>
-                <div class="text-right sm:max-w-xs shrink-0">
-                  <span class="text-xs font-medium text-[#231F1C] dark:text-[#EAE4DA] block">{{ w.translationPt }}</span>
-                  <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('progress.times_encountered', { count: w.encounterCount }) }}</span>
-                </div>
+                }
+              </div>
+            } @empty {
+              <div class="col-span-full py-8 text-center text-xs text-[#8A8278] dark:text-[#7A7268] space-y-1">
+                <p>Nenhum vocábulo corresponde ao filtro selecionado.</p>
+                <p class="italic">Clique nas palavras durante a leitura para adicioná-las ao seu Carnet de Mots.</p>
               </div>
             }
           </div>
@@ -335,6 +417,67 @@ export class ProgressView {
   readonly profile = this.learnerService.profile;
   readonly difficultyRadarList = computed(() => Object.values(this.learnerService.difficultyRadar()));
   readonly assessmentHistory = this.learnerService.assessmentHistory;
+
+  readonly vocabFilter = signal<'all' | 'learning' | 'false_friends'>('all');
+
+  readonly falseFriendsCount = computed(() => {
+    return this.learnerService.words().filter((w) => !!w.isFalseFriend).length;
+  });
+
+  readonly filteredNotebookWords = computed(() => {
+    const list = this.learnerService.words();
+    const filter = this.vocabFilter();
+    if (filter === 'learning') {
+      return list.filter((w) => w.state === 'learning');
+    }
+    if (filter === 'false_friends') {
+      return list.filter((w) => !!w.isFalseFriend);
+    }
+    return list;
+  });
+
+  exportMarkdown(): void {
+    const words = this.learnerService.words();
+    let md = '# Entrelinha — Carnet de Mots (Caderno de Leituras)\n\n';
+    md += `*Data de Exportação: ${new Date().toLocaleDateString('pt-BR')}*\n`;
+    md += `*Total de Vocábulos Coletados: ${words.length}*\n\n`;
+    md += '| Vocábulo Francês | Tradução em Português | Contexto Narrativo Original | Falso Cognato? |\n';
+    md += '|---|---|---|---|\n';
+    for (const w of words) {
+      const ff = w.isFalseFriend ? 'Sim (Atenção)' : 'Não';
+      const cleanCtx = (w.contextSentence || '').replace(/\|/g, '-');
+      md += `| **${w.french}** | ${w.translationPt} | *${cleanCtx}* | ${ff} |\n`;
+    }
+    this.downloadFile(md, 'entrelinha-carnet-de-mots.md', 'text/markdown');
+  }
+
+  exportAnkiTsv(): void {
+    const words = this.learnerService.words();
+    if (words.length === 0) return;
+    let tsv = '';
+    for (const w of words) {
+      const front = (w.french || '').replace(/[\t\r\n]+/g, ' ').trim();
+      const cleanPt = (w.translationPt || '').replace(/[\t\r\n]+/g, ' ').trim();
+      const cleanCtx = (w.contextSentence || '').replace(/[\t\r\n]+/g, ' ').trim();
+      const back = `${cleanPt}<br><small><i>« ${cleanCtx} »</i></small>${w.isFalseFriend ? '<br><span style="color:#c92a2a">⚠️ Falso Cognato</span>' : ''}`;
+      const tag = w.isFalseFriend ? 'entrelinha_falso_cognato' : 'entrelinha_vocabulario';
+      tsv += `${front}\t${back}\t${tag}\n`;
+    }
+    this.downloadFile(tsv, 'entrelinha-anki-deck.tsv', 'text/tab-separated-values');
+  }
+
+  private downloadFile(content: string, filename: string, mimeType: string): void {
+    if (typeof window === 'undefined' || !document) return;
+    const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
 
   findStoryForCategory(cat: DifficultyCategory): Story | undefined {
     const stories = this.storyService.stories();

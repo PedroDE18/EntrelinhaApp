@@ -7,6 +7,13 @@ export interface FrenchVoiceOption {
   label: string;
 }
 
+export interface NarrativeSentence {
+  paragraphIndex: number;
+  sentenceIndexInParagraph: number;
+  globalIndex: number;
+  text: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -19,6 +26,8 @@ export class SpeechNarrationService {
   readonly totalSentences = signal<number>(0);
   readonly activeVoiceName = signal<string>('Voz Natural Francesa');
   readonly availableFrenchVoices = signal<FrenchVoiceOption[]>([]);
+  readonly activeSentence = signal<NarrativeSentence | null>(null);
+  readonly narrativeSentences = signal<NarrativeSentence[]>([]);
 
   private sentences: string[] = [];
   private synth: SpeechSynthesis | null = null;
@@ -79,20 +88,16 @@ export class SpeechNarrationService {
     const name = voice.name.toLowerCase();
     const lang = (voice.lang || '').toLowerCase().replace('_', '-');
 
-    // Prefer France French (fr-FR) for standard target phonology
     if (lang === 'fr-fr') score += 40;
     else if (lang.startsWith('fr')) score += 20;
 
-    // High quality neural / online natural synthesis
     if (name.includes('natural') || name.includes('online')) score += 60;
     if (name.includes('google') && name.includes('français')) score += 55;
     if (name.includes('enhanced') || name.includes('premium') || name.includes('siri')) score += 50;
 
-    // Well-regarded human voice models
     const favoredNames = ['henri', 'paul', 'julie', 'denise', 'thomas', 'audrey', 'amélie', 'céline', 'nicolas'];
     if (favoredNames.some((n) => name.includes(n))) score += 25;
 
-    // Penalize mechanical robotic fallbacks
     if (name.includes('espeak') || name.includes('compact') || name.includes('sin-nombre')) score -= 80;
 
     return score;
@@ -157,6 +162,55 @@ export class SpeechNarrationService {
     return raw.length > 0 ? raw : [text];
   }
 
+  /**
+   * Prepares structured narrative sentences with paragraph mapping for active read-along
+   */
+  prepareStory(paragraphs: { text: string }[]): NarrativeSentence[] {
+    const result: NarrativeSentence[] = [];
+    let globalIndex = 0;
+
+    paragraphs.forEach((p, pIdx) => {
+      const sents = this.splitIntoSentences(p.text);
+      sents.forEach((text, sIdx) => {
+        result.push({
+          paragraphIndex: pIdx,
+          sentenceIndexInParagraph: sIdx,
+          globalIndex: globalIndex++,
+          text,
+        });
+      });
+    });
+
+    return result;
+  }
+
+  /**
+   * Plays story with paragraph-to-sentence read-along mapping
+   */
+  playStoryParagraphs(paragraphs: { text: string }[], startGlobalIndex: number = 0): void {
+    if (this.isProcessing) return;
+    this.isProcessing = true;
+
+    try {
+      this.clearPauseTimeout();
+      this.stop();
+      const narrative = this.prepareStory(paragraphs);
+      this.narrativeSentences.set(narrative);
+      this.sentences = narrative.map((n) => n.text);
+      this.totalSentences.set(this.sentences.length);
+      this.currentSentenceIndex.set(startGlobalIndex);
+      this.progressPercent.set(0);
+      this.isPaused.set(false);
+
+      if (this.sentences.length > 0 && startGlobalIndex < this.sentences.length) {
+        this.activeSentence.set(narrative[startGlobalIndex]);
+        this.speakCurrentSentence();
+      }
+    } finally {
+      this.isProcessing = false;
+    }
+  }
+
   playStory(fullText: string): void {
     if (this.isProcessing) return;
     this.isProcessing = true;
@@ -165,12 +219,22 @@ export class SpeechNarrationService {
       this.clearPauseTimeout();
       this.stop();
       this.sentences = this.splitIntoSentences(fullText);
+      const narrative: NarrativeSentence[] = this.sentences.map((text, i) => ({
+        paragraphIndex: 0,
+        sentenceIndexInParagraph: i,
+        globalIndex: i,
+        text,
+      }));
+      this.narrativeSentences.set(narrative);
       this.totalSentences.set(this.sentences.length);
       this.currentSentenceIndex.set(0);
       this.progressPercent.set(0);
       this.isPaused.set(false);
 
-      this.speakCurrentSentence();
+      if (narrative.length > 0) {
+        this.activeSentence.set(narrative[0]);
+        this.speakCurrentSentence();
+      }
     } finally {
       this.isProcessing = false;
     }
@@ -219,6 +283,10 @@ export class SpeechNarrationService {
     this.isPaused.set(false);
 
     if (this.sentences.length > 0) {
+      const narrative = this.narrativeSentences();
+      if (narrative[0]) {
+        this.activeSentence.set(narrative[0]);
+      }
       this.speakCurrentSentence();
     }
   }
@@ -234,6 +302,7 @@ export class SpeechNarrationService {
     }
     this.isPlaying.set(false);
     this.isPaused.set(false);
+    this.activeSentence.set(null);
     this.activeUtterance = null;
   }
 
@@ -242,6 +311,29 @@ export class SpeechNarrationService {
     if (this.isPlaying()) {
       this.speakCurrentSentence();
     }
+  }
+
+  /**
+   * Jump directly to speak a specific sentence in the narrative
+   */
+  jumpToSentence(globalIndex: number): void {
+    if (globalIndex < 0 || globalIndex >= this.sentences.length) return;
+    this.clearPauseTimeout();
+    if (this.synth) {
+      try {
+        this.synth.cancel();
+      } catch {
+        // ignore
+      }
+    }
+    this.currentSentenceIndex.set(globalIndex);
+    const narrative = this.narrativeSentences();
+    if (narrative[globalIndex]) {
+      this.activeSentence.set(narrative[globalIndex]);
+    }
+    this.isPlaying.set(true);
+    this.isPaused.set(false);
+    this.speakCurrentSentence();
   }
 
   /**
@@ -254,7 +346,6 @@ export class SpeechNarrationService {
       this.synth.cancel();
       const utterance = new SpeechSynthesisUtterance(frenchWord);
       utterance.lang = 'fr-FR';
-      // Slightly relaxed tempo for maximum phoneme clarity
       utterance.rate = Math.max(0.82, this.currentSpeed() * 0.95);
       utterance.pitch = 1.0;
 
@@ -285,8 +376,14 @@ export class SpeechNarrationService {
     if (idx >= this.sentences.length) {
       this.isPlaying.set(false);
       this.isPaused.set(false);
+      this.activeSentence.set(null);
       this.progressPercent.set(100);
       return;
+    }
+
+    const narrative = this.narrativeSentences();
+    if (narrative[idx]) {
+      this.activeSentence.set(narrative[idx]);
     }
 
     const sentence = this.sentences[idx];
@@ -323,6 +420,7 @@ export class SpeechNarrationService {
           } else {
             this.isPlaying.set(false);
             this.isPaused.set(false);
+            this.activeSentence.set(null);
             this.progressPercent.set(100);
           }
         };
@@ -330,6 +428,7 @@ export class SpeechNarrationService {
         utterance.onerror = () => {
           this.isPlaying.set(false);
           this.isPaused.set(false);
+          this.activeSentence.set(null);
         };
 
         this.activeUtterance = utterance;
@@ -339,6 +438,7 @@ export class SpeechNarrationService {
       } catch {
         this.isPlaying.set(false);
         this.isPaused.set(false);
+        this.activeSentence.set(null);
       }
     } else {
       this.isPlaying.set(true);

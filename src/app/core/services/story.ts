@@ -264,13 +264,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Dans une ancienne librairie du quartier du Marais à Paris",
-            "textPt": "Numa antiga livraria no bairro do Marais em Paris"
+            "textFr": "Dans une grande bibliothèque universitaire",
+            "textPt": "Numa grande biblioteca universitária"
           },
           {
             "id": "b",
-            "textFr": "Dans une grande bibliothèque universitaire",
-            "textPt": "Numa grande biblioteca universitária"
+            "textFr": "Dans une ancienne librairie du quartier du Marais à Paris",
+            "textPt": "Numa antiga livraria no bairro do Marais em Paris"
           },
           {
             "id": "c",
@@ -283,7 +283,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Na delegacia central do 4º distrito"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "Le texte précise qu'Élodie pousse la porte d'une ancienne librairie dans le Marais.",
         "explanationPt": "O texto cita explicitamente que ela empurra a porta de uma antiga livraria no Marais."
       },
@@ -295,8 +295,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "En ce moment précis / À cette heure",
-            "textPt": "Neste momento exato / Agora"
+            "textFr": "Plus tard dans la soirée",
+            "textPt": "Mais tarde na noite"
           },
           {
             "id": "b",
@@ -305,8 +305,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "Plus tard dans la soirée",
-            "textPt": "Mais tarde na noite"
+            "textFr": "En ce moment précis / À cette heure",
+            "textPt": "Neste momento exato / Agora"
           },
           {
             "id": "d",
@@ -314,7 +314,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Certamente"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "'Actuellement' est un faux-ami majeur pour les lusophones influencés par l'anglais. Il signifie uniquement 'maintenant, à cette période'.",
         "explanationPt": "'Actuellement' não significa 'na verdade' (que seria 'en fait'). Significa 'neste momento / atualmente'.",
         "portugueseInterferenceNote": "Falso cognato clássico: em português e inglês confunde-se com \"na verdade\" (actually). Em francês é \"no momento presente\"."
@@ -327,8 +327,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Parce qu'Élodie entend des pas au-dessus d'elle alors que la boutique paraissait déserte",
-            "textPt": "Porque Élodie ouve passos acima dela, embora a loja parecesse deserta"
+            "textFr": "Parce que son arme tombe par terre",
+            "textPt": "Porque sua arma cai no chão"
           },
           {
             "id": "b",
@@ -342,11 +342,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Parce que son arme tombe par terre",
-            "textPt": "Porque sua arma cai no chão"
+            "textFr": "Parce qu'Élodie entend des pas au-dessus d'elle alors que la boutique paraissait déserte",
+            "textPt": "Porque Élodie ouve passos acima dela, embora a loja parecesse deserta"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "La rupture du silence par un craquement et des pas à l'étage crée un suspense immédiat.",
         "explanationPt": "A quebra do silêncio pelo rangido da madeira e passos no andar superior quebra a expectativa de que o lugar estava vazio."
       },
@@ -492,8 +492,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Elle n'a pas de toilette convenable ni de bijoux pour y assister",
-            "textPt": "Ela não tem vestido adequado nem joias para comparecer"
+            "textFr": "Elle préfère voyager en Italie",
+            "textPt": "Ela prefere viajar para a Itália"
           },
           {
             "id": "b",
@@ -502,8 +502,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "Elle préfère voyager en Italie",
-            "textPt": "Ela prefere viajar para a Itália"
+            "textFr": "Elle n'a pas de toilette convenable ni de bijoux pour y assister",
+            "textPt": "Ela não tem vestido adequado nem joias para comparecer"
           },
           {
             "id": "d",
@@ -511,7 +511,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "O marido se recusa a ir com ela"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "Mathilde souffre de ne pas avoir de robe ni de bijoux dignes de ses aspirations aristocratiques.",
         "explanationPt": "Mathilde lamenta não ter joias ou vestido à altura das aparências da alta sociedade."
       },
@@ -523,8 +523,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Son besoin profond de reconnaissance sociale et son ivresse du succès éphémère",
-            "textPt": "Sua profunda necessidade de reconhecimento social e o desfrute de um sucesso passageiro"
+            "textFr": "Son ennui face aux mondanités",
+            "textPt": "Seu tédio diante das formalidades sociais"
           },
           {
             "id": "b",
@@ -538,11 +538,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Son ennui face aux mondanités",
-            "textPt": "Seu tédio diante das formalidades sociais"
+            "textFr": "Son besoin profond de reconnaissance sociale et son ivresse du succès éphémère",
+            "textPt": "Sua profunda necessidade de reconhecimento social e o desfrute de um sucesso passageiro"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "Maupassant montre que Mathilde s'enivre de l'admiration des autres, oubliant sa condition réelle pendant quelques heures.",
         "explanationPt": "Maupassant retrata como Mathilde se inebria com o olhar de admiração dos outros, vivendo plenamente a ilusão."
       },
@@ -585,13 +585,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "En français, les articles indéfinis et partitifs deviennent obligatoirement 'de' après une négation absolue",
-            "textPt": "Em francês, os artigos indefinidos e partitivos reduzem-se a 'de' após uma negação direta (pas de)"
+            "textFr": "Parce que le mot parure commence par une consonne",
+            "textPt": "Porque a palavra parure começa com consoante"
           },
           {
             "id": "b",
-            "textFr": "Parce que le mot parure commence par une consonne",
-            "textPt": "Porque a palavra parure começa com consoante"
+            "textFr": "En français, les articles indéfinis et partitifs deviennent obligatoirement 'de' après une négation absolue",
+            "textPt": "Em francês, os artigos indefinidos e partitivos reduzem-se a 'de' após uma negação direta (pas de)"
           },
           {
             "id": "c",
@@ -604,7 +604,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "'De' substitui o pronome sujeito 'elle'"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "Après une négation absolue comme 'ne... pas', l'article indéfini (un, une, des) ou partitif se réduit à 'de' ou 'd''.",
         "explanationPt": "Regra essencial de contraste: após 'ne... pas', os artigos indefinidos e partitivos transformam-se em 'de' puro ('j'ai une parure' -> 'je n'ai pas de parure').",
         "portugueseInterferenceNote": "articles_negation: redução obrigatória de un/une/des para 'de' após 'pas'."
@@ -688,8 +688,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Vingt mille livres sterling",
-            "textPt": "Vinte mil libras esterlinas"
+            "textFr": "Cinquante mille dollars",
+            "textPt": "Cinquenta mil dólares"
           },
           {
             "id": "b",
@@ -703,11 +703,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Cinquante mille dollars",
-            "textPt": "Cinquenta mil dólares"
+            "textFr": "Vingt mille livres sterling",
+            "textPt": "Vinte mil libras esterlinas"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "Fogg parie la moitié de sa fortune, soit vingt mille livres.",
         "explanationPt": "Fogg aposta vinte mil libras esterlinas, metade de todo o seu patrimônio."
       },
@@ -750,13 +750,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "La perte, l'échouement ou la destruction d'un navire en mer",
-            "textPt": "A perda, encalhe ou destruição de um navio em alto-mar (naufrágio)"
+            "textFr": "Une escale imprévue pour charger du charbon",
+            "textPt": "Uma parada imprevista para carregar carvão"
           },
           {
             "id": "b",
-            "textFr": "Une escale imprévue pour charger du charbon",
-            "textPt": "Uma parada imprevista para carregar carvão"
+            "textFr": "La perte, l'échouement ou la destruction d'un navire en mer",
+            "textPt": "A perda, encalhe ou destruição de um navio em alto-mar (naufrágio)"
           },
           {
             "id": "c",
@@ -769,7 +769,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "A velocidade máxima medida em nós"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "Le naufrage est l'accident maritime par excellence, redouté par les voyageurs.",
         "explanationPt": "'Naufrage' significa estritamente naufrágio ou perda da embarcação em alto-mar."
       },
@@ -781,8 +781,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Les noms terminés par le suffixe -age sont presque tous masculins en français (le voyage, le courage), à l'inverse du portugais (a viagem, a coragem)",
-            "textPt": "Substantivos em -age são masculinos em francês ('le voyage', 'le courage'), contrariando o feminino em português ('a viagem', 'a coragem')"
+            "textFr": "C'est un choix poétique réservé aux romans de Jules Verne",
+            "textPt": "É uma escolha poética de Jules Verne"
           },
           {
             "id": "b",
@@ -791,8 +791,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "C'est un choix poétique réservé aux romans de Jules Verne",
-            "textPt": "É uma escolha poética de Jules Verne"
+            "textFr": "Les noms terminés par le suffixe -age sont presque tous masculins en français (le voyage, le courage), à l'inverse du portugais (a viagem, a coragem)",
+            "textPt": "Substantivos em -age são masculinos em francês ('le voyage', 'le courage'), contrariando o feminino em português ('a viagem', 'a coragem')"
           },
           {
             "id": "d",
@@ -800,7 +800,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Em francês, todos os meios de transporte são masculinos"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "Le suffixe -age en français est un marqueur masculin régulier dérivé du latin -aticum.",
         "explanationPt": "Divergência de gênero clássica: palavras em -age são masculinas no francês (le voyage, le fromage, le paysage), enquanto em português terminam em -agem e são femininas (a viagem, a paisagem).",
         "portugueseInterferenceNote": "divergence_genre: le voyage (m.) vs a viagem (f.)."
@@ -908,13 +908,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "La création d'aménagements cyclables protégés et sécurisés",
-            "textPt": "A criação de infraestruturas cicloviárias protegidas e seguras"
+            "textFr": "L'obligation légale de pédaler sous peine d'amende",
+            "textPt": "A obrigatoriedade legal sob pena de multa"
           },
           {
             "id": "b",
-            "textFr": "L'obligation légale de pédaler sous peine d'amende",
-            "textPt": "A obrigatoriedade legal sob pena de multa"
+            "textFr": "La création d'aménagements cyclables protégés et sécurisés",
+            "textPt": "A criação de infraestruturas cicloviárias protegidas e seguras"
           },
           {
             "id": "c",
@@ -927,7 +927,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "A distribuição gratuita de bicicletas"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "La sécurisation des voies cyclables a levé le frein de la peur des accidents.",
         "explanationPt": "A criação de ciclovias seguras e segregadas do tráfego permitiu que cidadãos comuns aderissem à bicicleta."
       },
@@ -939,8 +939,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Un petit avertisseur sonore manuel fixé sur le guidon",
-            "textPt": "Uma pequena campainha ou buzina manual presa ao guidão"
+            "textFr": "La selle rembourrée pour le confort",
+            "textPt": "O selim estofado"
           },
           {
             "id": "b",
@@ -949,8 +949,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "La selle rembourrée pour le confort",
-            "textPt": "O selim estofado"
+            "textFr": "Un petit avertisseur sonore manuel fixé sur le guidon",
+            "textPt": "Uma pequena campainha ou buzina manual presa ao guidão"
           },
           {
             "id": "d",
@@ -958,7 +958,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "O cadeado para trancar a bicicleta"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "La sonnette permet aux cyclistes de signaler leur présence avec bienveillance.",
         "explanationPt": "'Sonnette' é a campainha ou sininho instalado no guidão de bicicletas."
       },
@@ -970,8 +970,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "'Grâce à' introduit une cause positive ou bénéfique, contrairement à 'à cause de' qui introduit une cause négative",
-            "textPt": "'Grâce à' introduz uma causa positiva/benéfica ('graças a'), ao passo que 'à cause de' introduz uma consequência negativa ('por causa de')"
+            "textFr": "Il n'y a aucune différence avec 'à cause de'",
+            "textPt": "Não há diferença com 'à cause de'"
           },
           {
             "id": "b",
@@ -985,11 +985,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Il n'y a aucune différence avec 'à cause de'",
-            "textPt": "Não há diferença com 'à cause de'"
+            "textFr": "'Grâce à' introduit une cause positive ou bénéfique, contrairement à 'à cause de' qui introduit une cause négative",
+            "textPt": "'Grâce à' introduz uma causa positiva/benéfica ('graças a'), ao passo que 'à cause de' introduz uma consequência negativa ('por causa de')"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "En français, 'grâce à' s'emploie pour une conséquence heureuse, tandis que 'à cause de' s'emploie pour un motif défavorable.",
         "explanationPt": "Contraste de conectores: use 'grâce à' para resultados positivos ('graças aos ciclovias') e reserve 'à cause de' para causas desfavoráveis ('por causa do trânsito')."
       }
@@ -1073,13 +1073,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Parce que la peur provoquée par les lettres anonymes fragilise ses certitudes rationnelles",
-            "textPt": "Porque o medo das cartas anônimas abala suas certezas racionais"
+            "textFr": "Parce que son ami Vilela lui a ordonné d’y aller",
+            "textPt": "Porque seu amigo Vilela ordenou que ele fosse"
           },
           {
             "id": "b",
-            "textFr": "Parce que son ami Vilela lui a ordonné d’y aller",
-            "textPt": "Porque seu amigo Vilela ordenou que ele fosse"
+            "textFr": "Parce que la peur provoquée par les lettres anonymes fragilise ses certitudes rationnelles",
+            "textPt": "Porque o medo das cartas anônimas abala suas certezas racionais"
           },
           {
             "id": "c",
@@ -1092,7 +1092,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Porque perdeu sua carteira"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "L'angoisse et la culpabilité de Camilo l'amènent à chercher un réconfort irrationnel.",
         "explanationPt": "A angústia e o pavor de ser descoberto levam o cético Camilo a buscar alívio na cartomante."
       },
@@ -1104,8 +1104,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Qui ne peut être ébranlé, ferme et inattaquable",
-            "textPt": "Inabalável, firme que não se deixa abalar"
+            "textFr": "Secrète et cachée à tous",
+            "textPt": "Secreta e escondida de todos"
           },
           {
             "id": "b",
@@ -1114,8 +1114,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "Secrète et cachée à tous",
-            "textPt": "Secreta e escondida de todos"
+            "textFr": "Qui ne peut être ébranlé, ferme et inattaquable",
+            "textPt": "Inabalável, firme que não se deixa abalar"
           },
           {
             "id": "d",
@@ -1123,7 +1123,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Passageira e passageira"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "'Inébranlable' vient du verbe ébranler (faire trembler).",
         "explanationPt": "'Inébranlable' traduz com fidelidade 'inabalável' (que resiste a qualquer abalo)."
       },
@@ -1135,8 +1135,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "La réception de lettres anonymes menaçant de dévoiler son adultère",
-            "textPt": "A chegada de cartas anônimas ameaçando denunciar a relação adúltera"
+            "textFr": "Une faillite financière à la bourse",
+            "textPt": "Uma falência financeira na bolsa"
           },
           {
             "id": "b",
@@ -1150,11 +1150,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Une faillite financière à la bourse",
-            "textPt": "Uma falência financeira na bolsa"
+            "textFr": "La réception de lettres anonymes menaçant de dévoiler son adultère",
+            "textPt": "A chegada de cartas anônimas ameaçando denunciar a relação adúltera"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "Les courriers anonymes brisent la quiétude insouciante de Camilo.",
         "explanationPt": "As cartas anônimas ameaçam expor a traição contra seu melhor amigo Vilela."
       },
@@ -1305,8 +1305,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Créer des liens réciproques et devenir uniques l’un pour l’autre",
-            "textPt": "Criar laços recíprocos e se tornarem únicos um para o outro"
+            "textFr": "Oublier ses souvenirs d’enfance",
+            "textPt": "Esquecer as memórias de infância"
           },
           {
             "id": "b",
@@ -1315,8 +1315,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "Oublier ses souvenirs d’enfance",
-            "textPt": "Esquecer as memórias de infância"
+            "textFr": "Créer des liens réciproques et devenir uniques l’un pour l’autre",
+            "textPt": "Criar laços recíprocos e se tornarem únicos um para o outro"
           },
           {
             "id": "d",
@@ -1324,7 +1324,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Aprender a falar várias línguas estrangeiras"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "Pour le renard, apprivoiser transforme deux inconnus ordinaires en présences irremplaçables l’un pour l’autre.",
         "explanationPt": "Para a raposa, cativar significa construir laços afetivos que tornam duas pessoas únicas e preciosas uma para a outra."
       },
@@ -1336,8 +1336,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "On ne voit bien qu’avec le cœur, l’essentiel est invisible pour les yeux",
-            "textPt": "Só se vê bem com o coração, o essencial é invisível aos olhos"
+            "textFr": "Toutes les roses sont rigoureusement identiques",
+            "textPt": "Todas as rosas são rigorosamente idênticas"
           },
           {
             "id": "b",
@@ -1351,11 +1351,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Toutes les roses sont rigoureusement identiques",
-            "textPt": "Todas as rosas são rigorosamente idênticas"
+            "textFr": "On ne voit bien qu’avec le cœur, l’essentiel est invisible pour les yeux",
+            "textPt": "Só se vê bem com o coração, o essencial é invisível aos olhos"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "La formule illustre la supériorité de la sensibilité et de l’amour sur les apparences matérielles.",
         "explanationPt": "A célebre máxima sintetiza que os valores humanos e afetivos superam qualquer aparência visível."
       },
@@ -1398,13 +1398,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "La structure 'ne... que' qui exprime la restriction ('não ser mais do que / apenas')",
-            "textPt": "A estrutura 'ne... que' que expressa restrição ('apenas / não ser mais que')"
+            "textFr": "Une négation absolue équivalente à 'ne... pas du tout'",
+            "textPt": "Uma negação absoluta equivalente a não ser de jeito nenhum"
           },
           {
             "id": "b",
-            "textFr": "Une négation absolue équivalente à 'ne... pas du tout'",
-            "textPt": "Uma negação absoluta equivalente a não ser de jeito nenhum"
+            "textFr": "La structure 'ne... que' qui exprime la restriction ('não ser mais do que / apenas')",
+            "textPt": "A estrutura 'ne... que' que expressa restrição ('apenas / não ser mais que')"
           },
           {
             "id": "c",
@@ -1417,7 +1417,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Um subjuntivo presente de dúvida"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "'Ne... que' est une tournure restrictive élégante et très fréquente en français.",
         "explanationPt": "Atenção: 'ne... que' não é uma negação total! Significa 'apenas', 'somente' ('tu n'es qu'un garçon' = você é apenas um garoto)."
       }
@@ -1511,8 +1511,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Un café crème et un croissant chaud",
-            "textPt": "Um café com leite e um croissant quente"
+            "textFr": "Une carafe d’eau minérale uniquement",
+            "textPt": "Apenas uma jarra de água mineral"
           },
           {
             "id": "b",
@@ -1526,11 +1526,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Une carafe d’eau minérale uniquement",
-            "textPt": "Apenas uma jarra de água mineral"
+            "textFr": "Un café crème et un croissant chaud",
+            "textPt": "Um café com leite e um croissant quente"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "Le texte précise explicitement la commande classique : un café crème et un croissant chaud.",
         "explanationPt": "O texto cita explicitamente o pedido matinal clássico parisiense: café com leite e croissant."
       },
@@ -1573,13 +1573,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "L'élégance et la tradition séculaire des grands cafés parisiens",
-            "textPt": "A elegância e a tradição centenária dos cafés clássicos parisienses"
+            "textFr": "Qu'il s'agit d'un déguisement de carnaval",
+            "textPt": "Que se trata de uma fantasia de carnaval"
           },
           {
             "id": "b",
-            "textFr": "Qu'il s'agit d'un déguisement de carnaval",
-            "textPt": "Que se trata de uma fantasia de carnaval"
+            "textFr": "L'élégance et la tradition séculaire des grands cafés parisiens",
+            "textPt": "A elegância e a tradição centenária dos cafés clássicos parisienses"
           },
           {
             "id": "c",
@@ -1592,7 +1592,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Um uniforme hospitalar"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "Le tablier blanc et le gilet noir composent l'uniforme emblématique des garçons de café parisiens.",
         "explanationPt": "A veste evoca o patrimônio cultural e o código visual tradicional do serviço nos bistrôs da capital francesa."
       },
@@ -1604,8 +1604,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "C'est le pronom de politesse formelle employé pour s'adresser avec respect à un inconnu ou commerçant",
-            "textPt": "É o pronome de polidez formal usado para se dirigir com respeito ao interlocutor (o senhor / a senhora)"
+            "textFr": "C'est un pronom possessif équivalent à 'votre'",
+            "textPt": "É pronome possessivo"
           },
           {
             "id": "b",
@@ -1614,8 +1614,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "C'est un pronom possessif équivalent à 'votre'",
-            "textPt": "É pronome possessivo"
+            "textFr": "C'est le pronom de politesse formelle employé pour s'adresser avec respect à un inconnu ou commerçant",
+            "textPt": "É o pronome de polidez formal usado para se dirigir com respeito ao interlocutor (o senhor / a senhora)"
           },
           {
             "id": "d",
@@ -1623,7 +1623,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "É uma interjeição sem valor gramatical"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "En français, 'vous' est le vouvoiement de respect essentiel dans les commerces et les relations publiques.",
         "explanationPt": "O 'vouvoiement' (uso de vous com pessoas não íntimas) é uma convenção social fundamental na França para pedir algo com gentileza."
       }
@@ -1748,13 +1748,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "La patience, la constance et le respect du temps sont les clés indispensables",
-            "textPt": "A paciência, a constância e o respeito ao tempo são chaves indispensáveis"
+            "textFr": "Il faut toujours acheter les ingrédients les plus coûteux",
+            "textPt": "Deve-se sempre comprar os ingredientes mais caros"
           },
           {
             "id": "b",
-            "textFr": "Il faut toujours acheter les ingrédients les plus coûteux",
-            "textPt": "Deve-se sempre comprar os ingredientes mais caros"
+            "textFr": "La patience, la constance et le respect du temps sont les clés indispensables",
+            "textPt": "A paciência, a constância e o respeito ao tempo são chaves indispensáveis"
           },
           {
             "id": "c",
@@ -1767,7 +1767,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Nunca se deve compartilhar segredos com aprendizes"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "Marcel établit un parallèle lumineux entre la haute cuisine et l’apprentissage : la constance triomphe toujours.",
         "explanationPt": "O chef compara a culinária ao aprendizado de uma língua: a paciência e a dedicação constante constroem a maestria."
       },
@@ -1779,8 +1779,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Des quenelles dorées servies avec une sauce onctueuse",
-            "textPt": "Quenelles douradas servidas com molho aveludado"
+            "textFr": "Un gâteau d'anniversaire au chocolat noir",
+            "textPt": "Um bolo de aniversário"
           },
           {
             "id": "b",
@@ -1789,8 +1789,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "Un gâteau d'anniversaire au chocolat noir",
-            "textPt": "Um bolo de aniversário"
+            "textFr": "Des quenelles dorées servies avec une sauce onctueuse",
+            "textPt": "Quenelles douradas servidas com molho aveludado"
           },
           {
             "id": "d",
@@ -1798,7 +1798,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Sushis de salmão"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "La quenelle lyonnaise au brochet est l'emblème culinaire du bouchon.",
         "explanationPt": "A quenelle lyonesa é um dos pratos mais emblemáticos da gastronomia da cidade."
       },
@@ -1810,8 +1810,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "'Assiette' désigne l'objet en porcelaine (o prato louça), alors que 'plat' désigne la recette préparée (o prato culinário / refeição)",
-            "textPt": "'Assiette' refere-se ao objeto de louça redonda (o prato físico), enquanto 'plat' refere-se à preparação culinária (o prato servido)"
+            "textFr": "Ce sont deux mots parfaitement interchangeables",
+            "textPt": "São dois termos completamente intercambiáveis"
           },
           {
             "id": "b",
@@ -1825,11 +1825,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Ce sont deux mots parfaitement interchangeables",
-            "textPt": "São dois termos completamente intercambiáveis"
+            "textFr": "'Assiette' désigne l'objet en porcelaine (o prato louça), alors que 'plat' désigne la recette préparée (o prato culinário / refeição)",
+            "textPt": "'Assiette' refere-se ao objeto de louça redonda (o prato físico), enquanto 'plat' refere-se à preparação culinária (o prato servido)"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "Faux-ami d'usage : on mange un bon plat dans une belle assiette.",
         "explanationPt": "Distinção contrastiva essencial: em português usamos 'prato' tanto para a louça quanto para a comida. Em francês, 'l'assiette' é a peça de louça, e 'le plat' é a receita culinária."
       }
@@ -1918,13 +1918,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Elle doit toujours rester vide car elle est réservée au Fantôme de l’Opéra",
-            "textPt": "Deve sempre permanecer vazia pois é reservada ao Fantasma da Ópera"
+            "textFr": "Elle est réservée au maire de Paris lors des vendredis soirs",
+            "textPt": "É reservada ao prefeito de Paris nas noites de sexta-feira"
           },
           {
             "id": "b",
-            "textFr": "Elle est réservée au maire de Paris lors des vendredis soirs",
-            "textPt": "É reservada ao prefeito de Paris nas noites de sexta-feira"
+            "textFr": "Elle doit toujours rester vide car elle est réservée au Fantôme de l’Opéra",
+            "textPt": "Deve sempre permanecer vazia pois é reservada ao Fantasma da Ópera"
           },
           {
             "id": "c",
@@ -1937,7 +1937,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "É proibida ao público por causa de um piso frágil"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "Le billet du Fantôme exige impérativement que sa loge personnelle demeure libre à chaque représentation.",
         "explanationPt": "A carta misteriosa exige que o camarote 5 permaneça reservado sem nenhum outro espectador presente."
       },
@@ -1949,8 +1949,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Un personnage masqué et solitaire qui hante les sous-sols du monument",
-            "textPt": "Um personagem mascarado e solitário que ronda os subterrâneos do monumento"
+            "textFr": "Un critique musical venu rédiger un article assassin",
+            "textPt": "Um crítico musical que veio redigir uma matéria maldosa"
           },
           {
             "id": "b",
@@ -1959,8 +1959,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "Un critique musical venu rédiger un article assassin",
-            "textPt": "Um crítico musical que veio redigir uma matéria maldosa"
+            "textFr": "Un personnage masqué et solitaire qui hante les sous-sols du monument",
+            "textPt": "Um personagem mascarado e solitário que ronda os subterrâneos do monumento"
           },
           {
             "id": "d",
@@ -1968,7 +1968,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "O pai de Christine disfarçado de diretor de cena"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "Le Fantôme de l’Opéra assiste en secret aux triomphes vocaux de son élève prodige.",
         "explanationPt": "O misterioso homem mascarado observa oculto o talento musical da jovem cantora."
       },
@@ -1980,8 +1980,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "D'un rouge vif, profond et éclatant",
-            "textPt": "Carmesim, de um vermelho vivo e intenso"
+            "textFr": "Brodé avec des fils d'argent pur",
+            "textPt": "Bordado com fios de prata"
           },
           {
             "id": "b",
@@ -1995,11 +1995,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Brodé avec des fils d'argent pur",
-            "textPt": "Bordado com fios de prata"
+            "textFr": "D'un rouge vif, profond et éclatant",
+            "textPt": "Carmesim, de um vermelho vivo e intenso"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "'Cramoisi' désigne une nuance de rouge sombre et éclatante tirant sur le grenat.",
         "explanationPt": "'Cramoisi' (carmesim) é o tom clássico de veludo teatral vermelho intenso dos palcos parisienses."
       },
@@ -2125,8 +2125,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "L’intensité écrasante de la chaleur et l’éclat aveuglant du soleil méditerranéen",
-            "textPt": "A intensidade esmagadora do calor e o brilho ofuscante do sol mediterrâneo"
+            "textFr": "La mélancolie causée par un ciel gris et pluvieux",
+            "textPt": "A melancolia causada por um céu cinzento e chuvoso"
           },
           {
             "id": "b",
@@ -2135,8 +2135,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "La mélancolie causée par un ciel gris et pluvieux",
-            "textPt": "A melancolia causada por um céu cinzento e chuvoso"
+            "textFr": "L’intensité écrasante de la chaleur et l’éclat aveuglant du soleil méditerranéen",
+            "textPt": "A intensidade esmagadora do calor e o brilho ofuscante do sol mediterrâneo"
           },
           {
             "id": "d",
@@ -2144,7 +2144,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "O medo do cair da noite no deserto"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "Camus dépeint le soleil comme une force quasi physique qui dicte les réactions sensorielles du protagoniste.",
         "explanationPt": "Camus constrói o sol como uma força física opressiva que satura a percepção e as reações do personagem."
       },
@@ -2156,8 +2156,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Le silence pesant et le soleil oppressant intensifient le sentiment d’un destin inéluctable",
-            "textPt": "O silêncio pesado e o sol opressor intensificam o sentimento de um destino inelutável"
+            "textFr": "La végétation luxuriante offre un refuge paisible",
+            "textPt": "A vegetação exuberante oferece um refúgio tranquilo"
           },
           {
             "id": "b",
@@ -2171,11 +2171,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "La végétation luxuriante offre un refuge paisible",
-            "textPt": "A vegetação exuberante oferece um refúgio tranquilo"
+            "textFr": "Le silence pesant et le soleil oppressant intensifient le sentiment d’un destin inéluctable",
+            "textPt": "O silêncio pesado e o sol opressor intensificam o sentimento de um destino inelutável"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "La pesanteur des éléments naturels annonce la rupture fatidique et scelle le tragique de la scène.",
         "explanationPt": "A tensão dos elementos climáticos reflete o clímax existencial da obra camusiana."
       },
@@ -2218,13 +2218,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Pour installer un tableau descriptif immersif et suspendre le temps avant l'action décisive",
-            "textPt": "Para instaurar um quadro descritivo imersivo de atmosfera sensorial contínua antes do evento decisivo"
+            "textFr": "Parce que le passé composé est interdit en littérature",
+            "textPt": "Porque o passé composé é proibido na literatura"
           },
           {
             "id": "b",
-            "textFr": "Parce que le passé composé est interdit en littérature",
-            "textPt": "Porque o passé composé é proibido na literatura"
+            "textFr": "Pour installer un tableau descriptif immersif et suspendre le temps avant l'action décisive",
+            "textPt": "Para instaurar um quadro descritivo imersivo de atmosfera sensorial contínua antes do evento decisivo"
           },
           {
             "id": "c",
@@ -2237,7 +2237,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "É um erro corrigido nas reedições"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "L'imparfait crée la sensation de lourdeur stagnante et d'accablement physique indéfini.",
         "explanationPt": "O imperfeito cumpre sua nobre função aspectual: não avança a ação cronológica, mas congela a percepção do leitor no calor paralisante da praia."
       }
@@ -2317,8 +2317,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Il a remarqué une gravure ancienne représentant son propre immeuble",
-            "textPt": "Ele notou uma gravura antiga representando seu próprio prédio"
+            "textFr": "Il s'abrite d'un violent orage d'été",
+            "textPt": "Ele se abriga de uma tempestade de verão"
           },
           {
             "id": "b",
@@ -2332,11 +2332,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Il s'abrite d'un violent orage d'été",
-            "textPt": "Ele se abriga de uma tempestade de verão"
+            "textFr": "Il a remarqué une gravure ancienne représentant son propre immeuble",
+            "textPt": "Ele notou uma gravura antiga representando seu próprio prédio"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "Lucas s'arrête net car il aperçoit au centre de la vitrine une vue historique de sa propre résidence.",
         "explanationPt": "Lucas para abruptamente porque vê no centro da vitrine uma gravura histórica do seu próprio prédio."
       },
@@ -2379,13 +2379,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Être présent / Participer en tant que témoin ou auditeur",
-            "textPt": "Estar presente / Comparecer como participante ou ouvinte"
+            "textFr": "Donner de l'argent et aider financièrement",
+            "textPt": "Ajudar financeiramente os organizadores"
           },
           {
             "id": "b",
-            "textFr": "Donner de l'argent et aider financièrement",
-            "textPt": "Ajudar financeiramente os organizadores"
+            "textFr": "Être présent / Participer en tant que témoin ou auditeur",
+            "textPt": "Estar presente / Comparecer como participante ou ouvinte"
           },
           {
             "id": "c",
@@ -2398,7 +2398,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Prestar assistência médica a um enfermo"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "« Assister à » signifie être présent. Pour exprimer l'aide en francês, on utilise « aider ».",
         "explanationPt": "« Assister à » significa comparecer/presenciar. Para expressar prestar ajuda, o francês utiliza « aider ».",
         "portugueseInterferenceNote": "faux_ami: assister à (comparecer) vs ajudar/dar assistência."
@@ -2411,8 +2411,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Les mots en -age sont masculins en français ('le voyage' vs 'a viagem'), et 'problème' d'origine grecque est masculin",
-            "textPt": "Palavras em -age são masculinas em francês ('le voyage' vs 'a viagem') e 'problème' de raiz grega é masculino"
+            "textFr": "C'est une exception réservée aux romans policiers",
+            "textPt": "É uma exceção de romances policiais"
           },
           {
             "id": "b",
@@ -2421,8 +2421,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "C'est une exception réservée aux romans policiers",
-            "textPt": "É uma exceção de romances policiais"
+            "textFr": "Les mots en -age sont masculins en français ('le voyage' vs 'a viagem'), et 'problème' d'origine grecque est masculin",
+            "textPt": "Palavras em -age são masculinas em francês ('le voyage' vs 'a viagem') e 'problème' de raiz grega é masculino"
           },
           {
             "id": "d",
@@ -2430,7 +2430,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "O neutro substitui o feminino"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "En français, le suffixe -age est presque toujours masculin, et les substantifs en -ème sont masculins.",
         "explanationPt": "Atenção ao contraste PT-BR: substantivos em -age são masculinos em francês (le voyage, le courage, le fromage), invertendo o feminino do português (a viagem, a coragem). Da mesma forma, 'le problème' é masculino.",
         "portugueseInterferenceNote": "divergence_genre: le voyage (m.) vs a viagem (f.); le problème (m.)."
@@ -2532,13 +2532,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Une tranquillité trompeuse qui annonce un bouleversement soudain",
-            "textPt": "Uma tranquilidade ilusória que prenuncia uma reviravolta repentina"
+            "textFr": "Une joie festive partagée par toute la foule parisienne",
+            "textPt": "Uma alegria festiva compartilhada por toda a multidão parisiense"
           },
           {
             "id": "b",
-            "textFr": "Une joie festive partagée par toute la foule parisienne",
-            "textPt": "Uma alegria festiva compartilhada por toda a multidão parisiense"
+            "textFr": "Une tranquillité trompeuse qui annonce un bouleversement soudain",
+            "textPt": "Uma tranquilidade ilusória que prenuncia uma reviravolta repentina"
           },
           {
             "id": "c",
@@ -2551,7 +2551,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Um pânico coletivo generalizado"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "L'immobilité de l'eau et le silence créent une tension dramatique avant l'orage.",
         "explanationPt": "A quietude da água e o silêncio preparam o contraste com a tempestade que eclode subitamente."
       },
@@ -2563,8 +2563,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Ouvir / Escutar com os ouvidos",
-            "textPt": "Ouvir / Perceber pelos ouvidos"
+            "textFr": "Aguardar com paciência",
+            "textPt": "Aguardar pacientemente"
           },
           {
             "id": "b",
@@ -2573,8 +2573,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "Aguardar com paciência",
-            "textPt": "Aguardar pacientemente"
+            "textFr": "Ouvir / Escutar com os ouvidos",
+            "textPt": "Ouvir / Perceber pelos ouvidos"
           },
           {
             "id": "d",
@@ -2582,7 +2582,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Planejar algo para o dia seguinte"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "« Entendre » renvoie à l'audition. Pour signifier « entender/compreender », le français emploie « comprendre ».",
         "explanationPt": "« Entendre » significa estritamente ouvir. Em português, o falso amigo 'entender' induz ao erro; para compreensão intelectual, usa-se 'comprendre'.",
         "portugueseInterferenceNote": "faux_ami: entendre (ouvir) vs comprendre (entender)."
@@ -2595,8 +2595,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "L'imparfait décrit une action continue en cours de déroulement, tandis que le passé composé exprime un événement ponctuel et soudain",
-            "textPt": "O imparfait descreve o cenário contínuo em andamento, enquanto o passé composé marca o fato pontual e repentino"
+            "textFr": "Il n'y a aucune différence d'aspect, c'est une simple variante",
+            "textPt": "Não há diferença aspectual, é mera variação estilística"
           },
           {
             "id": "b",
@@ -2610,11 +2610,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Il n'y a aucune différence d'aspect, c'est une simple variante",
-            "textPt": "Não há diferença aspectual, é mera variação estilística"
+            "textFr": "L'imparfait décrit une action continue en cours de déroulement, tandis que le passé composé exprime un événement ponctuel et soudain",
+            "textPt": "O imparfait descreve o cenário contínuo em andamento, enquanto o passé composé marca o fato pontual e repentino"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "L'imparfait sert de toile de fond (action non délimitée), rompue par l'action ponctuelle au passé composé.",
         "explanationPt": "Contraste aspectual crucial para lusófonos: o imperfeito cria o pano de fundo durativo ('o vento soprava'), enquanto o passé composé corta o tempo com um evento delimitado e pontual ('o relâmpago iluminou').",
         "portugueseInterferenceNote": "temps_verbal_aspect: oposição entre Imparfait (cenário/durativo) e Passé Composé (ação pontual/concluída)."
@@ -2690,13 +2690,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Par les caves voutées débouchant sur une ruelle abandonnée",
-            "textPt": "Pelos porões abobadados que davam para um beco abandonado"
+            "textFr": "En sautant par le toit du bureau de poste",
+            "textPt": "Saltando pelo telhado da agência postal"
           },
           {
             "id": "b",
-            "textFr": "En sautant par le toit du bureau de poste",
-            "textPt": "Saltando pelo telhado da agência postal"
+            "textFr": "Par les caves voutées débouchant sur une ruelle abandonnée",
+            "textPt": "Pelos porões abobadados que davam para um beco abandonado"
           },
           {
             "id": "c",
@@ -2709,7 +2709,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Escalando a grade da praça do Temple"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "Rodolphe s'engouffre dans la grille dissimulée des caves pour ressortir discrètement ruelle des Blancs-Manteaux.",
         "explanationPt": "Rodolphe entra pela grade camuflada dos subterrâneos para sair sorrateiramente no beco escuro."
       },
@@ -2721,8 +2721,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Il se retrouve pris au piège alors que ses poursuivants inspectent les abords",
-            "textPt": "Ele se encontra encurralado no subsolo enquanto os perseguidores rondam a entrada"
+            "textFr": "Il a peur des chauves-souris",
+            "textPt": "Ele tem fobia de morcegos"
           },
           {
             "id": "b",
@@ -2731,8 +2731,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "Il a peur des chauves-souris",
-            "textPt": "Ele tem fobia de morcegos"
+            "textFr": "Il se retrouve pris au piège alors que ses poursuivants inspectent les abords",
+            "textPt": "Ele se encontra encurralado no subsolo enquanto os perseguidores rondam a entrada"
           },
           {
             "id": "d",
@@ -2740,7 +2740,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Ele está atrasado para um jantar de gala"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "La sortie condamnée supprime son échappatoire immédiate et le force à improviser.",
         "explanationPt": "A porta trancada transforma o refúgio provisório em uma armadilha perigosa antes do amanhecer."
       },
@@ -2752,8 +2752,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Désappointement / Frustration devant un espoir déçu",
-            "textPt": "Desapontamento / Frustração diante de uma expectativa frustrada"
+            "textFr": "Étourdissement physique causé par le froid",
+            "textPt": "Tontura física provocada pelo frio"
           },
           {
             "id": "b",
@@ -2767,11 +2767,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Étourdissement physique causé par le froid",
-            "textPt": "Tontura física provocada pelo frio"
+            "textFr": "Désappointement / Frustration devant un espoir déçu",
+            "textPt": "Desapontamento / Frustração diante de uma expectativa frustrada"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "En français, la « déception » est le sentiment ressenti lorsqu'on est déçu. L'action de tromper se dit « tromperie » ou « duperie ».",
         "explanationPt": "Cuidado com a influência do inglês ('deception' = engano/fraude). Em francês, 'déception' é o sentimento de desapontamento ou decepção.",
         "portugueseInterferenceNote": "faux_ami: déception (desapontamento) vs fraude/engano."
@@ -2878,8 +2878,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "La création de corridors écologiques reliant les parcs centraux aux forêts",
-            "textPt": "A criação de corredores ecológicos ligando os parques centrais às florestas"
+            "textFr": "L'interdiction de toute bicyclette dans le centre historique",
+            "textPt": "A proibição de qualquer bicicleta no centro histórico"
           },
           {
             "id": "b",
@@ -2888,8 +2888,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "L'interdiction de toute bicyclette dans le centre historique",
-            "textPt": "A proibição de qualquer bicicleta no centro histórico"
+            "textFr": "La création de corridors écologiques reliant les parcs centraux aux forêts",
+            "textPt": "A criação de corredores ecológicos ligando os parques centrais às florestas"
           },
           {
             "id": "d",
@@ -2897,7 +2897,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "O aumento dos impostos sobre livros didáticos"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "Le projet vise à rendre la ville plus respirable grâce à des coulées vertes reliant les espaces naturels.",
         "explanationPt": "A pauta central trata da criação de corredores verdes interligando o centro às zonas florestais."
       },
@@ -2909,8 +2909,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Ils redoutent que la piétonnisation ne paralyse l'approvisionnement logistique de leurs boutiques",
-            "textPt": "Receiam que a restrição de tráfego comprometa a logística e as entregas em suas lojas"
+            "textFr": "Ils refusent de payer les salaires de leurs employés",
+            "textPt": "Recusam-se a pagar os salários de seus funcionários"
           },
           {
             "id": "b",
@@ -2924,11 +2924,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Ils refusent de payer les salaires de leurs employés",
-            "textPt": "Recusam-se a pagar os salários de seus funcionários"
+            "textFr": "Ils redoutent que la piétonnisation ne paralyse l'approvisionnement logistique de leurs boutiques",
+            "textPt": "Receiam que a restrição de tráfego comprometa a logística e as entregas em suas lojas"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "Les commerçants craignent que l'absence de voies carrossables ne paralyse la logistique de réapprovisionnement.",
         "explanationPt": "A inquietação repousa no receio prático de que a restrição de tráfego comprometa a chegada de carretas de abastecimento."
       },
@@ -2972,13 +2972,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "« Penser de » exprime une opinion ou un jugement critique, alors que « penser à » exprime le fait de diriger ses pensées vers un objet ou une personne",
-            "textPt": "« Penser de » expressa opinião ou julgamento avaliativo, ao passo que « penser à » expressa a reflexão direcionada a alguém ou algo"
+            "textFr": "« Penser de » est réservé aux questions, « penser à » aux affirmations",
+            "textPt": "« Penser de » só serve para perguntas, e « penser à » para orações afirmativas"
           },
           {
             "id": "b",
-            "textFr": "« Penser de » est réservé aux questions, « penser à » aux affirmations",
-            "textPt": "« Penser de » só serve para perguntas, e « penser à » para orações afirmativas"
+            "textFr": "« Penser de » exprime une opinion ou un jugement critique, alors que « penser à » exprime le fait de diriger ses pensées vers un objet ou une personne",
+            "textPt": "« Penser de » expressa opinião ou julgamento avaliativo, ao passo que « penser à » expressa a reflexão direcionada a alguém ou algo"
           },
           {
             "id": "c",
@@ -2991,7 +2991,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "« Penser de » caiu em desuso no francês moderno"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "« Penser à » = songer à, avoir à l'esprit. « Penser de » = avoir une opinion (qu'en penses-tu ?).",
         "explanationPt": "Em português costuma-se usar 'pensar em' ou 'achar de'. Em francês a divisão é estrita: 'penser à' para ter algo em mente, e 'penser de' para opinar e julgar criticamente.",
         "portugueseInterferenceNote": "preposition_complementation: oposição contrastiva pensar à (reflexão) vs pensar de (juízo de valor/opinião)."
@@ -3062,8 +3062,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Le souffle tiède du vent marin mêlé aux senteurs d'absinthe et de pierre brûlante",
-            "textPt": "O sopro morno do vento marinho mesclado aos odores de absinto e pedra aquecida"
+            "textFr": "Une brume opaque qui dissimule la ligne d'horizon",
+            "textPt": "Um nevoeiro opaco que oculta a linha do horizonte"
           },
           {
             "id": "b",
@@ -3077,11 +3077,11 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "d",
-            "textFr": "Une brume opaque qui dissimule la ligne d'horizon",
-            "textPt": "Um nevoeiro opaco que oculta a linha do horizonte"
+            "textFr": "Le souffle tiède du vent marin mêlé aux senteurs d'absinthe et de pierre brûlante",
+            "textPt": "O sopro morno do vento marinho mesclado aos odores de absinto e pedra aquecida"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "d",
         "explanationFr": "Camus décrit les odeurs sauvages de la terre et la lumière écrasante qui sanctifient la solitude du promeneur.",
         "explanationPt": "A união entre o vento, o perfume das plantas silvestres e a pedra ancestral compõe o núcleo sensorial do texto."
       },
@@ -3124,13 +3124,13 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "Réceptif, perméable aux impressions sensorielles et esthétiques",
-            "textPt": "Receptivo, altamente perceptivo às impressões sensoriais e estéticas"
+            "textFr": "Doté d'un bon sens logique et prudent dans ses investissements",
+            "textPt": "Sensato, dotado de prudência e bom senso prático (falso amigo)"
           },
           {
             "id": "b",
-            "textFr": "Doté d'un bon sens logique et prudent dans ses investissements",
-            "textPt": "Sensato, dotado de prudência e bom senso prático (falso amigo)"
+            "textFr": "Réceptif, perméable aux impressions sensorielles et esthétiques",
+            "textPt": "Receptivo, altamente perceptivo às impressões sensoriais e estéticas"
           },
           {
             "id": "c",
@@ -3143,7 +3143,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Apático e incapaz de reagir a estímulos"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "b",
         "explanationFr": "« Sensible » signifie réceptif aux émotions ou sensations. Pour signifier « prudente/sensato », on emploie « sensé ».",
         "explanationPt": "Atenção ao par sensível/sensato: em francês, 'sensible' expressa capacidade sensitiva. Para dizer que alguém é sensato/razoável, deve-se usar 'sensé'.",
         "portugueseInterferenceNote": "faux_ami: sensible (sensível/receptivo) vs sensé (sensato)."
@@ -3156,8 +3156,8 @@ export const SAMPLE_STORIES: Story[] = [
         "options": [
           {
             "id": "a",
-            "textFr": "« Bien que » exige le subjonctif, mais « espérer que » exige l'indicatif (futur/présent) en français, à l'inverse du portugais",
-            "textPt": "« Bien que » rege subjuntivo obrigatório, ao passo que « espérer que » rege indicativo (futuro ou presente), ao contrário do português"
+            "textFr": "« Bien que » et « espérer » sont parfaitement interchangeables quant au mode",
+            "textPt": "Ambas as conjunções aceitam livremente qualquer modo verbal"
           },
           {
             "id": "b",
@@ -3166,8 +3166,8 @@ export const SAMPLE_STORIES: Story[] = [
           },
           {
             "id": "c",
-            "textFr": "« Bien que » et « espérer » sont parfaitement interchangeables quant au mode",
-            "textPt": "Ambas as conjunções aceitam livremente qualquer modo verbal"
+            "textFr": "« Bien que » exige le subjonctif, mais « espérer que » exige l'indicatif (futur/présent) en français, à l'inverse du portugais",
+            "textPt": "« Bien que » rege subjuntivo obrigatório, ao passo que « espérer que » rege indicativo (futuro ou presente), ao contrário do português"
           },
           {
             "id": "d",
@@ -3175,7 +3175,7 @@ export const SAMPLE_STORIES: Story[] = [
             "textPt": "Trata-se de uma irregularidade gramatical sem justificativa normativa"
           }
         ],
-        "correctOptionId": "a",
+        "correctOptionId": "c",
         "explanationFr": "En français, 'espérer que' prend l'indicatif (j'espère qu'il viendra), tandis qu'en portugais 'esperar que' commande le subjonctif (espero que venha). 'Bien que' commande toujours le subjonctif.",
         "explanationPt": "Grande armadilha entre o português e o francês: enquanto no Brasil dizemos 'espero que ela permaneça' (subjuntivo), a gramática francesa exige o indicativo com espérer que ('il espère qu'elle demeurera/demeure'). Já 'bien que' sempre comanda o subjonctif.",
         "portugueseInterferenceNote": "declencheur_subjonctif: assimetria modal crítica ('bien que' + subjonctif vs 'espérer que' + indicatif)."
