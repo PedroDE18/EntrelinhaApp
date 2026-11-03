@@ -18,52 +18,52 @@ import { lookupFrenchLexicon } from '../core/lexicon';
     @if (story(); as s) {
       <div class="max-w-4xl mx-auto space-y-8 pb-16">
         <!-- Top Toolbar: Navigation & Reading Preferences -->
-        <div class="flex items-center justify-between gap-4 py-3 border-b border-[#E6DFD3] dark:border-[#332D28] text-xs text-[#6C645C] dark:text-[#9C9387]">
-          <a routerLink="/library" class="inline-flex items-center gap-1.5 hover:text-[#231F1C] dark:hover:text-[#EAE4DA] transition-colors">
-            <mat-icon class="text-base leading-none !w-4 !h-4">arrow_back</mat-icon>
+        <div class="flex items-center justify-between gap-4 py-3 border-b border-neutral-200 dark:border-neutral-800 text-xs text-neutral-500 dark:text-neutral-400">
+          <a routerLink="/library" class="inline-flex items-center gap-1.5 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors font-mono">
+            <mat-icon class="text-sm leading-none !w-4 !h-4">arrow_back</mat-icon>
             <span>{{ i18n.t('reader.back_to_library') }}</span>
           </a>
 
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2.5">
             <!-- Typography font style toggle -->
             <button
               type="button"
               (click)="toggleFontSerif()"
               [attr.aria-label]="useSerif() ? i18n.t('reader.aria_font_sans') : i18n.t('reader.aria_font_serif')"
-              class="px-2.5 py-1 rounded border border-[#DDD6C8] dark:border-[#38322C] bg-[#FCFAF7] dark:bg-[#221E1B] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#F2ECE1] dark:hover:bg-[#2C2723] transition-colors">
+              class="px-3 py-1 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors font-mono text-[11px]">
               {{ useSerif() ? i18n.t('reader.font_serif') : i18n.t('reader.font_sans') }}
             </button>
 
             <!-- Text Size adjuster -->
-            <div class="flex items-center border border-[#DDD6C8] dark:border-[#38322C] rounded overflow-hidden bg-[#FCFAF7] dark:bg-[#221E1B]">
+            <div class="flex items-center border border-neutral-200 dark:border-neutral-800 rounded-full overflow-hidden bg-white dark:bg-[#141414]">
               <button
                 type="button"
                 (click)="decreaseFontSize()"
                 [attr.aria-label]="i18n.t('reader.aria_font_decrease')"
-                class="px-2 py-1 hover:bg-[#F2ECE1] dark:hover:bg-[#2C2723] transition-colors text-xs font-semibold text-[#231F1C] dark:text-[#EAE4DA]">
+                class="px-2.5 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-xs font-mono text-neutral-800 dark:text-neutral-200">
                 A-
               </button>
-              <span class="px-2 py-1 bg-[#F5EFE3] dark:bg-[#181513] text-[11px] font-mono border-x border-[#DDD6C8] dark:border-[#38322C] text-[#231F1C] dark:text-[#EAE4DA]">
+              <span class="px-2 py-1 bg-neutral-50 dark:bg-[#0E0E0E] text-[10px] font-mono border-x border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400">
                 {{ fontSize() }}px
               </span>
               <button
                 type="button"
                 (click)="increaseFontSize()"
                 [attr.aria-label]="i18n.t('reader.aria_font_increase')"
-                class="px-2 py-1 hover:bg-[#F2ECE1] dark:hover:bg-[#2C2723] transition-colors text-xs font-semibold text-[#231F1C] dark:text-[#EAE4DA]">
+                class="px-2.5 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-xs font-mono text-neutral-800 dark:text-neutral-200">
                 A+
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Audio Narration Bar: Only sticky when actively playing -->
+        <!-- Audio Narration Bar: Floating Stoic Dock -->
         <div
           [class.sticky]="speech.isPlaying()"
           [class.top-16]="speech.isPlaying()"
           [class.z-30]="speech.isPlaying()"
           [class.shadow-md]="speech.isPlaying()"
-          class="bg-[#FCFAF7]/95 dark:bg-[#221E1B]/95 backdrop-blur-md rounded-xl p-4 border border-[#E6DFD3] dark:border-[#332D28] transition-all space-y-3">
+          class="bg-white/95 dark:bg-[#141414]/95 backdrop-blur-md rounded-2xl p-4 border border-neutral-200/80 dark:border-neutral-800/80 transition-all space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
               <!-- Play / Pause primary toggle button -->
@@ -71,8 +71,8 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                 type="button"
                 (click)="toggleAudio(s)"
                 [attr.aria-label]="speech.isPlaying() ? i18n.t('reader.aria_pause') : i18n.t('reader.aria_play')"
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#9C3823] text-white hover:bg-[#832F1D] dark:bg-[#DDA15E] dark:text-[#181513] hover:opacity-95 transition-all shadow-sm">
-                <mat-icon class="text-xl leading-none !w-5 !h-5">
+                class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:opacity-90 transition-all">
+                <mat-icon class="text-lg leading-none !w-4.5 !h-4.5">
                   {{ speech.isPlaying() ? 'pause' : 'play_arrow' }}
                 </mat-icon>
               </button>
@@ -82,12 +82,12 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                 type="button"
                 (click)="speech.replay()"
                 [attr.aria-label]="i18n.t('reader.aria_replay')"
-                class="p-2 rounded-lg border border-[#DDD6C8] dark:border-[#38322C] text-[#5A524A] dark:text-[#B5ADA3] hover:bg-[#F2ECE1] dark:hover:bg-[#2C2723] transition-colors">
-                <mat-icon class="text-base leading-none !w-4 !h-4">replay</mat-icon>
+                class="w-8 h-8 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors flex items-center justify-center">
+                <mat-icon class="text-sm leading-none !w-4 !h-4">replay</mat-icon>
               </button>
 
               <div class="space-y-0.5">
-                <div class="text-xs font-semibold text-[#231F1C] dark:text-[#EAE4DA] flex items-center gap-2">
+                <div class="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
                   <span>{{ i18n.t('reader.audio_narration_title') }}</span>
                   <!-- Interactive Natural Voice Selector -->
                   @if (speech.availableFrenchVoices().length > 1) {
@@ -96,25 +96,25 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                         [value]="speech.selectedVoiceId()"
                         (change)="onVoiceChange($event)"
                         title="Escolha a voz francesa com maior naturalidade para seu dispositivo"
-                        class="text-[10px] pl-2 pr-5 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2F2923] text-[#78350F] dark:text-[#FBBF24] font-medium border border-[#D5CABB]/60 dark:border-[#423930] appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#78350F]">
+                        class="text-[10px] font-mono pl-2 pr-5 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 appearance-none cursor-pointer focus:outline-none">
                         @for (v of speech.availableFrenchVoices(); track v.name) {
                           <option [value]="v.name">
                             {{ v.label }}
                           </option>
                         }
                       </select>
-                      <mat-icon class="text-[10px] leading-none !w-3 !h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#78350F] dark:text-[#FBBF24]">
+                      <mat-icon class="text-[10px] leading-none !w-3 !h-3 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500">
                         arrow_drop_down
                       </mat-icon>
                     </div>
                   } @else {
-                    <span class="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2F2923] text-[#78350F] dark:text-[#FBBF24] font-medium border border-[#D5CABB]/60 dark:border-[#423930]">
-                      <mat-icon class="text-[12px] leading-none !w-3 !h-3">record_voice_over</mat-icon>
+                    <span class="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                      <mat-icon class="text-[11px] leading-none !w-3 !h-3">record_voice_over</mat-icon>
                       <span>{{ speech.activeVoiceName() }}</span>
                     </span>
                   }
                 </div>
-                <div class="text-[11px] text-[#6C645C] dark:text-[#9C9387]">
+                <div class="text-[11px] text-neutral-400 dark:text-neutral-500">
                   {{ i18n.t('reader.audio_narration_subtitle') }}
                 </div>
               </div>
@@ -125,20 +125,20 @@ import { lookupFrenchLexicon } from '../core/lexicon';
               <button
                 type="button"
                 (click)="toggleAutoScroll()"
-                [class]="autoScrollEnabled() ? 'bg-[#9C3823] text-white dark:bg-[#DDA15E] dark:text-[#181513] font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] border border-[#DDD6C8] dark:border-[#38322C] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
+                [class]="autoScrollEnabled() ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold' : 'text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600'"
                 title="Rastreamento cinematográfico e centralização automática durante a narração"
-                class="px-2 py-0.5 rounded text-[11px] flex items-center gap-1 transition-colors">
+                class="px-2.5 py-0.5 rounded-full text-[11px] font-mono flex items-center gap-1 transition-colors">
                 <mat-icon class="text-xs leading-none !w-3 !h-3">center_focus_strong</mat-icon>
                 <span>Auto-scroll</span>
               </button>
 
-              <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] mr-0.5">{{ i18n.t('reader.speed_label') }}</span>
+              <span class="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 mr-0.5">{{ i18n.t('reader.speed_label') }}</span>
               @for (speed of [0.75, 0.92, 1.0, 1.25]; track speed) {
                 <button
                   type="button"
                   (click)="speech.setSpeed(speed)"
-                  [class]="speech.currentSpeed() === speed ? 'bg-[#231F1C] text-white dark:bg-[#EAE4DA] dark:text-[#181513] font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
-                  class="px-2 py-0.5 rounded text-[11px] transition-colors">
+                  [class]="speech.currentSpeed() === speed ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold' : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'"
+                  class="px-2 py-0.5 rounded-full font-mono text-[11px] transition-colors">
                   {{ speed === 0.92 ? '0.9x' : speed + 'x' }}
                 </button>
               }
@@ -146,46 +146,46 @@ import { lookupFrenchLexicon } from '../core/lexicon';
           </div>
 
           <!-- Progress scrubber -->
-          <div class="w-full bg-[#EFE9DD] dark:bg-[#181513] h-1.5 rounded-full overflow-hidden">
+          <div class="w-full bg-neutral-100 dark:bg-neutral-800 h-1 rounded-full overflow-hidden">
             <div
-              class="bg-[#9C3823] dark:bg-[#DDA15E] h-full transition-all duration-300"
+              class="bg-neutral-900 dark:bg-neutral-100 h-full transition-all duration-300"
               [style.width.%]="speech.progressPercent()"></div>
           </div>
         </div>
 
         <!-- Story Header: Clean Editorial Title & Frontispiece Vignette -->
-        <header class="flex flex-col sm:flex-row items-center sm:items-start gap-5 pt-3 pb-4 border-b border-[#E6DFD3] dark:border-[#332D28]">
-          <div class="w-24 sm:w-32 md:w-36 flex-shrink-0 rounded-lg overflow-hidden book-cover-shadow border border-[#D5CABB] dark:border-[#3E362F] bg-[#181513]">
-            <img [src]="s.coverImage || s.coverImageUrl || '/images/cover-marais.svg'" [alt]="s.title" class="w-full h-auto object-cover aspect-[4/5] block" />
+        <header class="flex flex-col sm:flex-row items-center sm:items-start gap-6 pt-3 pb-6 border-b border-neutral-200 dark:border-neutral-800">
+          <div class="w-24 sm:w-28 md:w-32 flex-shrink-0 rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 aspect-[4/5]">
+            <img [src]="s.coverImage || s.coverImageUrl || '/images/cover-marais.svg'" [alt]="s.title" class="w-full h-full object-cover block" />
           </div>
 
-          <div class="flex-1 space-y-2.5 text-center sm:text-left">
-            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs text-[#6C645C] dark:text-[#9C9387]">
-              <span class="px-2.5 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2C2621] font-semibold text-[#9C3823] dark:text-[#DDA15E]">
+          <div class="flex-1 space-y-2 text-center sm:text-left">
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-[10px] font-mono text-neutral-400 dark:text-neutral-500">
+              <span class="px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 font-semibold">
                 {{ i18n.t('home.level', { level: s.estimatedCEFR }) }}
               </span>
-              <span aria-hidden="true">·</span>
+              <span>·</span>
               <span>{{ i18n.t('reader.reading_time_words', { minutes: s.readingMinutes, words: s.wordCount }) }}</span>
-              <span aria-hidden="true">·</span>
+              <span>·</span>
               <span>{{ s.genre }}</span>
             </div>
 
-            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] tracking-tight leading-tight">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-medium text-neutral-900 dark:text-neutral-50 tracking-tight leading-tight">
               {{ s.title }}
             </h1>
 
-            <div class="text-xs sm:text-sm text-[#5A524A] dark:text-[#B5ADA3] flex flex-wrap items-center justify-center sm:justify-start gap-2">
-              <span>Par <strong class="font-medium text-[#231F1C] dark:text-[#EAE4DA]">{{ s.author }}</strong></span>
+            <div class="text-xs font-mono text-neutral-400 dark:text-neutral-500 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <span>Par <strong class="font-medium text-neutral-900 dark:text-neutral-100">{{ s.author }}</strong></span>
               @if (s.sourceUrl) {
-                <span aria-hidden="true">·</span>
-                <a [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer" class="hover:underline text-[#9C3823] dark:text-[#DDA15E]">
+                <span>·</span>
+                <a [href]="s.sourceUrl" target="_blank" rel="noopener noreferrer" class="hover:underline text-neutral-600 dark:text-neutral-400">
                   {{ i18n.t('reader.source_link') }}
                 </a>
               }
             </div>
 
             @if (s.excerpt) {
-              <p class="text-xs sm:text-sm font-reading italic text-[#6C645C] dark:text-[#9C9387] max-w-xl leading-relaxed pt-1 hidden sm:block">
+              <p class="text-xs sm:text-sm font-reading italic text-neutral-500 dark:text-neutral-400 max-w-xl leading-relaxed pt-1 hidden sm:block">
                 « {{ s.excerpt }} »
               </p>
             }
@@ -194,37 +194,37 @@ import { lookupFrenchLexicon } from '../core/lexicon';
 
         <!-- Reading Bookmark Notification (Retomar Leitura) -->
         @if (savedBookmarkParagraph(); as bookmarkIdx) {
-          <div class="flex items-center justify-between p-3 px-4 rounded-xl bg-[#F7EFE1] dark:bg-[#28221D] border border-[#E6DFD3] dark:border-[#3D342C] text-xs text-[#5A524A] dark:text-[#B5ADA3]">
+          <div class="flex items-center justify-between p-3.5 px-4 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400">
             <div class="flex items-center gap-2">
-              <mat-icon class="text-sm text-[#9C3823] dark:text-[#DDA15E] !w-4 !h-4">bookmark</mat-icon>
+              <mat-icon class="text-sm text-neutral-900 dark:text-neutral-100 !w-4 !h-4">bookmark</mat-icon>
               <span>Você parou a leitura no <strong>parágrafo {{ bookmarkIdx + 1 }}</strong>.</span>
             </div>
             <div class="flex items-center gap-3">
               <button
                 type="button"
                 (click)="scrollToParagraph(bookmarkIdx)"
-                class="font-semibold text-[#9C3823] dark:text-[#DDA15E] hover:underline cursor-pointer">
+                class="font-semibold text-neutral-900 dark:text-neutral-100 hover:underline cursor-pointer">
                 Retomar aqui
               </button>
               <button
                 type="button"
                 (click)="clearBookmark(s.id)"
                 title="Dispensar marcador"
-                class="text-[#8A8278] hover:text-[#231F1C] dark:hover:text-[#EAE4DA] p-0.5 cursor-pointer">
+                class="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 p-0.5 cursor-pointer">
                 <mat-icon class="text-xs !w-3.5 !h-3.5">close</mat-icon>
               </button>
             </div>
           </div>
         }
 
-        <!-- Reading Canvas: Book-like measure & Paper warmth with Lute Multi-Word Engine -->
-        <div class="paper-page book-spine-left rounded-2xl p-6 sm:p-10 lg:p-12 shadow-sm">
+        <!-- Reading Canvas: Stoic Distraction-Free Text Sanctuary -->
+        <div class="p-6 sm:p-10 lg:p-14 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-[#141414] shadow-sm">
           <article
-            class="max-w-2xl mx-auto space-y-6 text-[#2E2824] dark:text-[#E2DDD3]"
+            class="max-w-2xl mx-auto space-y-6 text-neutral-800 dark:text-neutral-200"
             [class.font-reading]="useSerif()"
             [class.font-sans]="!useSerif()"
             [style.fontSize.px]="fontSize()"
-            [style.lineHeight]="1.88">
+            [style.lineHeight]="1.85">
             @for (para of s.paragraphs; track para.id; let pIdx = $index) {
               <p
                 [id]="'para-' + pIdx"
@@ -235,7 +235,7 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                   type="button"
                   (click)="playFromParagraph(s, pIdx)"
                   title="Ouvir este parágrafo com voz natural"
-                  class="opacity-0 group-hover/para:opacity-100 transition-opacity absolute -left-7 top-1 text-[#8A8278] hover:text-[#9C3823] dark:hover:text-[#DDA15E] p-0.5 cursor-pointer">
+                  class="opacity-0 group-hover/para:opacity-100 transition-opacity absolute -left-7 top-1 text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 p-0.5 cursor-pointer">
                   <mat-icon class="text-base leading-none !w-4 !h-4">play_circle</mat-icon>
                 </button>
 
@@ -248,33 +248,24 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                       role="button"
                       [attr.aria-label]="'Traduzir ' + tok.fullText"
                       [attr.data-sentence-id]="pIdx + '-' + tok.sentenceNumber"
-                      [class.bg-amber-100/90]="isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.dark:bg-amber-950/60]="isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.text-[#7A2A18]]="tok.falseFriend && !isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.dark:text-[#F3D5A5]]="tok.falseFriend && !isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.font-semibold]="tok.falseFriend || tok.genderTrap"
+                      [class.bg-neutral-100]="isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:bg-neutral-800]="isSentenceActive(pIdx, tok.sentenceNumber)"
                       [class.underline]="tok.falseFriend || tok.genderTrap"
-                      [class.decoration-[#C07D2B]]="tok.falseFriend"
-                      [class.decoration-[#2B6CB0]]="tok.genderTrap"
-                      [class.border-b-2]="tok.isMultiword"
+                      [class.decoration-neutral-400]="tok.falseFriend || tok.genderTrap"
+                      [class.underline-offset-2]="tok.falseFriend || tok.genderTrap"
+                      [class.border-b]="tok.isMultiword"
                       [class.border-dotted]="tok.isMultiword"
-                      [class.border-[#9C3823]/60]="tok.isMultiword"
-                      [class.bg-[#F7EFE1]/80]="tok.isMultiword && !isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.dark:bg-[#342A22]/80]="tok.isMultiword && !isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.rounded]="tok.isMultiword"
-                      [class.px-1]="tok.isMultiword"
-                      [class.bg-[#EAF5EC]/60]="tok.state === 'known' && !isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.dark:bg-[#1E3324]/60]="tok.state === 'known' && !isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.bg-[#FEF3C7]/60]="tok.state === 'learning' && !isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.dark:bg-[#3E3018]/60]="tok.state === 'learning' && !isSentenceActive(pIdx, tok.sentenceNumber)"
-                      class="cursor-pointer hover:bg-[#F3E7D3] dark:hover:bg-[#382F26] rounded-xs px-0.5 py-0.5 inline transition-colors">
+                      [class.border-neutral-400]="tok.isMultiword"
+                      [class.bg-neutral-50]="tok.isMultiword && !isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:bg-neutral-800/50]="tok.isMultiword && !isSentenceActive(pIdx, tok.sentenceNumber)"
+                      class="cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded px-0.5 py-0.5 inline transition-colors">
                       {{ tok.text }}
                     </span>
                   } @else {
                     <span
                       [attr.data-sentence-id]="pIdx + '-' + tok.sentenceNumber"
-                      [class.bg-amber-100/90]="isSentenceActive(pIdx, tok.sentenceNumber)"
-                      [class.dark:bg-amber-950/60]="isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.bg-neutral-100]="isSentenceActive(pIdx, tok.sentenceNumber)"
+                      [class.dark:bg-neutral-800]="isSentenceActive(pIdx, tok.sentenceNumber)"
                       class="whitespace-pre-wrap select-text transition-colors duration-200">{{ tok.text }}</span>
                   }
                 }
@@ -285,15 +276,15 @@ import { lookupFrenchLexicon } from '../core/lexicon';
 
         <!-- Interactive Contextual Gloss Modal / Card -->
         @if (selectedToken(); as tok) {
-          <div class="fixed inset-x-0 bottom-0 sm:bottom-4 z-50 max-w-xl mx-auto px-2 sm:px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:pb-0 animate-in fade-in slide-in-from-bottom-4 duration-200">
-            <div class="paper-page rounded-t-2xl sm:rounded-2xl p-5 shadow-2xl border border-[#DDD6C8] dark:border-[#38322C] space-y-4">
+          <div class="fixed inset-x-0 bottom-0 sm:bottom-4 z-50 max-w-lg mx-auto px-2 sm:px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)] sm:pb-0 animate-in fade-in slide-in-from-bottom-4 duration-200">
+            <div class="bg-white dark:bg-[#161616] rounded-t-2xl sm:rounded-2xl p-5 shadow-2xl border border-neutral-200 dark:border-neutral-800 space-y-4">
               <!-- Header of gloss -->
               <div class="flex items-start justify-between gap-3">
                 <div class="space-y-1">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <span class="text-lg font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ tok.fullText }}</span>
+                    <span class="text-lg font-serif font-medium text-neutral-900 dark:text-neutral-100">{{ tok.fullText }}</span>
                     @if (tok.isMultiword) {
-                      <span class="text-[10px] font-semibold uppercase tracking-wider bg-[#EDE6D8] dark:bg-[#2F2924] text-[#6C645C] dark:text-[#B5ADA3] px-2 py-0.5 rounded-full border border-[#D5CABB] dark:border-[#3E362F]">
+                      <span class="text-[9px] font-mono uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-700">
                         Expressão ({{ tok.tokenCount }} termos)
                       </span>
                     }
@@ -301,13 +292,13 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                       type="button"
                       (click)="speech.speakWord(tok.fullText)"
                       [attr.aria-label]="i18n.t('reader.gloss.aria_pronounce')"
-                      class="text-[#6C645C] hover:text-[#9C3823] dark:hover:text-[#DDA15E] p-1 rounded transition-colors">
-                      <mat-icon class="text-base leading-none !w-4 !h-4">volume_up</mat-icon>
+                      class="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 p-1 rounded transition-colors">
+                      <mat-icon class="text-sm leading-none !w-4 !h-4">volume_up</mat-icon>
                     </button>
                   </div>
                   @if (tok.definitionFr) {
-                    <p class="text-xs text-[#6C645C] dark:text-[#9C9387]">
-                      {{ i18n.t('reader.gloss.french_definition') }} <span class="italic text-[#231F1C] dark:text-[#EAE4DA]">{{ tok.definitionFr }}</span>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                      {{ i18n.t('reader.gloss.french_definition') }} <span class="italic text-neutral-800 dark:text-neutral-200">{{ tok.definitionFr }}</span>
                     </p>
                   }
                 </div>
@@ -316,41 +307,41 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                   type="button"
                   (click)="closeGloss()"
                   [attr.aria-label]="i18n.t('reader.gloss.aria_close')"
-                  class="text-[#8A8278] hover:text-[#231F1C] dark:hover:text-[#EAE4DA] p-1">
+                  class="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 p-1">
                   <mat-icon class="text-lg leading-none !w-5 !h-5">close</mat-icon>
                 </button>
               </div>
 
               <!-- Brazilian Portuguese Translation & Contrast -->
-              <div class="p-3 bg-[#F9F3E8] dark:bg-[#25201B] rounded-xl border border-[#E8DCC8] dark:border-[#3A3228] space-y-1.5">
+              <div class="p-3.5 bg-neutral-50 dark:bg-[#1E1E1E] rounded-xl border border-neutral-200/80 dark:border-neutral-800 space-y-1.5">
                 <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-semibold text-[#9C3823] dark:text-[#DDA15E] uppercase tracking-wider">
+                  <span class="text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                     {{ i18n.t('reader.gloss.portuguese_heading') }}
                   </span>
                   @if (tok.falseFriend) {
-                    <span class="text-[10px] font-bold uppercase tracking-wider bg-[#FDE8E8] dark:bg-[#3D1A1A] text-[#9C3823] dark:text-[#F8B4B4] px-2 py-0.5 rounded">
+                    <span class="text-[9px] font-mono font-bold uppercase tracking-wider bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 px-2 py-0.5 rounded-full">
                       {{ i18n.t('reader.gloss.badge_false_friend') }}
                     </span>
                   }
                   @if (tok.genderTrap) {
-                    <span class="text-[10px] font-bold uppercase tracking-wider bg-[#E1EFFE] dark:bg-[#1E2E42] text-[#1E429F] dark:text-[#90CDF4] px-2 py-0.5 rounded">
+                    <span class="text-[9px] font-mono font-bold uppercase tracking-wider bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 px-2 py-0.5 rounded-full">
                       {{ i18n.t('reader.gloss.badge_gender_trap') }}
                     </span>
                   }
                 </div>
 
-                <p class="text-sm font-semibold text-[#231F1C] dark:text-[#EAE4DA]">
+                <p class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                   {{ tok.translationPt || ('Termo em contexto : ' + tok.cleanWord) }}
                 </p>
 
                 @if (tok.falseFriend) {
-                  <p class="text-xs text-[#7A2A18] dark:text-[#F3D5A5] leading-relaxed pt-1">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed pt-1">
                     {{ tok.falseFriend.explanation }}
                   </p>
                 }
 
                 @if (tok.genderTrap) {
-                  <p class="text-xs text-[#1E429F] dark:text-[#90CDF4] leading-relaxed pt-1">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed pt-1">
                     {{ tok.genderTrap.explanation }}
                   </p>
                 }
@@ -358,46 +349,46 @@ import { lookupFrenchLexicon } from '../core/lexicon';
 
               <!-- Surrounding Sentence Context -->
               @if (tok.sentenceContext) {
-                <div class="px-3 py-2 bg-[#F3ECE1] dark:bg-[#1D1917] rounded-lg text-xs space-y-0.5 border border-[#E4D9C8] dark:border-[#2F2925]">
-                  <span class="text-[10px] uppercase font-semibold text-[#8A8278] dark:text-[#7A7268] block">Contexto da Frase</span>
-                  <p class="italic text-[#4A423A] dark:text-[#C5BEB3] line-clamp-2">"{{ tok.sentenceContext.trim() }}"</p>
+                <div class="px-3 py-2 bg-neutral-50 dark:bg-neutral-900 rounded-lg text-xs space-y-0.5 border border-neutral-200/60 dark:border-neutral-800">
+                  <span class="text-[10px] uppercase font-mono text-neutral-400 dark:text-neutral-500 block">Contexto da Frase</span>
+                  <p class="italic font-reading text-neutral-600 dark:text-neutral-400 line-clamp-2">"{{ tok.sentenceContext.trim() }}"</p>
                 </div>
               }
 
               <!-- State Discrimination Selection -->
               <div class="space-y-1.5 pt-1">
-                <span class="text-[11px] text-[#6C645C] dark:text-[#9C9387] block">{{ i18n.t('reader.gloss.classify_prompt') }}</span>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500 block">{{ i18n.t('reader.gloss.classify_prompt') }}</span>
                 <div class="grid grid-cols-2 gap-2 text-xs">
                   <button
                     type="button"
                     (click)="classifyToken('want_to_learn', tok)"
-                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors border border-transparent hover:border-[#DDD6C8] dark:hover:border-[#38322C]">
-                    <span class="font-semibold block">{{ i18n.t('reader.gloss.btn_want_to_learn') }}</span>
-                    <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.gloss.btn_want_to_learn_sub') }}</span>
+                    class="px-3 py-2 text-left rounded-xl bg-neutral-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors border border-neutral-200 dark:border-neutral-800">
+                    <span class="font-medium block text-xs">{{ i18n.t('reader.gloss.btn_want_to_learn') }}</span>
+                    <span class="text-[10px] text-neutral-400 dark:text-neutral-500 block font-mono">{{ i18n.t('reader.gloss.btn_want_to_learn_sub') }}</span>
                   </button>
 
                   <button
                     type="button"
                     (click)="classifyToken('mark_known', tok)"
-                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors border border-transparent hover:border-[#DDD6C8] dark:hover:border-[#38322C]">
-                    <span class="font-semibold block">{{ i18n.t('reader.gloss.btn_known') }}</span>
-                    <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.gloss.btn_known_sub') }}</span>
+                    class="px-3 py-2 text-left rounded-xl bg-neutral-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors border border-neutral-200 dark:border-neutral-800">
+                    <span class="font-medium block text-xs">{{ i18n.t('reader.gloss.btn_known') }}</span>
+                    <span class="text-[10px] text-neutral-400 dark:text-neutral-500 block font-mono">{{ i18n.t('reader.gloss.btn_known_sub') }}</span>
                   </button>
 
                   <button
                     type="button"
                     (click)="classifyToken('mark_unknown', tok)"
-                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors border border-transparent hover:border-[#DDD6C8] dark:hover:border-[#38322C]">
-                    <span class="font-semibold block">{{ i18n.t('reader.gloss.btn_unknown') }}</span>
-                    <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.gloss.btn_unknown_sub') }}</span>
+                    class="px-3 py-2 text-left rounded-xl bg-neutral-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors border border-neutral-200 dark:border-neutral-800">
+                    <span class="font-medium block text-xs">{{ i18n.t('reader.gloss.btn_unknown') }}</span>
+                    <span class="text-[10px] text-neutral-400 dark:text-neutral-500 block font-mono">{{ i18n.t('reader.gloss.btn_unknown_sub') }}</span>
                   </button>
 
                   <button
                     type="button"
                     (click)="classifyToken('mark_uncertain', tok)"
-                    class="px-3 py-2 text-left rounded-lg bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors border border-transparent hover:border-[#DDD6C8] dark:hover:border-[#38322C]">
-                    <span class="font-semibold block">{{ i18n.t('reader.gloss.btn_uncertain') }}</span>
-                    <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.gloss.btn_uncertain_sub') }}</span>
+                    class="px-3 py-2 text-left rounded-xl bg-neutral-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors border border-neutral-200 dark:border-neutral-800">
+                    <span class="font-medium block text-xs">{{ i18n.t('reader.gloss.btn_uncertain') }}</span>
+                    <span class="text-[10px] text-neutral-400 dark:text-neutral-500 block font-mono">{{ i18n.t('reader.gloss.btn_uncertain_sub') }}</span>
                   </button>
                 </div>
               </div>
@@ -406,37 +397,37 @@ import { lookupFrenchLexicon } from '../core/lexicon';
         }
 
         <!-- Provenance & Licensing Metadata Block -->
-        <section class="mt-12 p-5 rounded-xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28] space-y-2 text-xs text-[#5A524A] dark:text-[#B5ADA3]">
-          <div class="flex items-center gap-2 font-semibold text-[#231F1C] dark:text-[#EAE4DA] uppercase tracking-wider text-[11px]">
-            <mat-icon class="text-sm leading-none !w-4 !h-4">verified</mat-icon>
+        <section class="mt-12 p-5 rounded-2xl bg-white dark:bg-[#141414] border border-neutral-200/80 dark:border-neutral-800/80 space-y-2 text-xs text-neutral-500 dark:text-neutral-400">
+          <div class="flex items-center gap-2 font-mono uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-500">
+            <mat-icon class="text-xs leading-none !w-3.5 !h-3.5">verified</mat-icon>
             <span>{{ i18n.t('reader.provenance.heading') }}</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
             <div>
-              <span class="text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.provenance.source_origin') }}</span>
-              <span class="text-[#231F1C] dark:text-[#EAE4DA]">{{ s.sourceLabel }}</span>
+              <span class="text-neutral-400 dark:text-neutral-500 font-mono text-[10px] block">{{ i18n.t('reader.provenance.source_origin') }}</span>
+              <span class="text-neutral-900 dark:text-neutral-100 font-medium">{{ s.sourceLabel }}</span>
             </div>
             <div>
-              <span class="text-[#8A8278] dark:text-[#7A7268] block">{{ i18n.t('reader.provenance.license') }}</span>
-              <span class="text-[#231F1C] dark:text-[#EAE4DA]">{{ s.licenseInfo }}</span>
+              <span class="text-neutral-400 dark:text-neutral-500 font-mono text-[10px] block">{{ i18n.t('reader.provenance.license') }}</span>
+              <span class="text-neutral-900 dark:text-neutral-100 font-medium">{{ s.licenseInfo }}</span>
             </div>
           </div>
-          <p class="text-[11px] text-[#8A8278] dark:text-[#7A7268] pt-1 leading-relaxed">
+          <p class="text-[11px] text-neutral-400 dark:text-neutral-500 pt-1 leading-relaxed">
             {{ i18n.t('reader.provenance.disclaimer') }}
           </p>
         </section>
 
         <!-- Comprehension Assessment Section -->
-        <section class="mt-12 p-6 sm:p-8 rounded-2xl bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#E6DFD3] dark:border-[#332D28] shadow-xs space-y-6">
+        <section class="mt-12 p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#141414] border border-neutral-200/80 dark:border-neutral-800/80 space-y-6">
           <div class="space-y-1">
-            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
-              <mat-icon class="text-sm leading-none !w-4 !h-4">quiz</mat-icon>
+            <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+              <mat-icon class="text-xs leading-none !w-3.5 !h-3.5">quiz</mat-icon>
               <span>{{ i18n.t('reader.quiz.badge') }}</span>
             </div>
-            <h2 class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+            <h2 class="text-xl sm:text-2xl font-serif font-medium text-neutral-900 dark:text-neutral-100">
               {{ i18n.t('reader.quiz.title') }}
             </h2>
-            <p class="text-xs font-reading text-[#5A524A] dark:text-[#B5ADA3] leading-relaxed">
+            <p class="text-xs font-reading text-neutral-500 dark:text-neutral-400 leading-relaxed">
               {{ i18n.t('reader.quiz.subtitle') }}
             </p>
           </div>
@@ -444,15 +435,15 @@ import { lookupFrenchLexicon } from '../core/lexicon';
           <!-- Questions loop -->
           <div class="space-y-6 pt-2">
             @for (q of s.comprehensionQuestions; track q.id; let qIdx = $index) {
-              <div class="p-5 rounded-xl bg-[#F7F4EE] dark:bg-[#181513] border border-[#E6DFD3] dark:border-[#332D28] space-y-3">
+              <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 space-y-3">
                 <div class="space-y-1">
-                  <span class="text-[11px] font-semibold text-[#8A8278] dark:text-[#7A7268] uppercase tracking-wider">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
                     {{ i18n.t('reader.quiz.question_label', { number: qIdx + 1, type: q.type }) }}
                   </span>
-                  <h3 class="text-base font-serif font-semibold text-[#231F1C] dark:text-[#EAE4DA]">
+                  <h3 class="text-base font-serif font-medium text-neutral-900 dark:text-neutral-100">
                     {{ q.questionFr }}
                   </h3>
-                  <p class="text-xs text-[#5A524A] dark:text-[#B5ADA3] italic">
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400 italic">
                     {{ q.questionPt }}
                   </p>
                 </div>
@@ -465,7 +456,7 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                       (click)="selectAnswer(q.id, opt.id)"
                       [disabled]="answeredQuestions()[q.id] !== undefined"
                       [class]="getOptionClass(q.id, opt.id, q.correctOptionId)"
-                      class="w-full text-left p-3 rounded-lg border text-xs sm:text-sm transition-colors flex items-start gap-2.5">
+                      class="w-full text-left p-3 rounded-xl border text-xs sm:text-sm transition-colors flex items-start gap-2.5">
                       <span class="font-mono text-xs mt-0.5 uppercase opacity-70">{{ opt.id }}.</span>
                       <div class="space-y-0.5">
                         <span class="font-medium block">{{ opt.textFr }}</span>
@@ -477,14 +468,14 @@ import { lookupFrenchLexicon } from '../core/lexicon';
 
                 <!-- Explanation when answered -->
                 @if (answeredQuestions()[q.id] !== undefined) {
-                  <div class="mt-3 p-3.5 rounded-lg bg-[#FCFAF7] dark:bg-[#221E1B] border border-[#DDD6C8] dark:border-[#38322C] text-xs space-y-1 animate-in fade-in duration-150">
-                    <div class="font-semibold text-[#231F1C] dark:text-[#EAE4DA]">
+                  <div class="mt-3 p-3.5 rounded-xl bg-white dark:bg-[#161616] border border-neutral-200 dark:border-neutral-800 text-xs space-y-1 animate-in fade-in duration-150">
+                    <div class="font-semibold text-neutral-900 dark:text-neutral-100">
                       {{ answeredQuestions()[q.id] === q.correctOptionId ? i18n.t('reader.quiz.correct_feedback') : i18n.t('reader.quiz.incorrect_feedback') }}
                     </div>
-                    <p class="text-[#3A342F] dark:text-[#D8D2C7] leading-relaxed">{{ q.explanationFr }}</p>
-                    <p class="text-[#5A524A] dark:text-[#B5ADA3] leading-relaxed italic">{{ q.explanationPt }}</p>
+                    <p class="text-neutral-600 dark:text-neutral-300 leading-relaxed">{{ q.explanationFr }}</p>
+                    <p class="text-neutral-500 dark:text-neutral-400 leading-relaxed italic">{{ q.explanationPt }}</p>
                     @if (q.portugueseInterferenceNote) {
-                      <div class="pt-1.5 text-[#9C3823] dark:text-[#DDA15E] font-medium">
+                      <div class="pt-1.5 text-neutral-900 dark:text-neutral-100 font-mono text-[11px]">
                         {{ i18n.t('reader.quiz.portuguese_note_prefix') }} {{ q.portugueseInterferenceNote }}
                       </div>
                     }
@@ -496,30 +487,30 @@ import { lookupFrenchLexicon } from '../core/lexicon';
 
           <!-- Final Complete Button & Diagnostic Outcome -->
           @if (completed() && assessmentResult(); as res) {
-            <div class="p-5 rounded-xl bg-[#F7F4EE] dark:bg-[#1A1715] border border-[#2E8540]/40 space-y-4 animate-in fade-in duration-200">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E6DFD3] dark:border-[#332D28] pb-3">
+            <div class="p-5 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 space-y-4 animate-in fade-in duration-200">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-neutral-200 dark:border-neutral-800 pb-3">
                 <div class="space-y-0.5">
-                  <div class="flex items-center gap-2 text-xs font-semibold text-[#1B5E20] dark:text-[#86EFAC]">
-                    <mat-icon class="text-sm !w-4 !h-4">check_circle</mat-icon>
+                  <div class="flex items-center gap-2 text-xs font-semibold text-neutral-900 dark:text-neutral-100 font-mono">
+                    <mat-icon class="text-sm !w-4 !h-4 text-emerald-500">check_circle</mat-icon>
                     <span>Avaliação Registrada com Sucesso</span>
                   </div>
-                  <h3 class="text-lg font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+                  <h3 class="text-lg font-serif font-medium text-neutral-900 dark:text-neutral-100">
                     Diagnóstico de Compreensão & Interferência
                   </h3>
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-4">
                   <div class="text-right">
-                    <span class="text-xs text-[#8A8278] dark:text-[#7A7268] block">Aproveitamento</span>
-                    <span class="text-xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+                    <span class="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 block">Aproveitamento</span>
+                    <span class="text-xl font-mono font-medium text-neutral-900 dark:text-neutral-100">
                       {{ res.scorePercent }}%
                     </span>
                   </div>
-                  <div class="w-px h-8 bg-[#E6DFD3] dark:bg-[#332D28]"></div>
+                  <div class="w-px h-8 bg-neutral-200 dark:bg-neutral-800"></div>
                   <div class="text-right">
-                    <span class="text-xs text-[#8A8278] dark:text-[#7A7268] block">Velocidade</span>
-                    <span class="text-xl font-mono font-bold text-[#9C3823] dark:text-[#DDA15E]">
-                      {{ readingWpm() }} <span class="text-[11px] font-normal text-[#8A8278] dark:text-[#7A7268]">ppm</span>
+                    <span class="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 block">Velocidade</span>
+                    <span class="text-xl font-mono font-medium text-neutral-900 dark:text-neutral-100">
+                      {{ readingWpm() }} <span class="text-[11px] font-normal text-neutral-400">ppm</span>
                     </span>
                   </div>
                 </div>
@@ -528,12 +519,12 @@ import { lookupFrenchLexicon } from '../core/lexicon';
               <!-- Categories tested vs mistakes -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div class="space-y-1">
-                  <span class="text-[11px] font-semibold text-[#6C645C] dark:text-[#9C9387] uppercase tracking-wider block">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500 block">
                     Tópicos Linguísticos Avaliados:
                   </span>
                   <div class="flex flex-wrap gap-1.5">
                     @for (cat of res.testedCategories; track cat) {
-                      <span class="px-2 py-0.5 rounded bg-[#FCFAF7] dark:bg-[#25201B] border border-[#DDD6C8] dark:border-[#38322C] text-[#231F1C] dark:text-[#EAE4DA] font-mono text-[11px]">
+                      <span class="px-2 py-0.5 rounded-full bg-white dark:bg-[#1A1A1A] border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 font-mono text-[10px]">
                         {{ cat }}
                       </span>
                     }
@@ -541,31 +532,31 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                 </div>
 
                 <div class="space-y-1">
-                  <span class="text-[11px] font-semibold text-[#6C645C] dark:text-[#9C9387] uppercase tracking-wider block">
-                    Pontos de Atenção (Erros Identificados):
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500 block">
+                    Pontos de Atenção (Erros):
                   </span>
                   @if (res.mistakeCategories.length > 0) {
                     <div class="flex flex-wrap gap-1.5">
                       @for (cat of res.mistakeCategories; track cat) {
-                        <span class="px-2 py-0.5 rounded bg-[#FDF2F2] dark:bg-[#3D1A1A] border border-[#D32F2F]/40 text-[#B71C1C] dark:text-[#FCA5A5] font-mono text-[11px]">
+                        <span class="px-2 py-0.5 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 font-mono text-[10px]">
                           {{ cat }}
                         </span>
                       }
                     </div>
                   } @else {
-                    <span class="text-[11px] text-[#1B5E20] dark:text-[#86EFAC] font-medium block">
-                      ✓ Nenhuma armadilha de interferência acionada. Excelente precisão!
+                    <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono block">
+                      ✓ Nenhuma armadilha acionada. Excelente precisão!
                     </span>
                   }
                 </div>
               </div>
 
-              <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-[#E6DFD3] dark:border-[#332D28] text-xs">
-                <span class="text-[#6C645C] dark:text-[#9C9387]">
-                  O Radar de Dificuldades Contrastivas do seu perfil foi atualizado.
+              <div class="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-neutral-200 dark:border-neutral-800 text-xs">
+                <span class="text-neutral-500 dark:text-neutral-400">
+                  O Radar de Dificuldades do seu perfil foi atualizado.
                 </span>
                 <div class="flex items-center gap-3">
-                  <a routerLink="/progress" class="font-medium text-[#9C3823] dark:text-[#DDA15E] hover:underline inline-flex items-center gap-1">
+                  <a routerLink="/progress" class="font-mono text-xs text-neutral-900 dark:text-neutral-100 hover:underline inline-flex items-center gap-1">
                     <span>Revisar Vocabulário no SRS</span>
                     <mat-icon class="text-xs !w-3.5 !h-3.5">arrow_forward</mat-icon>
                   </a>
@@ -573,8 +564,8 @@ import { lookupFrenchLexicon } from '../core/lexicon';
               </div>
             </div>
           } @else {
-            <div class="pt-4 border-t border-[#E6DFD3] dark:border-[#332D28] flex items-center justify-between">
-              <div class="text-xs text-[#6C645C] dark:text-[#9C9387]">
+            <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+              <div class="text-xs font-mono text-neutral-400 dark:text-neutral-500">
                 {{ i18n.t('reader.quiz.progress_counter', { answered: answeredCount(), total: s.comprehensionQuestions.length }) }}
               </div>
 
@@ -582,8 +573,8 @@ import { lookupFrenchLexicon } from '../core/lexicon';
                 type="button"
                 (click)="finishStory(s)"
                 [disabled]="completed() || answeredCount() === 0"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs text-white bg-[#231F1C] dark:bg-[#EAE4DA] dark:text-[#181513] hover:opacity-90 transition-opacity disabled:opacity-40">
-                <mat-icon class="text-base leading-none !w-4 !h-4">check_circle</mat-icon>
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-xs text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:opacity-90 transition-opacity disabled:opacity-40">
+                <mat-icon class="text-sm leading-none !w-4 !h-4">check_circle</mat-icon>
                 <span>
                   {{
                     completed()

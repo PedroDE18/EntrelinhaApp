@@ -7,50 +7,43 @@
 @theme {
   --font-serif: "Lora", Georgia, Cambria, "Times New Roman", Times, serif;
   --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --color-paper-bg: #F7F4EE;
-  --color-paper-surface: #FCFAF7;
-  --color-paper-border: #E6DFD3;
-  --color-paper-ink: #231F1C;
-  --color-paper-muted: #6C645C;
+  --color-paper-bg: #FAFAFA;
+  --color-paper-surface: #FFFFFF;
+  --color-paper-border: #E5E7EB;
+  --color-paper-ink: #111827;
+  --color-paper-muted: #6B7280;
 
-  --color-night-bg: #181513;
-  --color-night-surface: #221E1B;
-  --color-night-border: #332D28;
-  --color-night-ink: #EAE4DA;
-  --color-night-muted: #9C9387;
+  --color-night-bg: #0A0A0A;
+  --color-night-surface: #141414;
+  --color-night-border: #262626;
+  --color-night-ink: #F9FAFB;
+  --color-night-muted: #9CA3AF;
 }
 
 html {
   font-family: var(--font-sans);
-  background-color: #F7F4EE;
-  color: #231F1C;
+  background-color: #FAFAFA;
+  color: #111827;
   scroll-behavior: smooth;
+  letter-spacing: -0.011em;
 }
 
 html.dark {
-  background-color: #181513;
-  color: #EAE4DA;
+  background-color: #0A0A0A;
+  color: #F9FAFB;
 }
 
-/* Subtle book paper texture and comfort reading layer */
 body {
   min-height: 100vh;
   background-color: inherit;
   color: inherit;
-  /* Authentic fine-grain paper texture */
-  background-image: 
-    radial-gradient(rgba(140, 115, 80, 0.05) 1px, transparent 1px),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.022'/%3E%3C/svg%3E");
-  background-size: 28px 28px, 180px 180px;
-}
-
-html.dark body {
-  background-image: 
-    radial-gradient(rgba(215, 185, 140, 0.035) 1px, transparent 1px),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-  background-size: 28px 28px, 180px 180px;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .font-editorial {
@@ -61,115 +54,88 @@ html.dark body {
   font-family: var(--font-serif);
 }
 
-/* Paper page effect: Subtle inner border line, warm layered elevation, deckle feel */
-.paper-page {
-  background-color: #FAF7F2;
-  border: 1px solid rgba(180, 160, 135, 0.28);
-  box-shadow: 
-    0 1px 3px 0 rgba(60, 45, 30, 0.04),
-    0 12px 32px -4px rgba(60, 45, 30, 0.08),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+/* Swiss Minimalist / Stoic Card Base (aliased to .paper-page for complete coverage) */
+.paper-page,
+.stoic-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   position: relative;
 }
 
-.dark .paper-page {
-  background-color: #201C19;
-  border-color: rgba(90, 75, 60, 0.4);
-  box-shadow: 
-    0 1px 3px 0 rgba(0, 0, 0, 0.3),
-    0 12px 32px -4px rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+.dark .paper-page,
+.dark .stoic-card {
+  background-color: #141414;
+  border-color: #262626;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* Decorative literary drop cap for opening paragraphs */
+/* Swiss Grid Border Lines */
+.stoic-divider {
+  height: 1px;
+  background-color: #E5E7EB;
+}
+
+.dark .stoic-divider {
+  background-color: #262626;
+}
+
+/* Clean Editorial Text Treatment */
 .story-drop-cap::first-letter {
   float: left;
-  font-family: var(--font-display);
-  font-size: 3.4em;
-  line-height: 0.82;
-  padding-top: 0.12em;
-  padding-right: 0.16em;
-  padding-bottom: 0.05em;
-  color: #78350F;
-  font-weight: 700;
+  font-family: var(--font-serif);
+  font-size: 3.2em;
+  line-height: 0.85;
+  padding-top: 0.08em;
+  padding-right: 0.12em;
+  padding-bottom: 0.02em;
+  color: #111827;
+  font-weight: 600;
 }
 
 .dark .story-drop-cap::first-letter {
-  color: #FBBF24;
+  color: #F9FAFB;
 }
 
-/* Book spine effect for large format reading */
-.book-spine-left {
-  box-shadow: inset 18px 0 24px -16px rgba(90, 65, 40, 0.12);
-}
-
-.dark .book-spine-left {
-  box-shadow: inset 18px 0 24px -16px rgba(0, 0, 0, 0.4);
-}
-
-/* Book cover 3D elevation and realistic shelf shadow */
+/* Clean Modern Book Cover Representation */
 .book-cover-shadow {
-  box-shadow: 
-    -4px 4px 10px -2px rgba(40, 25, 15, 0.18),
-    -1px 1px 3px 0 rgba(40, 25, 15, 0.12),
-    0 16px 28px -6px rgba(40, 25, 15, 0.15);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dark .book-cover-shadow {
-  box-shadow: 
-    -4px 4px 12px -2px rgba(0, 0, 0, 0.6),
-    0 16px 28px -6px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.4);
 }
 
 .book-cover-shadow:hover {
-  transform: translateY(-4px) scale(1.015);
-  box-shadow: 
-    -6px 8px 18px -2px rgba(40, 25, 15, 0.24),
-    0 22px 34px -8px rgba(40, 25, 15, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -3px rgba(0, 0, 0, 0.1);
 }
 
 .dark .book-cover-shadow:hover {
-  box-shadow: 
-    -6px 8px 20px -2px rgba(0, 0, 0, 0.8),
-    0 24px 38px -8px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 8px 24px -3px rgba(0, 0, 0, 0.6);
 }
 
-/* Bookmark ribbon ornament */
-.bookmark-ribbon {
-  position: absolute;
-  top: 0;
-  right: 18px;
-  width: 14px;
-  height: 28px;
-  background: #9C3823;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
-  z-index: 10;
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
-}
-
-.dark .bookmark-ribbon {
-  background: #DDA15E;
-}
-
-/* Smooth bookish text selection */
+/* Stoic High-Contrast Text Selection */
 ::selection {
-  background-color: #eeddbb;
-  color: #4a2810;
+  background-color: #111827;
+  color: #FFFFFF;
 }
 
 .dark ::selection {
-  background-color: #5c3e20;
-  color: #faeedb;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
 }
 
-/* Comfortable reading column */
+/* Optimal Swiss Reading Measure */
 .prose-reading {
-  max-width: 68ch;
-  line-height: 1.88;
+  max-width: 65ch;
+  line-height: 1.85;
 }
 
-/* iPhone 13 & Mobile safe-area considerations */
+/* Mobile Safe-Area Layouts */
 .safe-bottom-padding {
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);
 }
@@ -178,7 +144,7 @@ html.dark body {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* Minimum 44px touch target accessibility */
+/* Minimum 44px Touch Target */
 .touch-target-min {
   min-height: 44px;
   min-width: 44px;
@@ -186,7 +152,7 @@ html.dark body {
 
 /* =========================================================================
    Global Material Icon Geometry & Sizing Normalization
-   Prevents glyph cutoff, baseline clipping, compression, and elipse distortions
+   Prevents glyph cutoff, baseline clipping, compression, and ellipse distortions
    ========================================================================= */
 mat-icon, .mat-icon {
   display: inline-flex !important;
@@ -205,7 +171,6 @@ mat-icon, .mat-icon {
   box-sizing: content-box;
 }
 
-/* Proportional auto-scaling matching Tailwind text size utilities */
 mat-icon.text-xs {
   font-size: 0.75rem !important;
   width: 0.75rem !important;

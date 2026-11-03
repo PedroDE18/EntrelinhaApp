@@ -15,11 +15,15 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
   template: `
     <div class="space-y-10">
       <!-- Section Header -->
-      <div class="space-y-2">
-        <h1 class="text-3xl sm:text-4xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] tracking-tight">
+      <div class="space-y-1.5 border-b border-neutral-200 dark:border-neutral-800/80 pb-6">
+        <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-500">
+          <mat-icon class="text-xs !w-3.5 !h-3.5">insights</mat-icon>
+          <span>Diagnostic & Progression</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-serif font-medium text-neutral-900 dark:text-neutral-50 tracking-tight">
           {{ i18n.t('progress.title') }}
         </h1>
-        <p class="text-sm font-reading text-[#5A524A] dark:text-[#B5ADA3] max-w-2xl leading-relaxed">
+        <p class="text-xs sm:text-sm font-reading text-neutral-500 dark:text-neutral-400 max-w-2xl leading-relaxed">
           {{ i18n.t('progress.subtitle') }}
         </p>
       </div>
@@ -27,94 +31,94 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
       <!-- CEFR Dual Proficiency Matrix -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Reading Proficiency -->
-        <div class="p-6 rounded-2xl paper-page space-y-4 shadow-xs">
+        <div class="p-6 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-[#141414] space-y-4">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-[#6C645C] dark:text-[#9C9387]">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
               {{ i18n.t('progress.reading_matrix_title') }}
             </span>
-            <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#F2E4D0] dark:bg-[#382D22] text-[#7A2A18] dark:text-[#F3D5A5]">
+            <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200">
               CEFR {{ profile().readingCEFR }}
             </span>
           </div>
 
           <div class="space-y-2">
             <div class="flex items-baseline justify-between">
-              <span class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ i18n.t('progress.reading_matrix_status') }}</span>
-              <span class="text-xs font-mono text-[#6C645C] dark:text-[#9C9387]">~135 palavras/min</span>
+              <span class="text-2xl font-mono font-medium text-neutral-900 dark:text-neutral-100">{{ i18n.t('progress.reading_matrix_status') }}</span>
+              <span class="text-xs font-mono text-neutral-400 dark:text-neutral-500">~135 mots/min</span>
             </div>
             <!-- CEFR Scale Bar -->
-            <div class="grid grid-cols-6 gap-1 h-2 rounded-full overflow-hidden bg-[#EFE9DD] dark:bg-[#1A1715]">
-              <div class="bg-[#9C3823] dark:bg-[#DDA15E] h-full"></div>
-              <div class="bg-[#9C3823] dark:bg-[#DDA15E] h-full"></div>
-              <div class="bg-[#9C3823] dark:bg-[#DDA15E] h-full"></div>
-              <div class="bg-[#DDD6C8] dark:bg-[#332D28] h-full"></div>
-              <div class="bg-[#DDD6C8] dark:bg-[#332D28] h-full"></div>
-              <div class="bg-[#DDD6C8] dark:bg-[#332D28] h-full"></div>
+            <div class="grid grid-cols-6 gap-1.5 h-1.5 rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+              <div class="bg-neutral-900 dark:bg-neutral-100 h-full"></div>
+              <div class="bg-neutral-900 dark:bg-neutral-100 h-full"></div>
+              <div class="bg-neutral-900 dark:bg-neutral-100 h-full"></div>
+              <div class="bg-neutral-200 dark:bg-neutral-800 h-full"></div>
+              <div class="bg-neutral-200 dark:bg-neutral-800 h-full"></div>
+              <div class="bg-neutral-200 dark:bg-neutral-800 h-full"></div>
             </div>
-            <div class="flex justify-between text-[10px] text-[#8A8278] dark:text-[#7A7268] font-mono">
-              <span>A1</span><span>A2</span><span class="font-bold text-[#9C3823] dark:text-[#DDA15E]">B1</span><span>B2</span><span>C1</span><span>C2</span>
+            <div class="flex justify-between text-[10px] text-neutral-400 dark:text-neutral-500 font-mono">
+              <span>A1</span><span>A2</span><span class="font-bold text-neutral-900 dark:text-neutral-100">B1</span><span>B2</span><span>C1</span><span>C2</span>
             </div>
           </div>
 
-          <p class="text-xs font-reading text-[#5A524A] dark:text-[#B5ADA3] leading-relaxed pt-1">
+          <p class="text-xs font-reading text-neutral-500 dark:text-neutral-400 leading-relaxed pt-1">
             {{ i18n.t('progress.reading_matrix_desc') }}
           </p>
         </div>
 
         <!-- Listening Proficiency -->
-        <div class="p-6 rounded-2xl paper-page space-y-4 shadow-xs">
+        <div class="p-6 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-[#141414] space-y-4">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-[#6C645C] dark:text-[#9C9387]">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
               {{ i18n.t('progress.listening_matrix_title') }}
             </span>
-            <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-[#F5EFE3] dark:bg-[#181513] text-[#231F1C] dark:text-[#EAE4DA]">
+            <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200">
               CEFR {{ profile().listeningCEFR }}
             </span>
           </div>
 
           <div class="space-y-2">
             <div class="flex items-baseline justify-between">
-              <span class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ i18n.t('progress.listening_matrix_status') }}</span>
-              <span class="text-xs font-mono text-[#6C645C] dark:text-[#9C9387]">Ritmo moderado (0.9x)</span>
+              <span class="text-2xl font-mono font-medium text-neutral-900 dark:text-neutral-100">{{ i18n.t('progress.listening_matrix_status') }}</span>
+              <span class="text-xs font-mono text-neutral-400 dark:text-neutral-500">Modéré (0.9x)</span>
             </div>
             <!-- CEFR Scale Bar -->
-            <div class="grid grid-cols-6 gap-1 h-2 rounded-full overflow-hidden bg-[#EFE9DD] dark:bg-[#1A1715]">
-              <div class="bg-[#9C3823] dark:bg-[#DDA15E] h-full"></div>
-              <div class="bg-[#9C3823] dark:bg-[#DDA15E] h-full"></div>
-              <div class="bg-[#DDD6C8] dark:bg-[#332D28] h-full"></div>
-              <div class="bg-[#DDD6C8] dark:bg-[#332D28] h-full"></div>
-              <div class="bg-[#DDD6C8] dark:bg-[#332D28] h-full"></div>
-              <div class="bg-[#DDD6C8] dark:bg-[#332D28] h-full"></div>
+            <div class="grid grid-cols-6 gap-1.5 h-1.5 rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+              <div class="bg-neutral-900 dark:bg-neutral-100 h-full"></div>
+              <div class="bg-neutral-900 dark:bg-neutral-100 h-full"></div>
+              <div class="bg-neutral-200 dark:bg-neutral-800 h-full"></div>
+              <div class="bg-neutral-200 dark:bg-neutral-800 h-full"></div>
+              <div class="bg-neutral-200 dark:bg-neutral-800 h-full"></div>
+              <div class="bg-neutral-200 dark:bg-neutral-800 h-full"></div>
             </div>
-            <div class="flex justify-between text-[10px] text-[#8A8278] dark:text-[#7A7268] font-mono">
-              <span>A1</span><span class="font-bold text-[#9C3823] dark:text-[#DDA15E]">A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span>
+            <div class="flex justify-between text-[10px] text-neutral-400 dark:text-neutral-500 font-mono">
+              <span>A1</span><span class="font-bold text-neutral-900 dark:text-neutral-100">A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span>
             </div>
           </div>
 
-          <p class="text-xs font-reading text-[#5A524A] dark:text-[#B5ADA3] leading-relaxed pt-1">
+          <p class="text-xs font-reading text-neutral-500 dark:text-neutral-400 leading-relaxed pt-1">
             {{ i18n.t('progress.listening_matrix_desc') }}
           </p>
         </div>
       </section>
 
-      <!-- Literary Spaced Repetition (SRS Flash-Review em Contexto) -->
-      <section id="srs-review" class="p-6 sm:p-8 rounded-2xl paper-page space-y-6 border border-[#DDD6C8] dark:border-[#38322C] shadow-sm">
+      <!-- Literary Spaced Repetition (SRS Flash-Review) -->
+      <section id="srs-review" class="p-6 sm:p-8 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-[#141414] space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="space-y-1">
-            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
-              <mat-icon class="text-sm leading-none !w-4 !h-4">auto_stories</mat-icon>
+            <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+              <mat-icon class="text-xs !w-3.5 !h-3.5">auto_stories</mat-icon>
               <span>Sessão Diária de Fixação</span>
             </div>
-            <h2 class="text-xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+            <h2 class="text-xl font-serif font-medium text-neutral-900 dark:text-neutral-100">
               Flash-Review Literário em Contexto
             </h2>
-            <p class="text-xs font-reading text-[#6C645C] dark:text-[#9C9387]">
+            <p class="text-xs font-reading text-neutral-500 dark:text-neutral-400">
               Repetição espaçada inteligente baseada em frases narrativas autênticas e contraste sistemático com o português.
             </p>
           </div>
 
           <div class="flex items-center gap-2 shrink-0">
-            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-[#EFE8DC] dark:bg-[#2C2621] text-[#9C3823] dark:text-[#DDA15E] font-semibold border border-[#D5CABB] dark:border-[#3E362F]">
+            <span class="text-[11px] font-mono px-3 py-1 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium">
               {{ srsDueWords().length }} para revisar hoje
             </span>
           </div>
@@ -122,19 +126,19 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
 
         @if (srsDueWords().length > 0 && currentSrsIndex() < srsDueWords().length) {
           @let word = srsDueWords()[currentSrsIndex()];
-          <div class="p-6 sm:p-8 rounded-xl bg-[#FCFAF7] dark:bg-[#1A1715] border border-[#E6DFD3] dark:border-[#332D28] space-y-6">
+          <div class="p-6 sm:p-8 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 space-y-6">
             <!-- Progress indicator inside review -->
-            <div class="flex items-center justify-between text-xs text-[#8A8278] dark:text-[#7A7268]">
+            <div class="flex items-center justify-between text-xs font-mono text-neutral-400 dark:text-neutral-500">
               <span>Cartão {{ currentSrsIndex() + 1 }} de {{ srsDueWords().length }}</span>
-              <span class="font-mono text-[11px]">{{ word.state === 'learning' ? 'Em aprendizado' : 'Consolidação' }}</span>
+              <span class="text-[10px] uppercase">{{ word.state === 'learning' ? 'Em aprendizado' : 'Consolidação' }}</span>
             </div>
 
             <!-- Cloze narrative context sentence -->
-            <div class="p-5 rounded-xl bg-[#F7F2E7] dark:bg-[#231D18] border border-[#E8DFD0] dark:border-[#3A3228] text-center space-y-2">
-              <span class="text-[10px] uppercase tracking-wider text-[#8A8278] dark:text-[#7A7268] font-semibold">
+            <div class="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-center space-y-2">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
                 Contexto na narrativa
               </span>
-              <p class="font-reading italic text-base sm:text-lg text-[#231F1C] dark:text-[#EAE4DA] leading-relaxed">
+              <p class="font-reading italic text-base sm:text-lg text-neutral-900 dark:text-neutral-100 leading-relaxed">
                 « {{ getClozeSentence(word) }} »
               </p>
             </div>
@@ -145,8 +149,8 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
                 <button
                   type="button"
                   (click)="revealSrsCard()"
-                  class="px-6 py-2.5 rounded-xl bg-[#231F1C] dark:bg-[#EAE4DA] text-white dark:text-[#181513] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-xs inline-flex items-center gap-2">
-                  <mat-icon class="text-sm !w-4 !h-4">visibility</mat-icon>
+                  class="px-6 py-2.5 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer inline-flex items-center gap-2">
+                  <mat-icon class="text-xs !w-3.5 !h-3.5">visibility</mat-icon>
                   <span>Revelar Vocábulo & Tradução</span>
                 </button>
               </div>
@@ -155,60 +159,60 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
               <div class="space-y-4 animate-in fade-in duration-200">
                 <div class="text-center space-y-1">
                   <div class="flex items-center justify-center gap-2">
-                    <span class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+                    <span class="text-2xl font-serif font-medium text-neutral-900 dark:text-neutral-100">
                       {{ word.french }}
                     </span>
                     <button
                       type="button"
                       (click)="speech.speakWord(word.french)"
                       title="Ouvir pronúncia autêntica em francês"
-                      class="p-1 rounded text-[#8A8278] hover:text-[#9C3823] dark:hover:text-[#DDA15E] cursor-pointer">
-                      <mat-icon class="text-base !w-4 !h-4">volume_up</mat-icon>
+                      class="p-1 rounded text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer">
+                      <mat-icon class="text-sm !w-4 !h-4">volume_up</mat-icon>
                     </button>
                   </div>
-                  <p class="text-sm font-semibold text-[#9C3823] dark:text-[#DDA15E]">
+                  <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">
                     {{ word.translationPt }}
                   </p>
                   @if (word.isFalseFriend) {
-                    <p class="text-xs text-[#B71C1C] dark:text-[#FCA5A5] bg-[#FDF2F2] dark:bg-[#3D1A1A] p-2.5 rounded-lg max-w-md mx-auto">
-                      ⚠️ <strong>Atenção ao Falso Cognato:</strong> {{ word.falseFriendNote || 'Sentido diferente do esperado em português.' }}
+                    <p class="text-xs font-mono text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 p-2.5 rounded-xl max-w-md mx-auto border border-neutral-200 dark:border-neutral-700">
+                      ⚠️ <strong>Falso Cognato:</strong> {{ word.falseFriendNote || 'Sentido diferente do esperado em português.' }}
                     </p>
                   }
                 </div>
 
                 <!-- SRS Rating Buttons (SM-2 / FSRS) -->
-                <div class="pt-4 border-t border-[#E6DFD3] dark:border-[#332D28] space-y-2">
-                  <span class="text-[11px] text-center block text-[#8A8278] dark:text-[#7A7268]">
+                <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-2">
+                  <span class="text-[10px] font-mono uppercase tracking-widest text-center block text-neutral-400 dark:text-neutral-500">
                     Como foi a sua recordação deste termo?
                   </span>
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <button
                       type="button"
                       (click)="rateSrsCard('again')"
-                      class="p-2.5 rounded-lg border border-[#D32F2F]/30 bg-[#FDF2F2] dark:bg-[#3D1A1A] text-[#B71C1C] dark:text-[#FCA5A5] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer">
-                      <span>❌ Novamente</span>
-                      <span class="text-[10px] block opacity-75 font-normal">1 dia</span>
+                      class="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#161616] hover:border-neutral-400 dark:hover:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-xs font-medium transition-all cursor-pointer">
+                      <span>Novamente</span>
+                      <span class="text-[10px] font-mono block text-neutral-400 mt-0.5">1 dia</span>
                     </button>
                     <button
                       type="button"
                       (click)="rateSrsCard('hard')"
-                      class="p-2.5 rounded-lg border border-[#C07D2B]/30 bg-[#FFFBEB] dark:bg-[#3D3019] text-[#B45309] dark:text-[#FDE68A] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer">
-                      <span>⚠️ Difícil</span>
-                      <span class="text-[10px] block opacity-75 font-normal">curto prazo</span>
+                      class="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#161616] hover:border-neutral-400 dark:hover:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-xs font-medium transition-all cursor-pointer">
+                      <span>Difícil</span>
+                      <span class="text-[10px] font-mono block text-neutral-400 mt-0.5">curto prazo</span>
                     </button>
                     <button
                       type="button"
                       (click)="rateSrsCard('good')"
-                      class="p-2.5 rounded-lg border border-[#2E8540]/30 bg-[#EBF7EE] dark:bg-[#1E3324] text-[#1B5E20] dark:text-[#86EFAC] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer">
-                      <span>✓ Bom</span>
-                      <span class="text-[10px] block opacity-75 font-normal">espaçado</span>
+                      class="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#161616] hover:border-neutral-400 dark:hover:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-xs font-medium transition-all cursor-pointer">
+                      <span>Bom</span>
+                      <span class="text-[10px] font-mono block text-neutral-400 mt-0.5">espaçado</span>
                     </button>
                     <button
                       type="button"
                       (click)="rateSrsCard('easy')"
-                      class="p-2.5 rounded-lg border border-[#1E40AF]/30 bg-[#EFF6FF] dark:bg-[#1E293B] text-[#1D4ED8] dark:text-[#93C5FD] text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer">
-                      <span>⚡ Fácil</span>
-                      <span class="text-[10px] block opacity-75 font-normal">longo prazo</span>
+                      class="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#161616] hover:border-neutral-400 dark:hover:border-neutral-600 text-neutral-900 dark:text-neutral-100 text-xs font-medium transition-all cursor-pointer">
+                      <span>Fácil</span>
+                      <span class="text-[10px] font-mono block text-neutral-400 mt-0.5">longo prazo</span>
                     </button>
                   </div>
                 </div>
@@ -217,20 +221,20 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
           </div>
         } @else {
           <!-- All caught up state -->
-          <div class="p-8 text-center rounded-xl bg-[#FCFAF7] dark:bg-[#1A1715] border border-dashed border-[#DDD6C8] dark:border-[#38322C] space-y-3">
-            <mat-icon class="text-3xl text-[#1B5E20] dark:text-[#86EFAC] !w-8 !h-8">task_alt</mat-icon>
+          <div class="p-8 text-center rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 space-y-3">
+            <mat-icon class="text-3xl text-emerald-500 !w-8 !h-8">task_alt</mat-icon>
             <div class="space-y-1">
-              <h3 class="font-serif font-bold text-base text-[#231F1C] dark:text-[#EAE4DA]">
-                Parabéns! Sua sessão diária está em dia.
+              <h3 class="font-serif font-medium text-base text-neutral-900 dark:text-neutral-100">
+                Sua sessão diária está em dia.
               </h3>
-              <p class="text-xs text-[#6C645C] dark:text-[#9C9387] max-w-md mx-auto font-reading">
+              <p class="text-xs text-neutral-500 dark:text-neutral-400 max-w-md mx-auto font-reading">
                 Todos os termos agendados foram revisados. Novos vocábulos serão propostos conforme suas próximas leituras.
               </p>
             </div>
             <button
               type="button"
               (click)="restartSrsReview()"
-              class="px-4 py-1.5 rounded-lg border border-[#DDD6C8] dark:border-[#38322C] text-xs text-[#5A524A] dark:text-[#B5ADA3] hover:bg-[#F2ECE1] dark:hover:bg-[#2C2723] transition-colors cursor-pointer">
+              class="px-4 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors cursor-pointer font-mono">
               Praticar novamente com todos os termos
             </button>
           </div>
@@ -238,65 +242,65 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
       </section>
 
       <!-- Vocabulary Funnel (Section 9) -->
-      <section class="p-6 sm:p-8 rounded-2xl paper-page space-y-6">
+      <section class="p-6 sm:p-8 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-[#141414] space-y-6">
         <div class="space-y-1">
-          <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
-            <mat-icon class="text-sm leading-none !w-4 !h-4">bubble_chart</mat-icon>
+          <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+            <mat-icon class="text-xs leading-none !w-3.5 !h-3.5">bubble_chart</mat-icon>
             <span>{{ i18n.t('progress.funnel_badge') }}</span>
           </div>
-          <h2 class="text-xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+          <h2 class="text-xl font-serif font-medium text-neutral-900 dark:text-neutral-100">
             {{ i18n.t('progress.funnel_title') }}
           </h2>
-          <p class="text-xs font-reading text-[#6C645C] dark:text-[#9C9387]">
+          <p class="text-xs font-reading text-neutral-500 dark:text-neutral-400">
             {{ i18n.t('progress.funnel_subtitle') }}
           </p>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div class="p-4 rounded-xl bg-[#F7F4EE] dark:bg-[#181513] border border-[#E6DFD3] dark:border-[#332D28]">
-            <span class="text-xs text-[#6C645C] dark:text-[#9C9387]">{{ i18n.t('progress.funnel_encountered') }}</span>
-            <div class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] mt-1">
+          <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50">
+            <span class="text-[10px] font-mono uppercase text-neutral-400 dark:text-neutral-500">{{ i18n.t('progress.funnel_encountered') }}</span>
+            <div class="text-2xl font-mono font-medium text-neutral-900 dark:text-neutral-100 mt-1">
               {{ profile().vocabularyMetrics.encountered }}
             </div>
-            <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] mt-0.5 block">{{ i18n.t('progress.funnel_encountered_sub') }}</span>
+            <span class="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5 block">{{ i18n.t('progress.funnel_encountered_sub') }}</span>
           </div>
 
-          <div class="p-4 rounded-xl bg-[#F9F3E8] dark:bg-[#25201B] border border-[#E8DCC8] dark:border-[#3A3228]">
-            <span class="text-xs text-[#9C3823] dark:text-[#DDA15E]">{{ i18n.t('progress.funnel_learning') }}</span>
-            <div class="text-2xl font-serif font-bold text-[#9C3823] dark:text-[#DDA15E] mt-1">
+          <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50">
+            <span class="text-[10px] font-mono uppercase text-neutral-400 dark:text-neutral-500">{{ i18n.t('progress.funnel_learning') }}</span>
+            <div class="text-2xl font-mono font-medium text-neutral-900 dark:text-neutral-100 mt-1">
               {{ learnerService.learningWordsCount() }}
             </div>
-            <span class="text-[10px] text-[#C07D2B] dark:text-[#E6B373] mt-0.5 block">{{ i18n.t('progress.funnel_learning_sub') }}</span>
+            <span class="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5 block">{{ i18n.t('progress.funnel_learning_sub') }}</span>
           </div>
 
-          <div class="p-4 rounded-xl bg-[#F7F4EE] dark:bg-[#181513] border border-[#E6DFD3] dark:border-[#332D28]">
-            <span class="text-xs text-[#6C645C] dark:text-[#9C9387]">{{ i18n.t('progress.funnel_known') }}</span>
-            <div class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] mt-1">
+          <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50">
+            <span class="text-[10px] font-mono uppercase text-neutral-400 dark:text-neutral-500">{{ i18n.t('progress.funnel_known') }}</span>
+            <div class="text-2xl font-mono font-medium text-neutral-900 dark:text-neutral-100 mt-1">
               {{ profile().vocabularyMetrics.known }}
             </div>
-            <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] mt-0.5 block">{{ i18n.t('progress.funnel_known_sub') }}</span>
+            <span class="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5 block">{{ i18n.t('progress.funnel_known_sub') }}</span>
           </div>
 
-          <div class="p-4 rounded-xl bg-[#EBF7EE] dark:bg-[#1B2B1E] border border-[#C3E6CB] dark:border-[#2C4832]">
-            <span class="text-xs text-[#1B5E20] dark:text-[#86EFAC]">{{ i18n.t('progress.funnel_mastered') }}</span>
-            <div class="text-2xl font-serif font-bold text-[#1B5E20] dark:text-[#86EFAC] mt-1">
+          <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50">
+            <span class="text-[10px] font-mono uppercase text-neutral-400 dark:text-neutral-500">{{ i18n.t('progress.funnel_mastered') }}</span>
+            <div class="text-2xl font-mono font-medium text-neutral-900 dark:text-neutral-100 mt-1">
               {{ profile().vocabularyMetrics.mastered }}
             </div>
-            <span class="text-[10px] text-[#2E7D32] dark:text-[#4ADE80] mt-0.5 block">{{ i18n.t('progress.funnel_mastered_sub') }}</span>
+            <span class="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5 block">{{ i18n.t('progress.funnel_mastered_sub') }}</span>
           </div>
         </div>
 
         <!-- Literary Notebook: Carnet de Mots & Export Section -->
-        <div class="space-y-4 pt-4 border-t border-[#E6DFD3] dark:border-[#332D28]">
+        <div class="space-y-4 pt-4 border-t border-neutral-200 dark:border-neutral-800">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 class="text-base font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] flex items-center gap-2">
+              <h3 class="text-base font-serif font-medium text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
                 <span>Carnet de Mots — Caderno de Leituras</span>
-                <span class="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-[#EFE8DC] dark:bg-[#2C2621] text-[#9C3823] dark:text-[#DDA15E]">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400">
                   {{ learnerService.words().length }} vocábulos
                 </span>
               </h3>
-              <p class="text-xs font-reading text-[#6C645C] dark:text-[#9C9387]">
+              <p class="text-xs font-reading text-neutral-500 dark:text-neutral-400">
                 Seu léxico coletado em contexto, pronto para revisão fonética e exportação.
               </p>
             </div>
@@ -307,10 +311,8 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
                 type="button"
                 (click)="exportMarkdown()"
                 [disabled]="learnerService.words().length === 0"
-                [class.opacity-50]="learnerService.words().length === 0"
-                [class.cursor-not-allowed]="learnerService.words().length === 0"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#FCFAF7] dark:bg-[#221E1B] text-[#231F1C] dark:text-[#EAE4DA] border border-[#DDD6C8] dark:border-[#38322C] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723] transition-colors shadow-2xs">
-                <mat-icon class="text-sm leading-none !w-4 !h-4">description</mat-icon>
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded-full bg-white dark:bg-[#161616] text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors">
+                <mat-icon class="text-xs leading-none !w-3.5 !h-3.5">description</mat-icon>
                 <span>Exportar .md</span>
               </button>
 
@@ -318,36 +320,34 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
                 type="button"
                 (click)="exportAnkiTsv()"
                 [disabled]="learnerService.words().length === 0"
-                [class.opacity-50]="learnerService.words().length === 0"
-                [class.cursor-not-allowed]="learnerService.words().length === 0"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#231F1C] dark:bg-[#EAE4DA] text-white dark:text-[#181513] hover:opacity-90 transition-opacity shadow-2xs">
-                <mat-icon class="text-sm leading-none !w-4 !h-4">file_download</mat-icon>
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:opacity-90 transition-opacity">
+                <mat-icon class="text-xs leading-none !w-3.5 !h-3.5">file_download</mat-icon>
                 <span>Exportar Anki (.tsv)</span>
               </button>
             </div>
           </div>
 
           <!-- Filter Pills for Notebook -->
-          <div class="flex items-center gap-2 text-xs">
+          <div class="flex items-center gap-1.5 text-xs">
             <button
               type="button"
               (click)="vocabFilter.set('all')"
-              [class]="vocabFilter() === 'all' ? 'bg-[#231F1C] text-white dark:bg-[#EAE4DA] dark:text-[#181513] font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
-              class="px-2.5 py-1 rounded-md transition-colors">
+              [class]="vocabFilter() === 'all' ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold' : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'"
+              class="px-3 py-1 rounded-full transition-colors font-mono text-[11px]">
               Todos ({{ learnerService.words().length }})
             </button>
             <button
               type="button"
               (click)="vocabFilter.set('learning')"
-              [class]="vocabFilter() === 'learning' ? 'bg-[#9C3823] text-white font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
-              class="px-2.5 py-1 rounded-md transition-colors">
+              [class]="vocabFilter() === 'learning' ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold' : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'"
+              class="px-3 py-1 rounded-full transition-colors font-mono text-[11px]">
               Quero Aprender ({{ learnerService.learningWordsCount() }})
             </button>
             <button
               type="button"
               (click)="vocabFilter.set('false_friends')"
-              [class]="vocabFilter() === 'false_friends' ? 'bg-[#7A2A18] text-white font-semibold' : 'text-[#6C645C] dark:text-[#9C9387] hover:bg-[#EFE9DD] dark:hover:bg-[#2C2723]'"
-              class="px-2.5 py-1 rounded-md transition-colors">
+              [class]="vocabFilter() === 'false_friends' ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold' : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'"
+              class="px-3 py-1 rounded-full transition-colors font-mono text-[11px]">
               Falsos Amigos ({{ falseFriendsCount() }})
             </button>
           </div>
@@ -355,42 +355,42 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
           <!-- Vocabulary Cards -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
             @for (w of filteredNotebookWords(); track w.id) {
-              <div class="p-4 rounded-xl bg-[#FCFAF7] dark:bg-[#1A1715] border border-[#E6DFD3] dark:border-[#332D28] hover:border-[#D1C7B7] dark:hover:border-[#473F37] transition-all space-y-2">
+              <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] hover:border-neutral-400 dark:hover:border-neutral-600 transition-all space-y-2">
                 <div class="flex items-start justify-between gap-2">
                   <div class="space-y-0.5">
                     <div class="flex items-center gap-2">
-                      <span class="font-serif font-bold text-base text-[#231F1C] dark:text-[#EAE4DA]">{{ w.french }}</span>
+                      <span class="font-serif font-medium text-base text-neutral-900 dark:text-neutral-100">{{ w.french }}</span>
                       <button
                         type="button"
                         (click)="speech.speakWord(w.french)"
                         title="Ouvir pronúncia autêntica em francês"
-                        class="p-1 rounded text-[#8A8278] hover:text-[#9C3823] dark:hover:text-[#DDA15E] transition-colors">
-                        <mat-icon class="text-sm leading-none !w-4 !h-4">volume_up</mat-icon>
+                        class="p-1 rounded text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+                        <mat-icon class="text-xs leading-none !w-3.5 !h-3.5">volume_up</mat-icon>
                       </button>
                       @if (w.isFalseFriend) {
-                        <span class="text-[10px] font-bold bg-[#FDE8E8] dark:bg-[#3D1A1A] text-[#9C3823] dark:text-[#F8B4B4] px-1.5 py-0.5 rounded">
+                        <span class="text-[9px] font-mono font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 px-1.5 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-700">
                           Falso Cognato
                         </span>
                       }
                     </div>
-                    <span class="text-xs font-semibold text-[#9C3823] dark:text-[#DDA15E] block">
+                    <span class="text-xs font-medium text-neutral-700 dark:text-neutral-300 block">
                       {{ w.translationPt }}
                     </span>
                   </div>
 
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EFE8DC] dark:bg-[#26211C] text-[#8A8278] dark:text-[#7A7268] shrink-0">
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 shrink-0">
                     {{ w.encounterCount }}× visto
                   </span>
                 </div>
 
                 @if (w.contextSentence) {
-                  <p class="text-xs text-[#5A524A] dark:text-[#B5ADA3] font-reading italic line-clamp-2 pt-1 border-t border-[#F2ECE1] dark:border-[#26221E]">
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400 font-reading italic line-clamp-2 pt-1 border-t border-neutral-100 dark:border-neutral-800">
                     « {{ w.contextSentence }} »
                   </p>
                 }
               </div>
             } @empty {
-              <div class="col-span-full py-8 text-center text-xs text-[#8A8278] dark:text-[#7A7268] space-y-1">
+              <div class="col-span-full py-8 text-center text-xs text-neutral-400 space-y-1">
                 <p>Nenhum vocábulo corresponde ao filtro selecionado.</p>
                 <p class="italic">Clique nas palavras durante a leitura para adicioná-las ao seu Carnet de Mots.</p>
               </div>
@@ -399,37 +399,36 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
         </div>
       </section>
 
-      <!-- Radar de Dificuldades Contrastivas (Português Brasileiro → Francês) -->
-      <section class="p-6 sm:p-8 rounded-2xl paper-page space-y-6">
+      <!-- Radar de Dificuldades Contrastivas -->
+      <section class="p-6 sm:p-8 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-[#141414] space-y-6">
         <div class="space-y-1">
-          <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
-            <mat-icon class="text-sm leading-none !w-4 !h-4">radar</mat-icon>
+          <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+            <mat-icon class="text-xs leading-none !w-3.5 !h-3.5">query_stats</mat-icon>
             <span>Diagnóstico Adaptativo Lusófono</span>
           </div>
-          <h2 class="text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+          <h2 class="text-xl sm:text-2xl font-serif font-medium text-neutral-900 dark:text-neutral-100">
             Radar de Interferência Linguística
           </h2>
-          <p class="text-xs font-reading text-[#5A524A] dark:text-[#B5ADA3] leading-relaxed">
+          <p class="text-xs font-reading text-neutral-500 dark:text-neutral-400 leading-relaxed">
             Monitoramento em tempo real dos 7 principais pontos de atrito cognitivo entre a gramática do português brasileiro e o francês padrão.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           @for (item of difficultyRadarList(); track item.category) {
-            <div class="p-4 rounded-xl bg-[#FCFAF7] dark:bg-[#1A1715] border border-[#E6DFD3] dark:border-[#332D28] space-y-3">
+            <div class="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 space-y-3">
               <div class="flex items-start justify-between gap-2">
                 <div>
-                  <h3 class="text-sm font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+                  <h3 class="text-sm font-serif font-medium text-neutral-900 dark:text-neutral-100">
                     {{ item.labelPt }}
                   </h3>
-                  <span class="text-[11px] text-[#8A8278] dark:text-[#7A7268] italic block">
+                  <span class="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 block">
                     {{ item.labelFr }}
                   </span>
                 </div>
 
                 <span
-                  [class]="getTrendBadgeClass(item.trend, item.masteryScore)"
-                  class="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0">
+                  class="text-[9px] font-mono px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-[#161616] text-neutral-800 dark:text-neutral-200 shrink-0">
                   {{ getTrendLabel(item.trend, item.masteryScore) }}
                 </span>
               </div>
@@ -437,33 +436,32 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
               <!-- Mastery bar -->
               <div class="space-y-1">
                 <div class="flex items-center justify-between text-xs font-mono">
-                  <span class="text-[#6C645C] dark:text-[#9C9387]">Índice de Domínio</span>
-                  <span class="font-bold text-[#231F1C] dark:text-[#EAE4DA]">{{ item.masteryScore }}%</span>
+                  <span class="text-neutral-400 dark:text-neutral-500">Domínio</span>
+                  <span class="font-medium text-neutral-900 dark:text-neutral-100">{{ item.masteryScore }}%</span>
                 </div>
-                <div class="h-2 w-full rounded-full bg-[#EFE9DD] dark:bg-[#25201B] overflow-hidden">
+                <div class="h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
                   <div
-                    class="h-full rounded-full transition-all duration-300"
-                    [style.width.%]="item.masteryScore"
-                    [class]="getMasteryBarColor(item.masteryScore)"></div>
+                    class="h-full rounded-full bg-neutral-900 dark:bg-neutral-100 transition-all duration-300"
+                    [style.width.%]="item.masteryScore"></div>
                 </div>
-                <div class="flex justify-between text-[10px] text-[#8A8278] dark:text-[#7A7268]">
-                  <span>{{ item.attemptsCount }} tentativas avaliadas</span>
+                <div class="flex justify-between text-[10px] font-mono text-neutral-400 dark:text-neutral-500">
+                  <span>{{ item.attemptsCount }} tentativas</span>
                   <span>{{ item.correctCount }} acertos / {{ item.errorCount }} erros</span>
                 </div>
               </div>
 
-              <p class="text-xs font-reading text-[#5A524A] dark:text-[#B5ADA3] pt-1 leading-relaxed border-t border-[#EFE9DD] dark:border-[#2C2723]">
+              <p class="text-xs font-reading text-neutral-600 dark:text-neutral-400 pt-1 leading-relaxed border-t border-neutral-200/60 dark:border-neutral-800/60">
                 {{ item.descriptionPt }}
               </p>
 
               @if (findStoryForCategory(item.category); as recStory) {
-                <div class="pt-2 border-t border-[#EFE9DD] dark:border-[#2C2723] flex items-center justify-between text-[11px]">
-                  <span class="text-[#8A8278] dark:text-[#7A7268]">Texto recomendado para reforço:</span>
+                <div class="pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60 flex items-center justify-between text-[11px]">
+                  <span class="text-neutral-400 font-mono text-[10px]">Texto sugerido:</span>
                   <a
                     [routerLink]="['/read', recStory.id]"
-                    class="font-medium text-[#9C3823] dark:text-[#DDA15E] hover:underline inline-flex items-center gap-1">
+                    class="font-medium text-neutral-900 dark:text-neutral-100 hover:underline inline-flex items-center gap-1">
                     <span class="truncate max-w-[150px]">{{ recStory.title }}</span>
-                    <mat-icon class="text-xs !w-3.5 !h-3.5">arrow_forward</mat-icon>
+                    <mat-icon class="text-xs !w-3 !h-3">arrow_forward</mat-icon>
                   </a>
                 </div>
               }
@@ -472,41 +470,41 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
         </div>
       </section>
 
-      <!-- Histórico Recente de Avaliações Diagnósticas -->
-      <section class="p-6 sm:p-8 rounded-2xl paper-page space-y-6">
+      <!-- Histórico Recente de Avaliações -->
+      <section class="p-6 sm:p-8 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-[#141414] space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div class="space-y-1">
-            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#9C3823] dark:text-[#DDA15E]">
-              <mat-icon class="text-sm leading-none !w-4 !h-4">history_edu</mat-icon>
-              <span>Registro de Desempenho</span>
+            <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+              <mat-icon class="text-xs leading-none !w-3.5 !h-3.5">history_edu</mat-icon>
+              <span>Histórico de Leituras</span>
             </div>
-            <h2 class="text-xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+            <h2 class="text-xl font-serif font-medium text-neutral-900 dark:text-neutral-100">
               Sessões de Leitura & Questionários Recentes
             </h2>
           </div>
-          <span class="text-xs text-[#8A8278] dark:text-[#7A7268]">
-            Total registrado: {{ assessmentHistory().length }}
+          <span class="text-xs font-mono text-neutral-400 dark:text-neutral-500">
+            Total: {{ assessmentHistory().length }}
           </span>
         </div>
 
         @if (assessmentHistory().length > 0) {
-          <div class="divide-y divide-[#EFE9DD] dark:divide-[#2C2723]">
+          <div class="divide-y divide-neutral-100 dark:divide-neutral-800/80">
             @for (session of assessmentHistory(); track session.id) {
               <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div class="space-y-1">
                   <div class="flex items-center gap-2">
-                    <span class="font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] text-sm">
+                    <span class="font-serif font-medium text-neutral-900 dark:text-neutral-100 text-sm">
                       {{ session.storyTitle }}
                     </span>
-                    <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268]">
+                    <span class="text-[10px] font-mono text-neutral-400">
                       {{ session.completedAt.split('T')[0] }}
                     </span>
                   </div>
 
                   <div class="flex flex-wrap gap-1.5 items-center">
-                    <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268]">Tópicos avaliados:</span>
+                    <span class="text-[10px] font-mono text-neutral-400">Tópicos:</span>
                     @for (cat of session.testedCategories; track cat) {
-                      <span class="px-1.5 py-0.5 rounded bg-[#F5EFE3] dark:bg-[#1A1715] text-[#231F1C] dark:text-[#EAE4DA] font-mono text-[10px] border border-[#DDD6C8] dark:border-[#38322C]">
+                      <span class="px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 font-mono text-[10px]">
                         {{ cat }}
                       </span>
                     }
@@ -515,19 +513,17 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
 
                 <div class="flex items-center gap-4 sm:text-right shrink-0">
                   <div>
-                    <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">Velocidade</span>
-                    <span class="font-mono font-bold text-[#9C3823] dark:text-[#DDA15E]">
+                    <span class="text-[10px] font-mono text-neutral-400 block">Velocidade</span>
+                    <span class="font-mono font-medium text-neutral-900 dark:text-neutral-100">
                       {{ session.estimatedWpm }} ppm
                     </span>
                   </div>
 
-                  <div class="w-px h-6 bg-[#E6DFD3] dark:bg-[#332D28]"></div>
+                  <div class="w-px h-6 bg-neutral-200 dark:bg-neutral-800"></div>
 
                   <div>
-                    <span class="text-[10px] text-[#8A8278] dark:text-[#7A7268] block">Aproveitamento</span>
-                    <span
-                      class="font-serif font-bold text-sm"
-                      [class]="session.scorePercent >= 75 ? 'text-[#1B5E20] dark:text-[#86EFAC]' : 'text-amber-600 dark:text-amber-400'">
+                    <span class="text-[10px] font-mono text-neutral-400 block">Aproveitamento</span>
+                    <span class="font-mono font-medium text-neutral-900 dark:text-neutral-100 text-sm">
                       {{ session.scorePercent }}%
                     </span>
                   </div>
@@ -536,10 +532,10 @@ import { detectQuestionDifficultyCategory } from '../core/adaptive-learning';
             }
           </div>
         } @else {
-          <div class="p-8 text-center rounded-xl bg-[#FCFAF7] dark:bg-[#1A1715] border border-dashed border-[#DDD6C8] dark:border-[#38322C] text-xs text-[#8A8278] dark:text-[#7A7268] space-y-2">
+          <div class="p-8 text-center rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 text-xs text-neutral-400 space-y-2">
             <p>Nenhuma sessão de leitura com questionário concluída ainda.</p>
-            <a routerLink="/library" class="inline-flex items-center gap-1 text-[#9C3823] dark:text-[#DDA15E] font-medium hover:underline">
-              <span>Escolha uma história na biblioteca para inaugurar seu diagnóstico</span>
+            <a routerLink="/library" class="inline-flex items-center gap-1 text-neutral-900 dark:text-neutral-100 font-mono hover:underline">
+              <span>Escolha uma história na biblioteca</span>
               <mat-icon class="text-xs !w-3.5 !h-3.5">arrow_forward</mat-icon>
             </a>
           </div>

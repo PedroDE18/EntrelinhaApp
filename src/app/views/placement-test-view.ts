@@ -18,96 +18,96 @@ import { createDefaultDifficultyRadar } from '../core/adaptive-learning';
   template: `
     <div class="max-w-3xl mx-auto space-y-8 pb-16">
       <!-- Top back navigation -->
-      <div class="py-2 border-b border-[#E6DFD3] dark:border-[#332D28] text-xs text-[#6C645C] dark:text-[#9C9387]">
-        <a routerLink="/" class="inline-flex items-center gap-1.5 hover:text-[#231F1C] dark:hover:text-[#EAE4DA] transition-colors">
+      <div class="py-2 border-b border-neutral-200 dark:border-neutral-800 text-xs text-neutral-500 dark:text-neutral-400">
+        <a routerLink="/" class="inline-flex items-center gap-1.5 hover:text-neutral-900 dark:hover:text-white transition-colors">
           <mat-icon class="text-base leading-none !w-4 !h-4">arrow_back</mat-icon>
           <span>Voltar ao Início</span>
         </a>
       </div>
 
       <!-- Header -->
-      <div class="space-y-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F2E4D0] dark:bg-[#382D22] text-[#7A2A18] dark:text-[#F3D5A5] text-xs font-semibold uppercase tracking-wider">
+      <div class="space-y-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 text-xs font-mono uppercase tracking-wider">
           <mat-icon class="text-sm !w-4 !h-4">explore</mat-icon>
           <span>Diagnóstico de Entrada</span>
         </div>
-        <h1 class="text-3xl sm:text-4xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] tracking-tight">
+        <h1 class="text-3xl sm:text-4xl font-serif font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
           Defina seu Ponto de Partida
         </h1>
-        <p class="text-sm font-reading text-[#5A524A] dark:text-[#B5ADA3] leading-relaxed max-w-2xl">
+        <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-2xl font-light">
           Responda a 6 questões práticas concebidas para lusófonos. Avaliaremos sua capacidade de inferência, domínio de falsos cognatos e estruturas verbais para calibrar seu nível de leitura (A1–B2) e seu radar de dificuldades.
         </p>
       </div>
 
       <!-- Completion Result Card -->
       @if (completedResult(); as res) {
-        <section class="paper-page p-6 sm:p-8 rounded-2xl border-2 border-[#2E8540]/40 space-y-6 animate-in fade-in duration-300 shadow-md">
-          <div class="space-y-2 border-b border-[#E6DFD3] dark:border-[#332D28] pb-4">
-            <span class="text-xs font-semibold text-[#1B5E20] dark:text-[#86EFAC] uppercase tracking-wider flex items-center gap-1.5">
+        <section class="stoic-card p-6 sm:p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] space-y-6 animate-in fade-in duration-300 shadow-xs">
+          <div class="space-y-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
+            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5 font-mono">
               <mat-icon class="text-base !w-4 !h-4">verified</mat-icon>
               <span>Diagnóstico Concluído com Sucesso</span>
             </span>
             <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-              <h2 class="text-2xl sm:text-3xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA]">
+              <h2 class="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
                 Nível Recomendado: {{ res.assignedCefr }}
               </h2>
-              <span class="text-sm font-mono text-[#8A8278] dark:text-[#7A7268]">
+              <span class="text-sm font-mono text-neutral-500 dark:text-neutral-400">
                 Aproveitamento: {{ res.score }} de {{ res.total }} ({{ Math.round((res.score / res.total) * 100) }}%)
               </span>
             </div>
           </div>
 
-          <p class="text-sm font-reading text-[#3A342F] dark:text-[#D8D2C7] leading-relaxed">
+          <p class="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-serif">
             {{ res.startingExplanationPt }}
           </p>
 
           <!-- Diagnostic Strengths & Weaknesses -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
-            <div class="p-4 rounded-xl bg-[#EBF7EE] dark:bg-[#1B2B1E] border border-[#C3E6CB] dark:border-[#2C4832] space-y-2">
-              <span class="font-bold text-[#1B5E20] dark:text-[#86EFAC] uppercase tracking-wider block">
+            <div class="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2">
+              <span class="font-mono font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">
                 ✓ Seus Pontos de Firmeza:
               </span>
               @if (res.initialStrengths.length > 0) {
-                <ul class="space-y-1 text-[#231F1C] dark:text-[#EAE4DA]">
+                <ul class="space-y-1.5 text-neutral-800 dark:text-neutral-200">
                   @for (cat of res.initialStrengths; track cat) {
-                    <li class="flex items-center gap-1.5">
-                      <span class="w-1.5 h-1.5 rounded-full bg-[#2E8540]"></span>
+                    <li class="flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                       <span>{{ formatCategoryName(cat) }}</span>
                     </li>
                   }
                 </ul>
               } @else {
-                <span class="text-[#5A524A] dark:text-[#B5ADA3]">Iniciando fundamentos do idioma.</span>
+                <span class="text-neutral-500 dark:text-neutral-400">Iniciando fundamentos do idioma.</span>
               }
             </div>
 
-            <div class="p-4 rounded-xl bg-[#FDF2F2] dark:bg-[#3D1A1A] border border-[#D32F2F]/30 space-y-2">
-              <span class="font-bold text-[#B71C1C] dark:text-[#FCA5A5] uppercase tracking-wider block">
+            <div class="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2">
+              <span class="font-mono font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wider block">
                 ⚠ Pontos que Calibramos no seu Radar:
               </span>
               @if (res.initialWeaknesses.length > 0) {
-                <ul class="space-y-1 text-[#231F1C] dark:text-[#EAE4DA]">
+                <ul class="space-y-1.5 text-neutral-800 dark:text-neutral-200">
                   @for (cat of res.initialWeaknesses; track cat) {
-                    <li class="flex items-center gap-1.5">
-                      <span class="w-1.5 h-1.5 rounded-full bg-[#D32F2F]"></span>
+                    <li class="flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                       <span>{{ formatCategoryName(cat) }}</span>
                     </li>
                   }
                 </ul>
               } @else {
-                <span class="text-[#1B5E20] dark:text-[#86EFAC]">Nenhuma fraqueza acentuada detectada!</span>
+                <span class="text-emerald-600 dark:text-emerald-400">Nenhuma fraqueza acentuada detectada!</span>
               }
             </div>
           </div>
 
-          <div class="pt-4 border-t border-[#E6DFD3] dark:border-[#332D28] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span class="text-xs text-[#6C645C] dark:text-[#9C9387]">
+          <div class="pt-4 border-t border-neutral-100 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span class="text-xs text-neutral-500 dark:text-neutral-400">
               Seu perfil e radar de interferência foram calibrados com estes resultados.
             </span>
             <button
               type="button"
               (click)="applyAndNavigate(res.assignedCefr)"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-xs text-white bg-[#231F1C] dark:bg-[#EAE4DA] dark:text-[#181513] hover:opacity-90 transition-opacity shadow-xs">
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-medium text-xs text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:opacity-90 transition-opacity">
               <mat-icon class="text-base !w-4 !h-4">auto_stories</mat-icon>
               <span>Explorar Leituras Recomendadas</span>
             </button>
@@ -118,31 +118,31 @@ import { createDefaultDifficultyRadar } from '../core/adaptive-learning';
         <div class="space-y-6">
           <!-- Progress bar -->
           <div class="space-y-1.5">
-            <div class="flex items-center justify-between text-xs text-[#6C645C] dark:text-[#9C9387]">
-              <span>Questão {{ currentStep() + 1 }} de {{ questions.length }}</span>
+            <div class="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+              <span class="font-mono">Questão {{ currentStep() + 1 }} de {{ questions.length }}</span>
               <span class="font-mono font-medium">{{ Math.round(((currentStep() + 1) / questions.length) * 100) }}%</span>
             </div>
-            <div class="h-1.5 w-full bg-[#EFE9DD] dark:bg-[#25201B] rounded-full overflow-hidden">
+            <div class="h-1 w-full bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
               <div
-                class="h-full bg-[#9C3823] dark:bg-[#DDA15E] transition-all duration-300 rounded-full"
+                class="h-full bg-neutral-900 dark:bg-white transition-all duration-300 rounded-full"
                 [style.width.%]="((currentStep() + 1) / questions.length) * 100"></div>
             </div>
           </div>
 
           @if (currentQuestion(); as q) {
-            <article class="paper-page p-6 sm:p-8 rounded-2xl space-y-6 shadow-xs">
+            <article class="stoic-card p-6 sm:p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] space-y-6 shadow-xs">
               <div class="space-y-2">
-                <div class="flex items-center gap-2 text-[11px] font-mono font-semibold uppercase tracking-wider text-[#8A8278] dark:text-[#7A7268]">
-                  <span>Nível Alvo: {{ q.targetCefr }}</span>
+                <div class="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                  <span class="px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-semibold">{{ q.targetCefr }}</span>
                   <span>·</span>
                   <span>{{ formatCategoryName(q.difficultyCategory) }}</span>
                 </div>
 
-                <h2 class="text-xl sm:text-2xl font-serif font-bold text-[#231F1C] dark:text-[#EAE4DA] leading-snug">
+                <h2 class="text-xl sm:text-2xl font-serif font-bold text-neutral-900 dark:text-neutral-100 leading-snug pt-1">
                   {{ q.promptFr }}
                 </h2>
 
-                <p class="text-xs text-[#5A524A] dark:text-[#B5ADA3] italic">
+                <p class="text-xs text-neutral-500 dark:text-neutral-400 italic">
                   {{ q.promptPt }}
                 </p>
               </div>
@@ -155,11 +155,11 @@ import { createDefaultDifficultyRadar } from '../core/adaptive-learning';
                     (click)="selectAnswer(q.id, opt.id)"
                     [disabled]="hasAnswered(q.id)"
                     [class]="getOptionClass(q.id, opt.id, q.correctOptionId)"
-                    class="w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-colors flex items-start gap-3">
-                    <span class="font-mono text-xs mt-0.5 uppercase opacity-70">{{ opt.id }}.</span>
+                    class="w-full text-left p-4 rounded-xl border text-xs sm:text-sm transition-all flex items-start gap-3">
+                    <span class="font-mono text-xs mt-0.5 uppercase opacity-60">{{ opt.id }}.</span>
                     <div class="space-y-0.5">
                       <span class="font-medium block">{{ opt.textFr }}</span>
-                      <span class="text-xs opacity-75 block">{{ opt.textPt }}</span>
+                      <span class="text-xs opacity-75 block font-light">{{ opt.textPt }}</span>
                     </div>
                   </button>
                 }
@@ -167,25 +167,25 @@ import { createDefaultDifficultyRadar } from '../core/adaptive-learning';
 
               <!-- Instant explanation once answered -->
               @if (hasAnswered(q.id)) {
-                <div class="mt-4 p-4 rounded-xl bg-[#F7F4EE] dark:bg-[#181513] border border-[#DDD6C8] dark:border-[#38322C] text-xs space-y-1.5 animate-in fade-in duration-150">
-                  <div class="font-semibold text-sm" [class]="selectedAnswers()[q.id] === q.correctOptionId ? 'text-[#1B5E20] dark:text-[#86EFAC]' : 'text-[#B71C1C] dark:text-[#FCA5A5]'">
+                <div class="mt-4 p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs space-y-2 animate-in fade-in duration-150">
+                  <div class="font-semibold text-sm" [class]="selectedAnswers()[q.id] === q.correctOptionId ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'">
                     {{ selectedAnswers()[q.id] === q.correctOptionId ? '✓ Correto!' : '✗ Observação contrastiva:' }}
                   </div>
-                  <p class="text-[#3A342F] dark:text-[#D8D2C7] leading-relaxed">
+                  <p class="text-neutral-700 dark:text-neutral-300 leading-relaxed font-serif">
                     {{ q.explanationPt }}
                   </p>
-                  <div class="pt-1 text-[#9C3823] dark:text-[#DDA15E] font-medium text-[11px]">
-                    💡 Foco pedagógico: {{ q.interferenceNote }}
+                  <div class="pt-1 text-neutral-500 dark:text-neutral-400 font-mono text-[11px]">
+                    Foco pedagógico: {{ q.interferenceNote }}
                   </div>
                 </div>
 
                 <!-- Next button -->
-                <div class="pt-4 border-t border-[#EFE9DD] dark:border-[#2C2723] flex justify-end">
+                <div class="pt-4 border-t border-neutral-100 dark:border-neutral-800 flex justify-end">
                   @if (currentStep() < questions.length - 1) {
                     <button
                       type="button"
                       (click)="nextQuestion()"
-                      class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl font-semibold text-xs text-white bg-[#231F1C] dark:bg-[#EAE4DA] dark:text-[#181513] hover:opacity-90 transition-opacity">
+                      class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-xs text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:opacity-90 transition-opacity">
                       <span>Próxima questão</span>
                       <mat-icon class="text-sm !w-4 !h-4">arrow_forward</mat-icon>
                     </button>
@@ -193,7 +193,7 @@ import { createDefaultDifficultyRadar } from '../core/adaptive-learning';
                     <button
                       type="button"
                       (click)="finishTest()"
-                      class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-xs text-white bg-[#2E8540] dark:bg-[#4ADE80] dark:text-[#181513] hover:opacity-90 transition-opacity">
+                      class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-xs text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 hover:opacity-90 transition-opacity">
                       <mat-icon class="text-base !w-4 !h-4">done_all</mat-icon>
                       <span>Finalizar e Ver Diagnóstico</span>
                     </button>
@@ -236,15 +236,15 @@ export class PlacementTestView {
   getOptionClass(questionId: string, optionId: string, correctOptionId: string): string {
     const chosen = this.selectedAnswers()[questionId];
     if (!chosen) {
-      return 'bg-[#FCFAF7] dark:bg-[#221E1B] border-[#DDD6C8] dark:border-[#38322C] hover:border-[#9C3823] dark:hover:border-[#DDA15E] text-[#231F1C] dark:text-[#EAE4DA]';
+      return 'bg-white dark:bg-[#141414] border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 text-neutral-900 dark:text-neutral-100';
     }
     if (optionId === correctOptionId) {
-      return 'bg-[#EBF7EE] dark:bg-[#1C3322] border-[#2E8540] text-[#1B5E20] dark:text-[#A3E635] font-semibold';
+      return 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-medium';
     }
     if (chosen === optionId && optionId !== correctOptionId) {
-      return 'bg-[#FDF2F2] dark:bg-[#3D1A1A] border-[#D32F2F] text-[#B71C1C] dark:text-[#FCA5A5]';
+      return 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-800 dark:text-rose-300';
     }
-    return 'bg-[#F5EFE3] dark:bg-[#1A1715] border-[#DDD6C8] dark:border-[#38322C] opacity-50 text-[#8A8278] dark:text-[#7A7268]';
+    return 'bg-neutral-50 dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 opacity-40 text-neutral-400 dark:text-neutral-600';
   }
 
   nextQuestion(): void {
